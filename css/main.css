@@ -9698,79 +9698,48 @@ a[data-fancybox] {
   padding: 0 !important;
 }
 :root[data-theme="dark"] .cmt-body.waline {
-  --waline-white: #1a1a1a !important;
-  --waline-light-grey: #666 !important;
-  --waline-dark-grey: #999 !important;
-/* 布局颜色 - 使用具体的暗色值而不是变量 */
-  --waline-color: #e6e6e6 !important;
-  --waline-bgcolor: #2d2d30 !important;
-  --waline-bgcolor-light: #1e1e1e !important;
-  --waline-bgcolor-hover: #3e3e42 !important;
-  --waline-border-color: #404040 !important;
-  --waline-disable-bgcolor: #404040 !important;
-  --waline-disable-color: #666 !important;
+  --waline-white: #000;
+  --waline-light-grey: #666;
+  --waline-dark-grey: #999;
+/* 布局颜色 */
+  --waline-color: #fff;
+  --waline-bgcolor: var(--block);
+  --waline-bgcolor-light: #272727;
+  --waline-border-color: #333;
+  --waline-disable-bgcolor: #444;
+  --waline-disable-color: #272727;
 /* 特殊颜色 */
-  --waline-bq-color: #1e1e1e !important;
+  --waline-bq-color: #272727;
 /* 其他颜色 */
-  --waline-info-bgcolor: #1e1e1e !important;
-  --waline-info-color: #999 !important;
-/* 代码块背景 */
-  --waline-code-bgcolor: #1e1e1e !important;
-}
-:root[data-theme="dark"] .cmt-body.waline .wl-editor,
-:root[data-theme="dark"] .cmt-body.waline .wl-input,
-:root[data-theme="dark"] .cmt-body.waline .wl-textarea {
-  background-color: #2d2d30 !important;
-  color: #e6e6e6 !important;
-}
-:root[data-theme="dark"] .cmt-body.waline .wl-panel {
-  background-color: #2d2d30 !important;
-}
-:root[data-theme="dark"] .cmt-body.waline .wl-card {
-  background-color: #2d2d30 !important;
+  --waline-info-bgcolor: #272727;
+  --waline-info-color: #666;
 }
 :root[data-theme="dark"] .cmt-body.waline .wl-count {
   padding: 0.375em;
   font-weight: bold;
   font-size: 1.25em;
-  color: #e6e6e6 !important;
-  background-color: transparent !important;
+  color: #fff;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) .cmt-body.waline {
-    --waline-white: #1a1a1a !important;
-    --waline-light-grey: #666 !important;
-    --waline-dark-grey: #999 !important;
-    --waline-color: #e6e6e6 !important;
-    --waline-bgcolor: #2d2d30 !important;
-    --waline-bgcolor-light: #1e1e1e !important;
-    --waline-bgcolor-hover: #3e3e42 !important;
-    --waline-border-color: #404040 !important;
-    --waline-disable-bgcolor: #404040 !important;
-    --waline-disable-color: #666 !important;
-    --waline-bq-color: #1e1e1e !important;
-    --waline-info-bgcolor: #1e1e1e !important;
-    --waline-info-color: #999 !important;
-    --waline-code-bgcolor: #1e1e1e !important;
-  }
-  :root:not([data-theme]) .cmt-body.waline .wl-editor,
-  :root:not([data-theme]) .cmt-body.waline .wl-input,
-  :root:not([data-theme]) .cmt-body.waline .wl-textarea {
-    background-color: #2d2d30 !important;
-    color: #e6e6e6 !important;
-  }
-  :root:not([data-theme]) .cmt-body.waline .wl-panel {
-    background-color: #2d2d30 !important;
-  }
-  :root:not([data-theme]) .cmt-body.waline .wl-card {
-    background-color: #2d2d30 !important;
+    --waline-white: #000;
+    --waline-light-grey: #666;
+    --waline-dark-grey: #999;
+    --waline-color: #fff;
+    --waline-bgcolor: var(--block);
+    --waline-bgcolor-light: #272727;
+    --waline-border-color: #333;
+    --waline-disable-bgcolor: #444;
+    --waline-disable-color: #272727;
+    --waline-bq-color: #272727;
+    --waline-info-bgcolor: #272727;
+    --waline-info-color: #666;
   }
   :root:not([data-theme]) .cmt-body.waline .wl-count {
     padding: 0.375em;
     font-weight: bold;
     font-size: 1.25em;
-    color: #e6e6e6 !important;
-    background-color: transparent !important;
+    color: #fff;
   }
 }
 .cmt-body.artalk .artalk {
