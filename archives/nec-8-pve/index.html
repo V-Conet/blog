@@ -1,0 +1,1137 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  <link rel="canonical" href="https://blog.vconet.top/archives/nec-8-pve/">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>NEC 8小主机：打通 PVE 内外网 - VConet的杂物间</title>
+
+  
+    <meta name="description" content="前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路 需求使用 vconet.top 这个我拥有的域名，给本地服务都用上 SSL、同时异地组网 实现在外访问本地服务，还需要把一些服务公布到互联网上 与此同时，还要保证在各个网络环境下都能保持一致的 URL 配置 PVE PVE 的安装和基本配置教程网上有很多，不再复述  NAT！出于种种原因">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NEC 8小主机：打通 PVE 内外网">
+<meta property="og:url" content="https://blog.vconet.top/archives/nec-8-pve/">
+<meta property="og:site_name" content="VConet的杂物间">
+<meta property="og:description" content="前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路 需求使用 vconet.top 这个我拥有的域名，给本地服务都用上 SSL、同时异地组网 实现在外访问本地服务，还需要把一些服务公布到互联网上 与此同时，还要保证在各个网络环境下都能保持一致的 URL 配置 PVE PVE 的安装和基本配置教程网上有很多，不再复述  NAT！出于种种原因">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/46270998?v=4">
+<meta property="article:published_time" content="2025-09-14T11:41:53.000Z">
+<meta property="article:modified_time" content="2025-09-14T11:41:53.000Z">
+<meta property="article:author" content="VConet">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="PVE">
+<meta property="article:tag" content="NAT">
+<meta property="article:tag" content="DNS">
+<meta property="article:tag" content="DHCP">
+<meta property="article:tag" content="异地组网">
+<meta property="article:tag" content="Cloudflare">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Nginx">
+<meta property="article:tag" content="Homelab">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/46270998?v=4">
+  
+  
+  
+  <meta name="keywords" content="Linux,PVE,NAT,DNS,DHCP,异地组网,Cloudflare,Docker,Nginx,Homelab">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://avatars.githubusercontent.com/u/46270998?v=4"},"dateCreated":"2025-09-14T19:41:53+08:00","dateModified":"2025-09-14T19:41:53+08:00","datePublished":"2025-09-14T19:41:53+08:00","description":"","headline":"NEC 8小主机：打通 PVE 内外网","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/nec-8-pve/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://avatars.githubusercontent.com/u/46270998?v=4","logo":{"@type":"ImageObject","url":"https://avatars.githubusercontent.com/u/46270998?v=4"}},"url":"https://blog.vconet.top/archives/nec-8-pve/","keywords":"Linux, PVE, NAT, DNS, DHCP, 异地组网, Cloudflare, Docker, Nginx, Homelab","thumbnailUrl":null,"image":[]}</script>
+  <link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet"><style>
+  @font-face {
+    font-family: "ZSFT-443";
+    src: url("https://fontsapi.zeoseven.com/443/main.woff2") format("woff2"),
+    url("https://fontsapi-storage.zeoseven.com/443/main.woff2") format("woff2");
+    font-display: swap;
+  }
+  @media (max-width: 768px) {
+    body > .sitebg {
+      background-attachment: scroll;
+      background-position: center center;
+    }
+  }
+</style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="ee90339e-f6e2-457d-86ee-ba4f417c1afb"></script>
+</head>
+<body><div class="sitebg"><div class="siteblur"></div></div>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://avatars.githubusercontent.com/u/46270998?v=4" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="关于我" href="/about/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/archives/nec-8-pve/"><span class="title">NEC 8小主机：打通 PVE 内外网</span></a><a class="item title" href="/archives/goodix-fp-reader/"><span class="title">Linux下使用咸鱼铝合金指纹识别器</span></a><a class="item title" href="/archives/uki-sbctl-secureboot/"><span class="title">UKI+sbctl：启用 Secure Boot 最简单的方法</span></a><a class="item title" href="/archives/mailu-with-caddy/"><span class="title">Caddy反向代理搭建Mailu邮局踩坑记录</span></a><a class="item title" href="/archives/arch-secure-boot-by-archboot/"><span class="title">借助Archboot安装Archlinux并开启安全启动</span></a><a class="item title" href="/archives/gaomon-linux-tablet/"><span class="title">高漫M6的Linux版GaomonTablet</span></a><a class="item title" href="/archives/mingit-ins-problem/"><span class="title">MinGit安装</span></a><a class="item title" href="/archives/linux-advise/"><span class="title">Linux 实用建议</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/V-Conet" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder/social/08a41b181ce68.svg"/></a><a class="social" href="https://t.me/v_conet" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://static.vconet.top/telegram.svg"/></a><a class="social" href="https://git.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://forgejo.org/favicon.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/PVE/">PVE</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-09-14T11:41:53.000Z">2025-09-14</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-09-14T11:41:53.000Z">2025-09-14</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>NEC 8小主机：打通 PVE 内外网</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路</p>
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>使用 <code>vconet.top</code> 这个我拥有的域名，给本地服务都用上 SSL、同时异地组网 实现在外访问本地服务，还需要把一些服务公布到互联网上</p>
+<p>与此同时，还要保证在各个网络环境下都能保持一致的 URL</p>
+<h2 id="配置-PVE"><a href="#配置-PVE" class="headerlink" title="配置 PVE"></a>配置 PVE</h2><blockquote>
+<p>PVE 的安装和基本配置教程网上有很多，不再复述</p>
+</blockquote>
+<h3 id="NAT！"><a href="#NAT！" class="headerlink" title="NAT！"></a>NAT！</h3><p>出于种种原因，我在 PVE 上额外划分了一个 <code>10.22.33.0/24</code> 网段，用于虚拟机和 LXC 容器</p>
+<h4 id="配置-SDN"><a href="#配置-SDN" class="headerlink" title="配置 SDN"></a>配置 SDN</h4><h5 id="创建-Simple-区域"><a href="#创建-Simple-区域" class="headerlink" title="创建 Simple 区域"></a>创建 Simple 区域</h5><p>转到 <code>数据中心</code> ➡️ <code>SDN</code> ➡️ <code>区域</code> ➡️ <code>添加</code> ➡️ <code>Simple</code></p>
+<p>填一个名称，勾选<code>高级</code>并启用<code>自动 DHCP</code></p>
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250914_221451.png" data-src="https://static.vconet.top/20250914_221451.png" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div></div>
+
+
+<h5 id="创建-VNets"><a href="#创建-VNets" class="headerlink" title="创建 VNets"></a>创建 VNets</h5><p>转到 <code>数据中心</code> ➡️ <code>SDN</code> ➡️ <code>VNets</code>  ➡️ <code>创建</code></p>
+<p>填写<code>名称</code>和<code>区</code>（刚才创建的 Simple 名称）</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250914_221633.png" data-src="https://static.vconet.top/20250914_221633.png" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div></div>
+
+<h5 id="创建子网"><a href="#创建子网" class="headerlink" title="创建子网"></a>创建子网</h5><p>在 <code>VNets</code> 右边的<code>子网</code>创建新子网，填写子网网段和网关，在 <code>DHCP 范围</code>选项卡内填写 DHCP 的 IP 范围</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250914_222016.png" data-src="https://static.vconet.top/20250914_222016.png" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div></div>
+
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250914_222032.png" data-src="https://static.vconet.top/20250914_222032.png" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div></div>
+
+<h5 id="应用更改"><a href="#应用更改" class="headerlink" title="应用更改"></a>应用更改</h5><p>转到 <code>数据中心</code> ➡️ <code>SDN</code>，点击左上角的<code>应用</code></p>
+<h4 id="启用-DHCP"><a href="#启用-DHCP" class="headerlink" title="启用 DHCP"></a>启用 DHCP</h4><p>要使 PVE 能真正的提供 DHCP 服务，需要在 PVE 上安装 <code>dnsmasq</code> 并禁用自带的服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt install dnsmasq</span><br><span class="line">systemctl <span class="built_in">disable</span> --now dnsmasq</span><br></pre></td></tr></table></figure>
+
+<h5 id="自定义-DNS"><a href="#自定义-DNS" class="headerlink" title="自定义 DNS"></a>自定义 DNS</h5><blockquote>
+<p>因为内外网的 DNS 记录不一样，需要给<code>10.22.33.0/24</code>网段内的虚拟机和 LXC 提供自定义的 DNS 服务器，我将会在下文给出的 Co re + Powerdns 方案</p>
+</blockquote>
+<p>为了让 <code>dnsmasq</code> 能在提供 DHCP 的同时，提供 自定义 DNS，需要编辑 <code>/etc/pve/sdn/subnets.cfg</code> 文件，添加 <code>dhcp-dns-server</code> 选项</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">subnet: pvenet-10.22.33.0-24</span><br><span class="line">        vnet vnet</span><br><span class="line">        dhcp-range start-address=10.22.33.2,end-address=10.22.33.253</span><br><span class="line">        gateway 10.22.33.1</span><br><span class="line">        snat 1</span><br><span class="line">        dhcp-dns-server 10.22.33.200 #你所需的 DNS 服务器 IP</span><br></pre></td></tr></table></figure>
+
+<h5 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h5><p>目前我并没有防火墙的需求，暂时跳过</p>
+<h3 id="内网域名解析"><a href="#内网域名解析" class="headerlink" title="内网域名解析"></a>内网域名解析</h3><p>为了提供 <code>vconet.top</code> 等 TLD 域名的内部解析，需要一个自己的 DNS 服务器，同时还要方便维护</p>
+<p>可以实现上面需求的，可选方案有很多：CoreDNS（两种方案）、Powerdns、TechnitiumDNS，甚至 小米路由器自带的 <code>自定义 Hosts</code> 功能也能满足需求</p>
+<h4 id="自定义-DNS-怎么选？"><a href="#自定义-DNS-怎么选？" class="headerlink" title="自定义 DNS 怎么选？"></a>自定义 DNS 怎么选？</h4><h5 id="简单记录"><a href="#简单记录" class="headerlink" title="简单记录"></a>简单记录</h5><p>如果你只需要简单的 <code>xx.vconet.top</code>对应 <code>ip</code>，那么大可选择小米路由器自带的 <code>自定义 Hosts</code> 功能，亦或是 CoreDNS（方案一）</p>
+<p>该方案用到 CoreDNS的 <code>hosts</code>功能：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.:53 &#123;</span><br><span class="line">    # lan.hosts为你需要的解析，格式和 hosts 文件一致</span><br><span class="line">    hosts /etc/CoreDNS/lan.hosts &#123;</span><br><span class="line">       fallthrough</span><br><span class="line">    &#125;</span><br><span class="line">    forward . 223.5.5.5 119.29.29.29</span><br><span class="line">    log</span><br><span class="line">    cache</span><br><span class="line">    errors</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="复杂记录"><a href="#复杂记录" class="headerlink" title="复杂记录"></a>复杂记录</h5><p>如果不仅仅需要 A 记录，还需要 PTR、MX 等，就需要 CoreDNS（方案二）、Powerdns、Technitiumdns 这些权威 DNS 了</p>
+<p>CoreDNS（方案二）需要用到 CoreDNS 的 <code>file</code>功能： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">. &#123;</span><br><span class="line">    forward . 223.5.5.5</span><br><span class="line">    log</span><br><span class="line">    errors</span><br><span class="line">&#125;</span><br><span class="line">vconet.top &#123;</span><br><span class="line">    file /etc/CoreDNS/DOMAIN.zone #域名的Zone文件</span><br><span class="line">    log</span><br><span class="line">    errors</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Powerdns、Technitiumdns 有对应的 Web 管理页面，直接添加就可</p>
+<blockquote>
+<p>如果选择权威 DNS 给 <code>vconet.top</code> 做解析，<strong>且</strong>如果本地 DNS 的记录不全，解析时会返回 NXDOMAIN</p>
+</blockquote>
+<p>权威 DNS 在查询到不存在的记录时，会直接返回 <code>NXDOMAIN</code>，而不会继续向上递归查询，这可能导致内外网记录解析失败：</p>
+<pre class="mermaid">flowchart LR
+    ldns --本地IP--> id1[Client]
+    id1 --"local.vconet.top(存在于本地DNS)"-->ldns["本地 DNS"]
+    
+    ldns--NXDOMAIN-->id2[Client]
+    id2 --"blog.vconet.top(不存在于本地)"--> ldns
+    ldns x--"向上查找blog.xx"--x rdns["公共 DNS"]</pre>
+
+<h6 id="解决-NXDOMAIN"><a href="#解决-NXDOMAIN" class="headerlink" title="解决 NXDOMAIN"></a>解决 NXDOMAIN</h6><ul>
+<li><p>对于  Technitiumdns，你可以在创建新域名的时候，选择 <code>条件转发</code></p>
+</li>
+<li><p>对于 CoreDNS（方案二），需要自己编译含有 <code>alternate</code> 插件的 CoreDNS：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vconet.top &#123;</span><br><span class="line">    file /etc/CoreDNS/DOMAIN.zone #域名的Zone文件</span><br><span class="line">    alternate NXDOMAIN . 223.5.5.5 119.29.29.29</span><br><span class="line">    log</span><br><span class="line">    errors</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="我的方案"><a href="#我的方案" class="headerlink" title="我的方案"></a>我的方案</h5><p>因需要给 PVE 提供 DNS 相关服务，只能选择 Powerdns 解析内网记录，而 Powerdns 本身只用能作权威 DNS，还需要搭配 powerdns-recurosr 之类的前置</p>
+<p><em>但</em> recursor 并不能非常方便的解决上面 NXDOMAIN 的问题，因此我选择 CoreDNS 而非 powerdns-recursor</p>
+<p>CoreDNS 配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">####################</span><br><span class="line"># 修改 /etc/coredns/Corefile 文件</span><br><span class="line"># 127.0.0.1:54 为 Powerdns</span><br><span class="line">####################</span><br><span class="line"></span><br><span class="line">vconet.top &#123;</span><br><span class="line">    forward . 127.0.0.1:54 &#123;</span><br><span class="line">        policy sequential</span><br><span class="line">    &#125;</span><br><span class="line">    alternate NXDOMAIN . 223.5.5.5 119.29.29.29</span><br><span class="line">    log</span><br><span class="line">    errors</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">####################</span><br><span class="line"># 这两部分是用于 PVE 实例的反向查询和内网域名解析</span><br><span class="line">33.22.10.in-addr.arpa &#123;</span><br><span class="line">    forward . 127.0.0.1:54</span><br><span class="line">    log</span><br><span class="line">    errors</span><br><span class="line">&#125;</span><br><span class="line">pve.lan &#123;</span><br><span class="line">    forward . 127.0.0.1:54</span><br><span class="line">    log</span><br><span class="line">    errors</span><br><span class="line">&#125;</span><br><span class="line">####################</span><br><span class="line"></span><br><span class="line"># 其他请求</span><br><span class="line">.:53 &#123;</span><br><span class="line">    #bind 10.22.33.200</span><br><span class="line">    forward . 223.5.5.5 119.29.29.29</span><br><span class="line">    cache</span><br><span class="line">    log</span><br><span class="line">    errors</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Powerdns 配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"># 在 /etc/powerdns/pdns.conf 下追加下面这一段</span><br><span class="line"></span><br><span class="line"># AXFR</span><br><span class="line">allow-axfr-ips=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16</span><br><span class="line"># DNS UPDATE</span><br><span class="line">allow-dnsupdate-from=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16</span><br><span class="line"># DNS Notify</span><br><span class="line">allow-notify-from=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16</span><br><span class="line"># 是否允许未签名 Notify</span><br><span class="line">allow-unsigned-notify=no</span><br><span class="line"># 额外通知服务器</span><br><span class="line">#also-notify=10.0.0.10,192.168.31.10,[fc00::1]</span><br><span class="line"></span><br><span class="line">#daemon 启动</span><br><span class="line">daemon=yes</span><br><span class="line">disable-axfr=no</span><br><span class="line">guardian=no</span><br><span class="line">#是否master</span><br><span class="line">master=yes</span><br><span class="line">#是否slave</span><br><span class="line">slave=no</span><br><span class="line">#启动权限</span><br><span class="line">setgid=pdns</span><br><span class="line">setuid=pdns</span><br><span class="line">#打印日志</span><br><span class="line">log-dns-details=yes</span><br><span class="line">log-dns-queries=no</span><br><span class="line">loglevel=6</span><br><span class="line">log-timestamp=yes</span><br><span class="line">logging-facility=0</span><br><span class="line">#开启api</span><br><span class="line">api=yes</span><br><span class="line">api-key=非常长的随机字符串</span><br><span class="line">#启动webserver 监控</span><br><span class="line">webserver=yes</span><br><span class="line">webserver-address=0.0.0.0</span><br><span class="line">webserver-allow-from=0.0.0.0/0</span><br><span class="line">webserver-port=9190</span><br><span class="line">#监听的地址端口</span><br><span class="line">local-address=0.0.0.0</span><br><span class="line">local-port=54</span><br><span class="line">#记录query 日志</span><br><span class="line">query-logging=yes</span><br></pre></td></tr></table></figure>
+
+<p>请把<code>api-key</code>、<code>local-port</code>、<code>webserver-port</code>修改为自己所需的值</p>
+<h3 id="打通内外网"><a href="#打通内外网" class="headerlink" title="打通内外网"></a>打通内外网</h3><p>在这一部分开始之前，我需要介绍一下我的网络拓展：</p>
+<pre class="mermaid">flowchart TD
+    %% ISP 到家庭网络
+    ISP((ISP))
+    WIFI[小米路由器<br/>192.168.31.0/24]
+
+    %% 局域网
+    NB[笔记本 <br/>192.168.31.10]
+    PVE[PVE 宿主机</br>192.168.31.210]
+
+    %% PVE 内部网络
+    SUBNET1[[内部网络<br/>10.22.33.0/24]]
+    VM1["虚拟机1(核心)<br/>10.22.33.200"]
+    VM2["虚拟机2(Docker服务)"]
+    LXC1["LXC 1"]
+    LXC2["LXC 2"]
+
+    %% ZeroTier 网络
+    ZT[[ZeroTier 网络<br/>192.168.192.0/24]]
+
+    %% 拓扑关系
+    ISP --> WIFI
+    WIFI --> NB
+    WIFI --> PVE
+    PVE --> SUBNET1
+    SUBNET1 --> VM1
+    SUBNET1 --> VM2
+    SUBNET1 --> LXC1
+    SUBNET1 --> LXC2
+
+    VM1 <--> ZT</pre>
+
+<h4 id="本地访问"><a href="#本地访问" class="headerlink" title="本地访问"></a>本地访问</h4><p>在前面配置中，我们已经在 NAT 环境下新增了一层虚拟网络</p>
+<p>接下来要解决的问题是：如何让 <code>192.168.31.0/24</code> 网段内的设备能够访问 <code>10.22.33.0/24</code> 网段的虚拟机和 LXC 容器？</p>
+<h5 id="静态路由"><a href="#静态路由" class="headerlink" title="静态路由"></a>静态路由</h5><div class="tag-plugin blockquote" indent="undefined"><p>什么是路由？</p><p>网络路由是选择一个或多个网络上的路径的过程。路由原理可以应用于从电话网络到公共交通的任何类型的网络。在诸如互联网等数据包交换网络中，路由选择互联网协议 (IP) 数据包从其起点到目的地的路径。这些互联网路由决定由称为路由器的专用网络硬件做出。</p></div>
+
+<p>为了实现这个需求，需要在自己的路由器里添加一条静态路由：</p>
+<p>其<code>目标地址</code>为  <code>10.22.33.0</code>，<code>网关</code>为 PVE 的 IP <code>192.168.31.210</code>，<code>掩码</code>为 <code>255.255.255.0</code></p>
+<p>小米 AX3000T 在开启 ssh 服务后，编辑 <code>/etc/config/network</code>和防火墙 <code>/etc/config/firewall</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># /etc/config/network</span><br><span class="line"># 添加新的静态路由，格式如下</span><br><span class="line">config route</span><br><span class="line">        option interface &#x27;lan&#x27;</span><br><span class="line">        option target &#x27;10.22.33.0&#x27;</span><br><span class="line">        option netmask &#x27;255.255.255.0&#x27;</span><br><span class="line">        option gateway &#x27;192.168.31.210&#x27;</span><br><span class="line">        </span><br><span class="line"># /etc/config/network</span><br><span class="line"># 请看准是否为 defaults 部分的防火墙配置！</span><br><span class="line"># 将 forward 改为 ACCEPT</span><br><span class="line">config defaults</span><br><span class="line">        option syn_flood &#x27;0&#x27;</span><br><span class="line">        option input &#x27;ACCEPT&#x27;</span><br><span class="line">        option output &#x27;ACCEPT&#x27;</span><br><span class="line">        option forward &#x27;ACCEPT&#x27;</span><br><span class="line">        ...</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>请自行查找其他路由器添加静态路由的方法</p>
+</blockquote>
+<p>生效后，Linux 效果如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">user@archlinux$ </span><span class="language-bash">route -n</span></span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">10.22.33.0      192.168.31.210  255.255.255.0   UG    5000   0        0 wlp9s0</span><br></pre></td></tr></table></figure>
+
+<p>这样我们就实现了 <code>192.168.31.0/24</code> 网段访问 <code>10.22.33.0/24</code> 网段</p>
+<pre class="mermaid">flowchart LR
+    id1["笔记本 192.168.31.10"] --"ping 10.22.33.200"---> id2["路由器 192.168.31.1"] --"下一跳192.168.31.210"-->id3["PVE .31.210和.33.1"]
+    id3 --获得请求--> id4["虚拟机1（核心）10.22.33.200"] ---> id1</pre>
+
+<h4 id="异地组网"><a href="#异地组网" class="headerlink" title="异地组网"></a>异地组网</h4><p>异地组网可选的方案有很多，常用的有 <code>Tailscale</code> 和 <code>ZeroTier</code>，在此我选择功能更少的 ZeroTier</p>
+<!--？或许qoute更好？-->
+
+<p><em>Tailscale 有很多独特的功能，其中就有内网 HTTPS，但这个功能不够强大，而且和下面配置的 Nginx 反代服务重复了</em></p>
+<p>上面提到，我的 ZeroTier 是安装在 <code>虚拟机1（核心）</code>里的，这就意味着 当我的手机连接到 ZeroTier 后，只能访问 <code>192.168.192.31</code>这个 由 ZT 提供的 IP，并不能访问 <code>10.22.33.0/24</code> 网段</p>
+<p>解决问题的办法其实很简单，在 ZT 的后台添加一条新的静态路由，但这次的网关是 ZT 提供给<code>虚拟机1（核心）</code>的 IP</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250915_180513.png" data-src="https://static.vconet.top/20250915_180513.png" alt="ZT添加路由" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">ZT添加路由</span></div></div>
+
+<p>但此时，我们还并不能 ping 通，因为从 ZT 发来的请求，PVE 接收到后并不知道返回的路由</p>
+<p>因此需要在 PVE 宿主机上添加一条路由：</p>
+<p>目标地址为 <code>192.168.192.0/24</code> （ZeroTier 的网段），网关为 <code>10.22.33.200</code>（虚拟机 1 的  IP）</p>
+<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_1" value="ip route add 192.168.192.0/24 via 10.22.33.200"><button class="copy-btn" onclick="util.copy(&quot;copy_1&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<details class="tag-plugin colorful folding" color="cyan" child="codeblock"><summary><p>添加为系统服务，自动添加和删除</p>
+</summary><div class="body"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Static route for Zerotier</span><br><span class="line">After=network-online.target</span><br><span class="line">Wants=network-online.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=oneshot</span><br><span class="line">ExecStart=/sbin/ip route add 192.168.192.0/24 via 10.22.33.200</span><br><span class="line">ExecStop=/sbin/ip route del 192.168.192.0/24 via 10.22.33.200</span><br><span class="line">RemainAfterExit=yes</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure></div></details>
+
+
+<p>最后，启用 <code>虚拟机1（核心）</code>的转发功能：</p>
+<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_2" value="sysctl -w net.ipv4.ip_forward=1"><button class="copy-btn" onclick="util.copy(&quot;copy_2&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+
+<p>至此，在本地或使用 ZeroTier 时，都可以访问 <code>10.22.33.0/24</code> 网段的设备了</p>
+<p>这么做也避免了给同一个域名添加两个不同网段 IP 的麻烦，方便维护</p>
+<h4 id="外网访问"><a href="#外网访问" class="headerlink" title="外网访问"></a>外网访问</h4><p>当下，直接开放端口非 80&#x2F;443 端口虽可以实现，但这么做容易暴露自己的 IP</p>
+<p>一个解决办法是使用 CDN 回源，但免费版 Cloudflre 的 Origin Rule 只能有三条回源规则，数量有限还需要手动维护 IP 记录</p>
+<p>那还有没有什么别的办法呢？</p>
+<p>有的。那就是赛博活佛 Cloudflare 的 <code>Zero Trust</code>，Zero Trust 中的<code>隧道</code> 功能可以把内网服务公布到互联网上：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250915_185440.png" data-src="https://static.vconet.top/20250915_185440.png" alt="CF隧道" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">CF隧道</span></div></div>
+
+<p>cloudflared 的安装和设置 在创建完隧道后有详细的介绍，不再赘述</p>
+<h2 id="各种服务"><a href="#各种服务" class="headerlink" title="各种服务"></a>各种服务</h2><p>以下是我在内外网打通后部署的一些服务，属于扩展内容，可按需参考</p>
+<p><em>略去了很多设置过程</em></p>
+<h3 id="基础服务"><a href="#基础服务" class="headerlink" title="基础服务"></a>基础服务</h3><p>上文曾多次提到<code>虚拟机1（核心）</code>，这台虚拟机承担了我内网环境的 Nginx 反代、DNS 服务器和 ZeroTier 组网</p>
+<h4 id="Nginx-反代"><a href="#Nginx-反代" class="headerlink" title="Nginx 反代"></a>Nginx 反代</h4><p>我尝试过 Nginx Proxy Manager 的网页管理，但决定手动管理，因其可选项比较少，不能灵活配置</p>
+<p>Debian 系统可以直接安装 <code>nginx</code> 包和 <code>nginx-full</code>包</p>
+<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_3" value="apt install nginx nginx-full"><button class="copy-btn" onclick="util.copy(&quot;copy_3&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+
+<p>在安装完后，按照下面的反代模板添加配置文件即可：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">8443</span> ssl;</span><br><span class="line">    <span class="attribute">server_name</span> pve.vconet.top;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">ssl_certificate</span> /root/.acme.sh/<span class="regexp">*.vconet.top</span>_ecc/fullchain.cer;</span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> /root/.acme.sh/<span class="regexp">*.vconet.top</span>_ecc/<span class="regexp">*.vconet.top.key</span>;</span><br><span class="line">    <span class="attribute">add_header</span> Strict-Transport-Security <span class="string">&quot;max-age=31536000;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> https://10.22.33.1:8006;</span><br><span class="line">        <span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">        <span class="attribute">proxy_connect_timeout</span>  <span class="number">3600s</span>;</span><br><span class="line">        <span class="attribute">proxy_read_timeout</span>  <span class="number">3600s</span>;</span><br><span class="line">        <span class="attribute">proxy_send_timeout</span>  <span class="number">3600s</span>;</span><br><span class="line">        <span class="attribute">send_timeout</span>  <span class="number">3600s</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我在这里使用<code>8443</code>而非443端口的原因在下面 Forgejo 部分有解释</p>
+<h4 id="DNS-服务器与-PVE-整合"><a href="#DNS-服务器与-PVE-整合" class="headerlink" title="DNS 服务器与 PVE 整合"></a>DNS 服务器与 PVE 整合</h4><p>在前面，我配置好了 Powerdns，下面是 PVE 启用 DNS 插件，实现自动添加虚拟机解析记录和 PTR 记录的方法</p>
+<h6 id="添加-DNS-插件"><a href="#添加-DNS-插件" class="headerlink" title="添加 DNS 插件"></a>添加 DNS 插件</h6><p>转到 <code>数据中心</code> ➡️ <code>SDN</code> ➡️ <code>选项</code> ➡️ <code>添加</code></p>
+<p>填写对应的 Powerdns API 地址和 API 密钥</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250915_211605.png" data-src="https://static.vconet.top/20250915_211605.png" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div></div>
+
+<h5 id="补全-Simple-的信息"><a href="#补全-Simple-的信息" class="headerlink" title="补全 Simple 的信息"></a>补全 Simple 的信息</h5><p>转到 <code>数据中心</code> ➡️ <code>SDN</code> ➡️ <code>区域</code> ➡️ <code>添加</code> ➡️ <code>Simple</code><br>勾选<code>高级</code>，补全下面的信息</p>
+<blockquote>
+<p>在填写DNS 域之前，请在 powerdns 内创建此域</p>
+</blockquote>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250915_212357.png" data-src="https://static.vconet.top/20250915_212357.png" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div></div>
+
+<h3 id="Docker-服务"><a href="#Docker-服务" class="headerlink" title="Docker 服务"></a>Docker 服务</h3><p>使用 Docker 是因为方便更新和管理</p>
+<h4 id="自动追番"><a href="#自动追番" class="headerlink" title="自动追番"></a>自动追番</h4><div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250915_220249.png" data-src="https://static.vconet.top/20250915_220249.png" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div></div>
+
+<h5 id="Emby"><a href="#Emby" class="headerlink" title="Emby"></a>Emby</h5><p>Emby 的 docker-compose 如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">emby:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">emby</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">emby/embyserver</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">devices:</span></span><br><span class="line">     <span class="bullet">-</span> <span class="string">/dev/dri:/dev/dri</span> <span class="comment"># 挂载显卡用于转码</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8096</span><span class="string">:8096</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">1900</span><span class="string">:1900/udp</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./emby:/config</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/mnt/emby:/mnt/emby</span></span><br><span class="line">  <span class="attr">fontinass:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">riderlty/fontinass:noproxy</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">fontinass</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PUID=100000</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PGID=100000</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">EMBY_SERVER_URL=http://emby:8096</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8011</span><span class="string">:8011</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./fonts:/fonts</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./fiadata:/data</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">emby</span></span><br></pre></td></tr></table></figure>
+
+<p>为了实现 Emby 观看番剧时，自动加载 <code>ass</code> 字幕所需的字体，避免本地安装  需要用到 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/RiderLty/fontInAss">fontInAss</a> 并使用下面的 Nginx 反代</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">8012</span>; <span class="comment">#新的Emby访问端口</span></span><br><span class="line">    <span class="attribute">gzip</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">gzip_http_version</span> <span class="number">1</span>.<span class="number">0</span>;</span><br><span class="line">    <span class="attribute">gzip_comp_level</span> <span class="number">1</span>;</span><br><span class="line">    <span class="attribute">gzip_types</span> text/x-ssa;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> <span class="regexp">~ /(socket|embywebsocket)</span> &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> <span class="variable">$EMBY_SERVER_URL</span>;</span><br><span class="line">        <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Connection <span class="string">&quot;upgrade&quot;</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-Protocol <span class="variable">$scheme</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-Host <span class="variable">$http_host</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> <span class="regexp">~* /videos/(.*)/Subtitles/(.*)/Stream.vtt</span>  &#123;</span><br><span class="line">        <span class="comment">#适配emby网页播放SRT字幕，302直链时避免冲突</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> <span class="variable">$EMBY_SERVER_URL</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> <span class="regexp">~* /videos/(.*)/Subtitles/(.*)/(Stream.ass|Stream.srt|Stream)</span> &#123;</span><br><span class="line">        <span class="comment">#仅匹配ass与srt字幕文件，Stream适配infuse</span></span><br><span class="line">        <span class="comment">#修改为你的fontinass服务器地址</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:8011;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="section">location</span> <span class="regexp">~* /web/bower_components/(.*)/subtitles-octopus.js</span> &#123;</span><br><span class="line">        <span class="comment">#修改为你的fontinass服务器地址</span></span><br><span class="line">        <span class="comment">#如不需要修改web端渲染，可删除此location</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:8011;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> <span class="regexp">~* /web/modules/htmlvideoplayer/plugin.js</span> &#123;</span><br><span class="line">        <span class="comment">#修改为你的fontinass服务器地址</span></span><br><span class="line">        <span class="comment">#仅当需要web渲染，且通过https访问时，才需启用此location，否则可删除</span></span><br><span class="line">        <span class="comment">#见 https://github.com/RiderLty/fontInAss/issues/43</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:8011;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="comment">#修改为你的Emby/Jellyfin服务器地址</span></span><br><span class="line">        <span class="attribute">proxy_pass</span> <span class="variable">$EMBY_SERVER_URL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="下载器"><a href="#下载器" class="headerlink" title="下载器"></a>下载器</h5><p>使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/c0re100/qBittorrent-Enhanced-Edition">qBittorrentEE</a> 和 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/PBH-BTN/PeerBanHelper">PeerBanHelper</a></p>
+<p>PeerBanHelper 用于阻止迅雷等吸血客户端</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">qbittorrentee:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">superng6/qbittorrentee:latest</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">qbittorrentee</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">WEBUIPORT=8080</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ENABLE_DOWNLOADS_PERM_FIX=true</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./qbitcnf:/config</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/mnt/emby:/downloads/</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">6881</span><span class="string">:6881</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">6881</span><span class="string">:6881/udp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">8080</span><span class="string">:8080</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  <span class="attr">peerbanhelper:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghostchu/peerbanhelper:latest</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">pbh</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./pbhcnf:/app/data</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">9898</span><span class="string">:9898</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">qbittorrentee</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="ASS自动追番"><a href="#ASS自动追番" class="headerlink" title="ASS自动追番"></a>ASS自动追番</h5><p>AniRSS 的使用，请阅读<a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.wushuo.top/">官方文档</a></p>
+<h4 id="Forgejo-反代下同域名-ssh"><a href="#Forgejo-反代下同域名-ssh" class="headerlink" title="Forgejo 反代下同域名 ssh"></a>Forgejo 反代下同域名 ssh</h4><blockquote>
+<p>Git 服务器我选择使用 Gitea 的 fork：Forgejo<br>Forgejo 的安装 Gitea&#x2F;Forgejo 都有详细的文档，可自行搜索</p>
+</blockquote>
+<p>在这一节中，我需要解决一个问题：由于 Nginx 反代服务器和 Forgejo 并不在同一台虚拟机上，默认情况下我必须为 SSH 使用不同的域名。</p>
+<p>经过探索，我发现可以通过 Nginx 的 stream 模块，在同一域名下根据流量类型分别提供 HTTP 反代和 SSH 反代。</p>
+<p>在 <code>nginx.conf</code>的 <code>http</code> 段前添加这样一段：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">stream</span> &#123;</span><br><span class="line">    <span class="section">upstream</span> https_backend &#123;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8443</span>;  <span class="comment"># 所有HTTPS流量转发到8443</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="section">upstream</span> ssh_backend &#123;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">10.22.33.203:22</span>;  <span class="comment"># SSH流量转发到目标服务器</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 基于协议检测进行流量分发</span></span><br><span class="line">    <span class="comment"># SSL握手包会被检测为HTTPS，非SSL流量被认为是SSH</span></span><br><span class="line">    <span class="attribute">map</span> <span class="variable">$ssl_preread_protocol</span> <span class="variable">$upstream</span> &#123;</span><br><span class="line">        &quot;&quot; ssh_backend;         <span class="comment"># 非SSL流量 -&gt; SSH</span></span><br><span class="line">        ~. https_backend; 		<span class="comment"># SSL流量 -&gt; HTTPS</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span> <span class="number">443</span>;</span><br><span class="line">        <span class="attribute">ssl_preread</span> <span class="literal">on</span>;</span><br><span class="line">        <span class="attribute">proxy_pass</span> <span class="variable">$upstream</span>;</span><br><span class="line">        <span class="comment">#proxy_timeout 10s;</span></span><br><span class="line">        <span class="comment">#proxy_responses 1;</span></span><br><span class="line">        <span class="attribute">error_log</span> /var/log/nginx/stream.log;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>这也是我在前面选择使用 8443 端口的原因</em></p>
+<p>虽然和使用单独的域名比，这个方法略显麻烦，但在此记录这个解决办法</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="https://static.vconet.top/20250915_221635.png" data-src="https://static.vconet.top/20250915_221635.png" data-fancybox="true"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div></div>
+
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>至此，我的 NEC8 小主机在 PVE 上的内外网打通和基础服务搭建就告一段落了。希望本文能为有类似需求的朋友提供一些参考</p>
+</article>
+<div class="article-footer">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://yangwenqing.com/archives/2290/">PVE只有一个IP，如何让内部的虚拟机也能上网。–SNAT源地址转换</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.vconet.top/archives/nec-8-pve/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/nec-8-pve/&title=NEC 8小主机：打通 PVE 内外网 - VConet的杂物间&summary=前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路
+需求使用 vconet.top 这个我拥有的域名，给本地服务都用上 SSL、同时异地组网 实现在外访问本地服务，还需要把一..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=NEC 8小主机：打通 PVE 内外网 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/nec-8-pve/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.vconet.top/archives/nec-8-pve/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/archives/goodix-fp-reader/">Linux下使用咸鱼铝合金指纹识别器</a></div></section></div>
+
+<div class="related-wrap" id="related-posts"></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body twikoo'>
+      
+
+<div id="twikoo_container"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-PVE"><span class="toc-text">配置 PVE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#NAT%EF%BC%81"><span class="toc-text">NAT！</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SDN"><span class="toc-text">配置 SDN</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-Simple-%E5%8C%BA%E5%9F%9F"><span class="toc-text">创建 Simple 区域</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-VNets"><span class="toc-text">创建 VNets</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%90%E7%BD%91"><span class="toc-text">创建子网</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E6%9B%B4%E6%94%B9"><span class="toc-text">应用更改</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E7%94%A8-DHCP"><span class="toc-text">启用 DHCP</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-DNS"><span class="toc-text">自定义 DNS</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">防火墙</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="toc-text">内网域名解析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-DNS-%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9F"><span class="toc-text">自定义 DNS 怎么选？</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E8%AE%B0%E5%BD%95"><span class="toc-text">简单记录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%8D%E6%9D%82%E8%AE%B0%E5%BD%95"><span class="toc-text">复杂记录</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3-NXDOMAIN"><span class="toc-text">解决 NXDOMAIN</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E6%96%B9%E6%A1%88"><span class="toc-text">我的方案</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E9%80%9A%E5%86%85%E5%A4%96%E7%BD%91"><span class="toc-text">打通内外网</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E8%AE%BF%E9%97%AE"><span class="toc-text">本地访问</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E8%B7%AF%E7%94%B1"><span class="toc-text">静态路由</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%82%E5%9C%B0%E7%BB%84%E7%BD%91"><span class="toc-text">异地组网</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="toc-text">外网访问</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E7%A7%8D%E6%9C%8D%E5%8A%A1"><span class="toc-text">各种服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%9C%8D%E5%8A%A1"><span class="toc-text">基础服务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Nginx-%E5%8F%8D%E4%BB%A3"><span class="toc-text">Nginx 反代</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DNS-%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8E-PVE-%E6%95%B4%E5%90%88"><span class="toc-text">DNS 服务器与 PVE 整合</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0-DNS-%E6%8F%92%E4%BB%B6"><span class="toc-text">添加 DNS 插件</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A1%A5%E5%85%A8-Simple-%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="toc-text">补全 Simple 的信息</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-%E6%9C%8D%E5%8A%A1"><span class="toc-text">Docker 服务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E8%BF%BD%E7%95%AA"><span class="toc-text">自动追番</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Emby"><span class="toc-text">Emby</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%99%A8"><span class="toc-text">下载器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ASS%E8%87%AA%E5%8A%A8%E8%BF%BD%E7%95%AA"><span class="toc-text">ASS自动追番</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Forgejo-%E5%8F%8D%E4%BB%A3%E4%B8%8B%E5%90%8C%E5%9F%9F%E5%90%8D-ssh"><span class="toc-text">Forgejo 反代下同域名 ssh</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E5%B0%BE"><span class="toc-text">结尾</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":"blog.vconet.top","officialHosts":["localhost"],"encoded":"YmxvZy52Y29uZXQudG9w"};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":[],"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script type="module">
+  const el = document.getElementById('twikoo_container');
+  util.viewportLazyload(el, load_twikoo, false);
+
+  function load_twikoo() {
+    if (!el) return;
+    utils.js('https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js', {defer: true}).then(function () {
+      const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+      twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js","envId":"https://comments.vconet.top/"}, {
+        el: '#twikoo_container',
+        path: path,
+      }));
+    });
+  }
+</script>
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script defer type="text/javascript" src="https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    var mermaid_config = {
+      startOnLoad: true,
+      theme:
+        "auto" == "auto" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "neutral",
+      logLevel: 3,
+      themeVariables: {
+        darkMode: true
+      },
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        curve: "linear"
+      },
+      gantt: {
+        axisFormat: "%Y/%m/%d"
+      },
+      sequence: {
+        actorMargin: 50
+      }
+    }
+    mermaid.initialize(mermaid_config);
+  });
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>
