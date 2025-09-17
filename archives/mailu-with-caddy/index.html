@@ -20,12 +20,12 @@
   <title>Caddy反向代理搭建Mailu邮局踩坑记录 - VConet的杂物间</title>
 
   
-    <meta name="description" content="网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查 1telnet smtp.163.com 25  若出现以下信息，证明25端口可用 1234Trying 111.124.203.45...Connected to smtp163.mail.ntes53.netease.com.Escape character is &#x27;^]&#x27;.220 163.c">
+    <meta name="description" content="网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Caddy反向代理搭建Mailu邮局踩坑记录">
 <meta property="og:url" content="https://blog.vconet.top/archives/mailu-with-caddy/">
 <meta property="og:site_name" content="VConet的杂物间">
-<meta property="og:description" content="网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查 1telnet smtp.163.com 25  若出现以下信息，证明25端口可用 1234Trying 111.124.203.45...Connected to smtp163.mail.ntes53.netease.com.Escape character is &#x27;^]&#x27;.220 163.c">
+<meta property="og:description" content="网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://static.vconet.top/avatar.jpg">
 <meta property="article:published_time" content="2024-08-14T03:24:00.000Z">
@@ -50,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg"},"dateCreated":"2024-08-14T11:24:00+08:00","dateModified":"2024-08-14T11:24:00+08:00","datePublished":"2024-08-14T11:24:00+08:00","description":"网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查\n1telnet smtp.163.com 25\n\n若出现以下信息，证明25端口可用\n1234Trying 111.124.203.45...Connected to smtp163.mail.ntes53.netease.com.Escape character is &#x27;^]&#x27;.220 163.com Anti-spam GT for Coremail System (163com[20141201])","headline":"Caddy反向代理搭建Mailu邮局踩坑记录","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/mailu-with-caddy/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg","logo":{"@type":"ImageObject","url":"https://static.vconet.top/avatar.jpg"}},"url":"https://blog.vconet.top/archives/mailu-with-caddy/","keywords":"Mailu, Caddy","thumbnailUrl":null,"image":[]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg"},"dateCreated":"2024-08-14T11:24:00+08:00","dateModified":"2024-08-14T11:24:00+08:00","datePublished":"2024-08-14T11:24:00+08:00","description":"网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查","headline":"Caddy反向代理搭建Mailu邮局踩坑记录","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/mailu-with-caddy/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg","logo":{"@type":"ImageObject","url":"https://static.vconet.top/avatar.jpg"}},"url":"https://blog.vconet.top/archives/mailu-with-caddy/","keywords":"Mailu, Caddy","thumbnailUrl":null,"image":[]}</script>
   <meta name="yandex-verification" content="7724ebe7e7e09ce8" /><link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet"><style>
   @font-face {
     font-family: "ZSFT-443";
@@ -108,11 +108,13 @@
     
   </div>
   </div><article class="md-text content"><h2 id="网络要求"><a href="#网络要求" class="headerlink" title="网络要求"></a>网络要求</h2><p>首先安装docker，并确保服务器的25端口开放，可使用<code>telnet</code>检查</p>
+<span id="more"></span>
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet smtp.163.com 25</span><br></pre></td></tr></table></figure>
 
 <p>若出现以下信息，证明25端口可用</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Trying 111.124.203.45...</span><br><span class="line">Connected to smtp163.mail.ntes53.netease.com.</span><br><span class="line">Escape character is &#x27;^]&#x27;.</span><br><span class="line">220 163.com Anti-spam GT for Coremail System (163com[20141201])</span><br></pre></td></tr></table></figure>
-<span id="more"></span>
+<!--more-->
 
 <h2 id="添加DNS记录"><a href="#添加DNS记录" class="headerlink" title="添加DNS记录"></a>添加DNS记录</h2><ul>
 <li>添加A&#x2F;AAAA记录，解析<code>mail.example.com</code></li>
@@ -164,11 +166,7 @@
       <div class="header"><span>分享文章</span></div>
       <div class="body">
         <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.vconet.top/archives/mailu-with-caddy/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/mailu-with-caddy/&title=Caddy反向代理搭建Mailu邮局踩坑记录 - VConet的杂物间&summary=网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查
-1telnet smtp.163.com 25
-
-若出现以下信息，证明25端口可用
-1234Trying 111.124.203.45...Connec..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Caddy反向代理搭建Mailu邮局踩坑记录 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/mailu-with-caddy/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/mailu-with-caddy/&title=Caddy反向代理搭建Mailu邮局踩坑记录 - VConet的杂物间&summary=网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=Caddy反向代理搭建Mailu邮局踩坑记录 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/mailu-with-caddy/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.vconet.top/archives/mailu-with-caddy/"/>
@@ -185,7 +183,7 @@
       <div class='title cap theme'>相关文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="/archives/gaomon-linux-tablet/" title="高漫M6的Linux版GaomonTablet"><span class="title">高漫M6的Linux版GaomonTablet</span><span class="excerpt">这是一篇水文~ 记录一下 Linux 下使用手绘板的自定义按键和滚轮</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="/archives/arch-secure-boot-by-archboot/" title="借助Archboot安装Archlinux并开启安全启动"><span class="title">借助Archboot安装Archlinux并开启安全启动</span><span class="excerpt">借助Archboot安装Archlinux并开启安全启动</span></a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">

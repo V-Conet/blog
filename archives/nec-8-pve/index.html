@@ -20,12 +20,12 @@
   <title>NEC 8小主机：打通 PVE 内外网 - VConet的杂物间</title>
 
   
-    <meta name="description" content="前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路 需求使用 vconet.top 这个我拥有的域名，给本地服务都用上 SSL、同时异地组网 实现在外访问本地服务，还需要把一些服务公布到互联网上 与此同时，还要保证在各个网络环境下都能保持一致的 URL 配置 PVE PVE 的安装和基本配置教程网上有很多，不再复述  NAT！出于种种原因">
+    <meta name="description" content="前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NEC 8小主机：打通 PVE 内外网">
 <meta property="og:url" content="https://blog.vconet.top/archives/nec-8-pve/">
 <meta property="og:site_name" content="VConet的杂物间">
-<meta property="og:description" content="前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路 需求使用 vconet.top 这个我拥有的域名，给本地服务都用上 SSL、同时异地组网 实现在外访问本地服务，还需要把一些服务公布到互联网上 与此同时，还要保证在各个网络环境下都能保持一致的 URL 配置 PVE PVE 的安装和基本配置教程网上有很多，不再复述  NAT！出于种种原因">
+<meta property="og:description" content="前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://static.vconet.top/avatar.jpg">
 <meta property="article:published_time" content="2025-09-14T11:41:53.000Z">
@@ -58,7 +58,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg"},"dateCreated":"2025-09-14T19:41:53+08:00","dateModified":"2025-09-14T19:41:53+08:00","datePublished":"2025-09-14T19:41:53+08:00","description":"","headline":"NEC 8小主机：打通 PVE 内外网","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/nec-8-pve/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg","logo":{"@type":"ImageObject","url":"https://static.vconet.top/avatar.jpg"}},"url":"https://blog.vconet.top/archives/nec-8-pve/","keywords":"Linux, PVE, NAT, DNS, DHCP, 异地组网, Cloudflare, Docker, Nginx, Homelab","thumbnailUrl":"https://static.vconet.top/pve_20250915_20.png","image":1}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg"},"dateCreated":"2025-09-14T19:41:53+08:00","dateModified":"2025-09-14T19:41:53+08:00","datePublished":"2025-09-14T19:41:53+08:00","description":"前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路","headline":"NEC 8小主机：打通 PVE 内外网","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/nec-8-pve/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg","logo":{"@type":"ImageObject","url":"https://static.vconet.top/avatar.jpg"}},"url":"https://blog.vconet.top/archives/nec-8-pve/","keywords":"Linux, PVE, NAT, DNS, DHCP, 异地组网, Cloudflare, Docker, Nginx, Homelab","thumbnailUrl":"https://static.vconet.top/pve_20250915_20.png","image":1}</script>
   <meta name="yandex-verification" content="7724ebe7e7e09ce8" /><link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet"><style>
   @font-face {
     font-family: "ZSFT-443";
@@ -116,6 +116,7 @@
     
   </div>
   </div><article class="md-text content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路</p>
+<span id="more"></span>
 <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>使用 <code>vconet.top</code> 这个我拥有的域名，给本地服务都用上 SSL、同时异地组网 实现在外访问本地服务，还需要把一些服务公布到互联网上</p>
 <p>与此同时，还要保证在各个网络环境下都能保持一致的 URL</p>
 <h2 id="配置-PVE"><a href="#配置-PVE" class="headerlink" title="配置 PVE"></a>配置 PVE</h2><blockquote>
@@ -315,18 +316,6 @@
 <h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>至此，我的 NEC8 小主机在 PVE 上的内外网打通和基础服务搭建就告一段落了。希望本文能为有类似需求的朋友提供一些参考</p>
 </article>
 <div class="article-footer">
-    <section id="references">
-      <div class="header"><span>参考资料</span></div>
-      <div class="body">
-        <ul>
-        <li class="post-title">
-          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://yangwenqing.com/archives/2290/">PVE只有一个IP，如何让内部的虚拟机也能上网。–SNAT源地址转换</a></p>
-
-        </li>
-        </ul>
-      </div>
-    </section>
-    
     <section id="license">
       <div class="header"><span>许可协议</span></div>
       <div class="body"><p>本文采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
@@ -339,8 +328,7 @@
       <div class="header"><span>分享文章</span></div>
       <div class="body">
         <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.vconet.top/archives/nec-8-pve/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/nec-8-pve/&title=NEC 8小主机：打通 PVE 内外网 - VConet的杂物间&pics=https://static.vconet.top/pve_20250915_20.png&summary=前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路
-需求使用 vconet.top 这个我拥有的域名，给本地服务都用上 SSL、同时异地组网 实现在外访问本地服务，还需要把一..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=NEC 8小主机：打通 PVE 内外网 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/nec-8-pve/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/nec-8-pve/&title=NEC 8小主机：打通 PVE 内外网 - VConet的杂物间&pics=https://static.vconet.top/pve_20250915_20.png&summary=前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=NEC 8小主机：打通 PVE 内外网 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/nec-8-pve/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.vconet.top/archives/nec-8-pve/"/>
@@ -1088,35 +1076,7 @@
     }
   });
 </script>
-<script defer type="text/javascript" src="https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js"></script>
 <script>
-  window.addEventListener('DOMContentLoaded', (event) => {
-    var mermaid_config = {
-      startOnLoad: true,
-      theme:
-        "auto" == "auto" &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "neutral",
-      logLevel: 3,
-      themeVariables: {
-        darkMode: true
-      },
-      flowchart: {
-        useMaxWidth: false,
-        htmlLabels: true,
-        curve: "linear"
-      },
-      gantt: {
-        axisFormat: "%Y/%m/%d"
-      },
-      sequence: {
-        actorMargin: 50
-      }
-    }
-    mermaid.initialize(mermaid_config);
-  });
-</script><script>
   document.addEventListener('DOMContentLoaded', function () {
     window.codeElements = document.querySelectorAll('.code');
     if (window.codeElements.length > 0) {

@@ -20,12 +20,12 @@
   <title>UKI+sbctl：启用 Secure Boot 最简单的方法 - VConet的杂物间</title>
 
   
-    <meta name="description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。 正文在现有系统上抛弃Grub，拥抱统一内核映像（UKI）并启用 Secure Boot  我所使用的内核为 linux-zen，下面的配置请注意修改  修改内核命令行参数创建&#x2F;etc&#x2F;kernel&#x2F;cmdline如下： 1">
+    <meta name="description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UKI+sbctl：启用 Secure Boot 最简单的方法">
 <meta property="og:url" content="https://blog.vconet.top/archives/uki-sbctl-secureboot/">
 <meta property="og:site_name" content="VConet的杂物间">
-<meta property="og:description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。 正文在现有系统上抛弃Grub，拥抱统一内核映像（UKI）并启用 Secure Boot  我所使用的内核为 linux-zen，下面的配置请注意修改  修改内核命令行参数创建&#x2F;etc&#x2F;kernel&#x2F;cmdline如下： 1">
+<meta property="og:description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://static.vconet.top/avatar.jpg">
 <meta property="article:published_time" content="2025-02-04T14:38:00.000Z">
@@ -50,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg"},"dateCreated":"2025-02-04T22:38:00+08:00","dateModified":"2025-02-04T22:38:00+08:00","datePublished":"2025-02-04T22:38:00+08:00","description":"","headline":"UKI+sbctl：启用 Secure Boot 最简单的方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/uki-sbctl-secureboot/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg","logo":{"@type":"ImageObject","url":"https://static.vconet.top/avatar.jpg"}},"url":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","keywords":"Archlinux, Secure Boot","thumbnailUrl":"https://static.vconet.top/612702643.png","image":1}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg"},"dateCreated":"2025-02-04T22:38:00+08:00","dateModified":"2025-02-04T22:38:00+08:00","datePublished":"2025-02-04T22:38:00+08:00","description":"前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。","headline":"UKI+sbctl：启用 Secure Boot 最简单的方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/uki-sbctl-secureboot/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg","logo":{"@type":"ImageObject","url":"https://static.vconet.top/avatar.jpg"}},"url":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","keywords":"Archlinux, Secure Boot","thumbnailUrl":"https://static.vconet.top/612702643.png","image":1}</script>
   <meta name="yandex-verification" content="7724ebe7e7e09ce8" /><link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet"><style>
   @font-face {
     font-family: "ZSFT-443";
@@ -108,6 +108,9 @@
     
   </div>
   </div><article class="md-text content"><h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h2><p>上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。</p>
+<span id="more"></span>
+
+
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>在现有系统上抛弃Grub，拥抱统一内核映像（UKI）并启用 Secure Boot</p>
 <blockquote>
 <p>我所使用的内核为 <code>linux-zen</code>，下面的配置请注意修改</p>
@@ -167,8 +170,7 @@
       <div class="header"><span>分享文章</span></div>
       <div class="body">
         <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.vconet.top/archives/uki-sbctl-secureboot/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/uki-sbctl-secureboot/&title=UKI+sbctl：启用 Secure Boot 最简单的方法 - VConet的杂物间&pics=https://static.vconet.top/612702643.png&summary=前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。
-正文在现有系统上抛弃Grub，拥抱统一内核映像（UKI）..."><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=UKI+sbctl：启用 Secure Boot 最简单的方法 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/uki-sbctl-secureboot/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/uki-sbctl-secureboot/&title=UKI+sbctl：启用 Secure Boot 最简单的方法 - VConet的杂物间&pics=https://static.vconet.top/612702643.png&summary=前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=UKI+sbctl：启用 Secure Boot 最简单的方法 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/uki-sbctl-secureboot/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.vconet.top/archives/uki-sbctl-secureboot/"/>
@@ -185,17 +187,8 @@
       <div class='title cap theme'>相关文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="/archives/arch-secure-boot-by-archboot/" title="借助Archboot安装Archlinux并开启安全启动"><span class="title">借助Archboot安装Archlinux并开启安全启动</span><span class="excerpt">已有更简单的方法，此文仅作参考
-
-Archboot的启动MOK导入hash正常情况下，会遇到下面的错误：
-
-按下回车，进入如图界面：
-
-
-选择Enroll hash from disk
-选择以下文件：
-
-ARCHBOOT/EFI/BO...</span></a><a class="item" href="/archives/gaomon-linux-tablet/" title="高漫M6的Linux版GaomonTablet"><span class="title">高漫M6的Linux版GaomonTablet</span><span class="excerpt">这是一篇水文~ 记录一下 Linux 下使用手绘板的自定义按键和滚轮</span></a><a class="item" href="/archives/goodix-fp-reader/" title="Linux下使用咸鱼铝合金指纹识别器"><span class="title">Linux下使用咸鱼铝合金指纹识别器</span><span class="excerpt">安装驱动上游 freedesktop 和 ubuntu 的 libfprint 都不支持我手上这个27C6:5584 指纹识别器，不过万幸 Github 上有一个名为 “Goodix Fingerprint Linux Develop...</span></a><a class="item" href="/archives/linux-advise/" title="Linux 实用建议"><span class="title">Linux 实用建议</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="/archives/arch-secure-boot-by-archboot/" title="借助Archboot安装Archlinux并开启安全启动"><span class="title">借助Archboot安装Archlinux并开启安全启动</span><span class="excerpt">借助Archboot安装Archlinux并开启安全启动</span></a><a class="item" href="/archives/goodix-fp-reader/" title="Linux下使用咸鱼铝合金指纹识别器"><span class="title">Linux下使用咸鱼铝合金指纹识别器</span><span class="excerpt">记录Linux下使用咸鱼铝合金指纹识别器</span></a><a class="item" href="/archives/gaomon-linux-tablet/" title="高漫M6的Linux版GaomonTablet"><span class="title">高漫M6的Linux版GaomonTablet</span><span class="excerpt">这是一篇水文~ 记录一下 Linux 下使用手绘板的自定义按键和滚轮</span></a><a class="item" href="/archives/linux-advise/" title="Linux 实用建议"><span class="title">Linux 实用建议</span><span class="excerpt">Git配置由于国内GFW的存在，在不用魔法的情况下，很难流畅访问Github
+同时，在进行git clone时经常失败，所以需要给git做一点小配置，走ssh而不是默认的http</span></a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">
