@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="VConet的杂物间">
 <meta property="og:description" content="网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查 1telnet smtp.163.com 25  若出现以下信息，证明25端口可用 1234Trying 111.124.203.45...Connected to smtp163.mail.ntes53.netease.com.Escape character is &#x27;^]&#x27;.220 163.c">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://avatars.githubusercontent.com/u/46270998?v=4">
+<meta property="og:image" content="https://static.vconet.top/avatar.jpg">
 <meta property="article:published_time" content="2024-08-14T03:24:00.000Z">
 <meta property="article:modified_time" content="2024-08-14T03:24:00.000Z">
 <meta property="article:author" content="VConet">
 <meta property="article:tag" content="Mailu">
 <meta property="article:tag" content="Caddy">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/46270998?v=4">
+<meta name="twitter:image" content="https://static.vconet.top/avatar.jpg">
   
   
   
@@ -50,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://avatars.githubusercontent.com/u/46270998?v=4"},"dateCreated":"2024-08-14T11:24:00+08:00","dateModified":"2024-08-14T11:24:00+08:00","datePublished":"2024-08-14T11:24:00+08:00","description":"网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查\n1telnet smtp.163.com 25\n\n若出现以下信息，证明25端口可用\n1234Trying 111.124.203.45...Connected to smtp163.mail.ntes53.netease.com.Escape character is &#x27;^]&#x27;.220 163.com Anti-spam GT for Coremail System (163com[20141201])","headline":"Caddy反向代理搭建Mailu邮局踩坑记录","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/mailu-with-caddy/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://avatars.githubusercontent.com/u/46270998?v=4","logo":{"@type":"ImageObject","url":"https://avatars.githubusercontent.com/u/46270998?v=4"}},"url":"https://blog.vconet.top/archives/mailu-with-caddy/","keywords":"Mailu, Caddy","thumbnailUrl":null,"image":[]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg"},"dateCreated":"2024-08-14T11:24:00+08:00","dateModified":"2024-08-14T11:24:00+08:00","datePublished":"2024-08-14T11:24:00+08:00","description":"网络要求首先安装docker，并确保服务器的25端口开放，可使用telnet检查\n1telnet smtp.163.com 25\n\n若出现以下信息，证明25端口可用\n1234Trying 111.124.203.45...Connected to smtp163.mail.ntes53.netease.com.Escape character is &#x27;^]&#x27;.220 163.com Anti-spam GT for Coremail System (163com[20141201])","headline":"Caddy反向代理搭建Mailu邮局踩坑记录","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/mailu-with-caddy/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg","logo":{"@type":"ImageObject","url":"https://static.vconet.top/avatar.jpg"}},"url":"https://blog.vconet.top/archives/mailu-with-caddy/","keywords":"Mailu, Caddy","thumbnailUrl":null,"image":[]}</script>
   <meta name="yandex-verification" content="7724ebe7e7e09ce8" /><link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet"><style>
   @font-face {
     font-family: "ZSFT-443";
@@ -72,7 +72,7 @@
 <div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://avatars.githubusercontent.com/u/46270998?v=4" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://static.vconet.top/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
 
 <div class="nav-area">
 
@@ -185,17 +185,7 @@
       <div class='title cap theme'>相关文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="/archives/arch-secure-boot-by-archboot/" title="借助Archboot安装Archlinux并开启安全启动"><span class="title">借助Archboot安装Archlinux并开启安全启动</span><span class="excerpt">已有更简单的方法，此文仅作参考
-
-Archboot的启动MOK导入hash正常情况下，会遇到下面的错误：
-
-按下回车，进入如图界面：
-
-
-选择Enroll hash from disk
-选择以下文件：
-
-ARCHBOOT/EFI/BO...</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="/archives/gaomon-linux-tablet/" title="高漫M6的Linux版GaomonTablet"><span class="title">高漫M6的Linux版GaomonTablet</span><span class="excerpt">这是一篇水文~ 记录一下 Linux 下使用手绘板的自定义按键和滚轮</span></a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">

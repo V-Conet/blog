@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="VConet的杂物间">
 <meta property="og:description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。 正文在现有系统上抛弃Grub，拥抱统一内核映像（UKI）并启用 Secure Boot  我所使用的内核为 linux-zen，下面的配置请注意修改  修改内核命令行参数创建&#x2F;etc&#x2F;kernel&#x2F;cmdline如下： 1">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://avatars.githubusercontent.com/u/46270998?v=4">
+<meta property="og:image" content="https://static.vconet.top/avatar.jpg">
 <meta property="article:published_time" content="2025-02-04T14:38:00.000Z">
 <meta property="article:modified_time" content="2025-02-04T14:38:00.000Z">
 <meta property="article:author" content="VConet">
 <meta property="article:tag" content="Archlinux">
 <meta property="article:tag" content="Secure Boot">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/46270998?v=4">
+<meta name="twitter:image" content="https://static.vconet.top/avatar.jpg">
   
   
   
@@ -50,7 +50,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://avatars.githubusercontent.com/u/46270998?v=4"},"dateCreated":"2025-02-04T22:38:00+08:00","dateModified":"2025-02-04T22:38:00+08:00","datePublished":"2025-02-04T22:38:00+08:00","description":"","headline":"UKI+sbctl：启用 Secure Boot 最简单的方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/uki-sbctl-secureboot/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://avatars.githubusercontent.com/u/46270998?v=4","logo":{"@type":"ImageObject","url":"https://avatars.githubusercontent.com/u/46270998?v=4"}},"url":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","keywords":"Archlinux, Secure Boot","thumbnailUrl":"https://static.vconet.top/612702643.png","image":1}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg"},"dateCreated":"2025-02-04T22:38:00+08:00","dateModified":"2025-02-04T22:38:00+08:00","datePublished":"2025-02-04T22:38:00+08:00","description":"","headline":"UKI+sbctl：启用 Secure Boot 最简单的方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/uki-sbctl-secureboot/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://static.vconet.top/avatar.jpg","logo":{"@type":"ImageObject","url":"https://static.vconet.top/avatar.jpg"}},"url":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","keywords":"Archlinux, Secure Boot","thumbnailUrl":"https://static.vconet.top/612702643.png","image":1}</script>
   <meta name="yandex-verification" content="7724ebe7e7e09ce8" /><link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet"><style>
   @font-face {
     font-family: "ZSFT-443";
@@ -72,7 +72,7 @@
 <div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://avatars.githubusercontent.com/u/46270998?v=4" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://static.vconet.top/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
 
 <div class="nav-area">
 
