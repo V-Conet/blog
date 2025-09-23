@@ -204,7 +204,7 @@
 <li><p>创建 <code>/etc/modprobe.d/looking-glass.conf</code> 内容如下：</p>
  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options kvmfr static_size_mb=计算出的数值</span><br></pre></td></tr></table></figure>
 
-<p> 这里面数值的计算方法：${\frac{分辨率宽\times 分辨率高\times4\times2}{1024\times1024}}$，将计算出的结果以 ${2^n}$ 的整数向上取整</p>
+<p> 数值的计算方法：${\frac{分辨率宽\times 分辨率高\times4\times2}{1024\times1024}}$，将计算出的结果以 ${2^n}$ 向上取整的整数</p>
 <p> 如分显示器辨率为 2560x1600，其结果为：<br> $${\frac{2560\times1600\times4\times2}{  1024 \times 1024 } &#x3D;31.25}$$<br> 最接近 31.25 的是 ${2^6&#x3D; 64}$，因此上面的值为 64</p>
 </li>
 <li><p>给 <code>/dev/kvmfr0</code> 赋予访问权，创建 udev 规则 <code>/etc/udev/rules.d/99-kvmfr.rules</code>：</p>
@@ -232,9 +232,9 @@
 </li>
 </ol>
 <p>之后你可以添加 virtiofs 了，大概… （我没有测试）</p>
-<h3 id="键鼠"><a href="#键鼠" class="headerlink" title="键鼠"></a>键鼠</h3><p>这一部分是为了解决 Looking Glass 糟糕的键鼠问题：丢包，根本没法玩游戏</p>
+<h3 id="键鼠"><a href="#键鼠" class="headerlink" title="键鼠"></a>键鼠</h3><p>这一部分是为了解决 Looking Glass 糟糕的键鼠性能：丢包，根本没法玩游戏</p>
 <p>解决办法比较粗暴，我有一套单独的键鼠，直通后不影响笔记本的键盘和触控板</p>
-<p>为了保证随时可以切换连接状态，不在 virt-manager 里直接添加 <code>USB 主机设备</code>，而是用 <code>virsh</code> 这个 CLI 工具</p>
+<p>为了保证随时可以切换连接状态，不应在 virt-manager 里直接添加 <code>USB 主机设备</code>，而是用 <code>virsh</code> 这个 CLI 工具</p>
 <p>连接：</p>
 <div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_9" value="virsh attach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_9&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
