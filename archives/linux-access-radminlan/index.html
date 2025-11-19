@@ -96,7 +96,7 @@
 
 
 
-<div class="article banner top">
+<div class="article banner top"><img class="lazy bg" data-src="https://static.vconet.top/2025/ec75e62de245532b223b4842530a3ff5.png">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Windows/">Windows</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Windows/Linux/">Linux</a></div>
@@ -199,8 +199,8 @@
       <div class='title cap theme'>相关文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="/archives/nec-8-pve/" title="NEC 8小主机：打通 PVE 内外网"><span class="title">NEC 8小主机：打通 PVE 内外网</span><span class="excerpt">前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路</span></a><a class="item" href="/archives/nvidia-kvm-passthrough/" title="告别重启：Linux 下的 NVIDIA 显卡直通"><span class="title">告别重启：Linux 下的 NVIDIA 显卡直通</span><span class="excerpt">缘起自前年全面从 Windows 转到 ArchLinux 之后，我的的大部分时间都在 Linux 下，但为了运行 CAD、打游戏，我不得不选择双系统方案
-双系统虽然能解决软件兼容性的问题，但每次切换都需要重的体验很割裂，那么虚拟机呢？</span></a><a class="item" href="/archives/arch-secure-boot-by-archboot/" title="借助Archboot安装Archlinux并开启安全启动"><span class="title">借助Archboot安装Archlinux并开启安全启动</span><span class="excerpt">借助Archboot安装Archlinux并开启安全启动</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="/archives/nvidia-kvm-passthrough/" title="告别重启：Linux 下的 NVIDIA 显卡直通"><span class="title">告别重启：Linux 下的 NVIDIA 显卡直通</span><span class="excerpt">缘起自前年全面从 Windows 转到 ArchLinux 之后，我的的大部分时间都在 Linux 下，但为了运行 CAD、打游戏，我不得不选择双系统方案
+双系统虽然能解决软件兼容性的问题，但每次切换都需要重的体验很割裂，那么虚拟机呢？</span></a><a class="item" href="/archives/nec-8-pve/" title="NEC 8小主机：打通 PVE 内外网"><span class="title">NEC 8小主机：打通 PVE 内外网</span><span class="excerpt">前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路</span></a><a class="item" href="/archives/arch-secure-boot-by-archboot/" title="借助Archboot安装Archlinux并开启安全启动"><span class="title">借助Archboot安装Archlinux并开启安全启动</span><span class="excerpt">借助Archboot安装Archlinux并开启安全启动</span></a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">
@@ -936,7 +936,29 @@
     }
   });
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.23/dist/katex.min.css" integrity="sha384-//SZkxyB7axjCAopkAL1E1rve+ZSPKapD89Lo/lLhcsXR+zOYl5z6zJZEFXil+q0" crossorigin="anonymous">
+
+<script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async></script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+  MathJax.Hub.Config({
+    tex2jax: {
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     window.codeElements = document.querySelectorAll('.code');
