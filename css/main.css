@@ -1241,26 +1241,33 @@ a.button.start.gradient {
 }
 .canonical-tip {
   position: fixed;
+  display: flex;
   text-align: center;
   bottom: 4rem;
   left: 50%;
   transform: translateX(-50%);
   max-width: 90%;
-  background-color: var(--card);
-  color: var(--text-p1);
-  font-size: 1rem;
+  color: var(--text);
   font-family: #fff8e1;
   z-index: 9999999;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.1), 0 8px 32px rgba(0,0,0,0.1);
-  border-radius: 6px;
 }
 .canonical-tip .headline {
   font-size: calc(17px + 11px);
 }
-.canonical-tip a {
+.canonical-tip a,
+.canonical-tip button {
+  border-radius: 6px;
+  background: var(--bg-a100);
   display: block;
   color: inherit;
-  padding: 1rem 2rem;
+  padding: 1rem;
+  font-size: 1rem;
+}
+.canonical-tip button {
+  padding: 0;
+  width: 3rem;
+  margin-left: 1px;
 }
 .canonical-tip.unofficial {
   background-color: #f43;
@@ -1380,6 +1387,9 @@ a.button.start.gradient {
 .float-panel:after {
   border-radius: 64px;
 }
+:root[data-theme="dark"] .float-panel {
+  text-shadow: 0 0 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.4);
+}
 @media (prefers-color-scheme: dark) {
   .float-panel {
     text-shadow: 0 0 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.4);
@@ -1388,6 +1398,10 @@ a.button.start.gradient {
 .float-panel nav a:not(.active,
 .float-panel :hover) {
   filter: drop-shadow(0 0 0 #fff) drop-shadow(0 0 4px #fff);
+}
+:root[data-theme="dark"] .float-panel nav a:not(.active,
+:root[data-theme="dark"] .float-panel :hover) {
+  filter: none;
 }
 @media (prefers-color-scheme: dark) {
   .float-panel nav a:not(.active,
@@ -1413,6 +1427,9 @@ a.button.start.gradient {
   background: rgba(255,255,255,0.3);
   margin: 1px;
 }
+:root[data-theme="dark"] .float-panel:before {
+  background: rgba(255,255,255,0.2);
+}
 @media (prefers-color-scheme: dark) {
   .float-panel:before {
     background: rgba(255,255,255,0.2);
@@ -1430,6 +1447,9 @@ a.button.start.gradient {
   -moz-transition: all 0.2s ease-out;
   -webkit-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
+}
+:root[data-theme="dark"] .float-panel:after {
+  box-shadow: inset 0 0 2px 1px rgba(255,255,255,0.2);
 }
 @media (prefers-color-scheme: dark) {
   .float-panel:after {
@@ -2709,6 +2729,9 @@ div.toast.show {
   -o-transition: all 0.2s ease-out;
   text-shadow: 0 0 4px #fff, 0 0 8px rgba(255,255,255,0.8), 0 0 16px rgba(255,255,255,0.6);
 }
+:root[data-theme="dark"] .navbar-blur {
+  text-shadow: 0 0 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.4);
+}
 @media (prefers-color-scheme: dark) {
   .navbar-blur {
     text-shadow: 0 0 2px rgba(0,0,0,0.2), 0 0 4px rgba(0,0,0,0.4);
@@ -2717,6 +2740,10 @@ div.toast.show {
 .navbar-blur nav a:not(.active,
 .navbar-blur :hover) {
   filter: drop-shadow(0 0 0 #fff) drop-shadow(0 0 4px #fff);
+}
+:root[data-theme="dark"] .navbar-blur nav a:not(.active,
+:root[data-theme="dark"] .navbar-blur :hover) {
+  filter: none;
 }
 @media (prefers-color-scheme: dark) {
   .navbar-blur nav a:not(.active,
@@ -2742,6 +2769,9 @@ div.toast.show {
   background: rgba(255,255,255,0.3);
   margin: 1px;
 }
+:root[data-theme="dark"] .navbar-blur:before {
+  background: rgba(255,255,255,0.2);
+}
 @media (prefers-color-scheme: dark) {
   .navbar-blur:before {
     background: rgba(255,255,255,0.2);
@@ -2759,6 +2789,9 @@ div.toast.show {
   -moz-transition: all 0.2s ease-out;
   -webkit-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
+}
+:root[data-theme="dark"] .navbar-blur:after {
+  box-shadow: inset 0 0 2px 1px rgba(255,255,255,0.2);
 }
 @media (prefers-color-scheme: dark) {
   .navbar-blur:after {
@@ -2823,6 +2856,9 @@ div.toast.show {
   pointer-events: none;
   backdrop-filter: saturate(300%);
   -webkit-backdrop-filter: saturate(300%);
+}
+:root[data-theme="dark"] .navbar nav a.active {
+  background: rgba(255,255,255,0.25);
 }
 @media (prefers-color-scheme: dark) {
   .navbar nav a.active {
@@ -3695,7 +3731,7 @@ a.tag-plugin.button:hover {
 .md-text .tag-plugin.chat >.content .chatcell .user-main .talk.emoji,
 .md-text .tag-plugin.chat >.content .chatcell .user-main .talk.link,
 .md-text .tag-plugin.chat >.content .chatcell .user-main .talk.video,
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file {
   background: unset !important;
   padding: 0 !important;
 }
@@ -3839,7 +3875,7 @@ a.tag-plugin.button:hover {
   width: 100%;
   border-radius: 6px;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file {
   background: transparent !important;
   display: flex;
   padding: unset !important;
@@ -3847,22 +3883,22 @@ a.tag-plugin.button:hover {
   width: calc(100% - 32px);
   cursor: pointer;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.content {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.content {
   background: var(--chat-block);
   padding: 0.5em;
   border-radius: 6px;
   flex-grow: 1;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.content >.top {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.content >.top {
   display: flex;
   align-items: center;
   column-gap: 0.5rem;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.content >.top >.left {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.content >.top >.left {
   height: 2.5rem;
   flex-grow: 1;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.content >.top >.left >span {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.content >.top >.left >span {
   white-space: unset;
   font-size: 0.875rem;
   font-weight: 500;
@@ -3875,32 +3911,32 @@ a.tag-plugin.button:hover {
   -webkit-line-clamp: 2;
   line-height: calc(2.5rem / 2);
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.content >.top >.right {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.content >.top >.right {
   height: fit-content;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.content >.top >.right >svg.icon {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.content >.top >.right >svg.icon {
   height: 2.5rem;
   width: unset;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.content >.bottom {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.content >.bottom {
   margin-top: 0.5em;
   display: flex;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.content >.bottom >span {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.content >.bottom >span {
   line-height: 0.75rem;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.download-btn {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.download-btn {
   display: flex;
   align-items: flex-end;
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.download-btn >svg.icon {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.download-btn >svg.icon {
   height: 1rem;
   width: 1rem;
   padding: 0.2em;
   border-radius: 50%;
   background: var(--chat-block);
 }
-.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.file >.download-btn >svg.icon >path {
+.md-text .tag-plugin.chat >.content .chatcell .user-main .talk.chat-file >.download-btn >svg.icon >path {
   fill: var(--text-p1);
 }
 .md-text .tag-plugin.chat >.content .chatcell.right .user-avatar {
@@ -3914,7 +3950,7 @@ a.tag-plugin.button:hover {
   flex-basis: 100%;
   justify-content: flex-end;
 }
-.md-text .tag-plugin.chat >.content .chatcell.right .user-main .talk.file {
+.md-text .tag-plugin.chat >.content .chatcell.right .user-main .talk.chat-file {
   flex-direction: row-reverse;
 }
 .md-text .tag-plugin.chat >.content .chatcell.right .user-main .talk.voice .voice-btns svg.icon>path {
@@ -3988,12 +4024,12 @@ a.tag-plugin.button:hover {
 }
 .md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.link>.link-card,
 .md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.video>video,
-.md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.file>.content,
+.md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.chat-file>.content,
 .md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.image>img,
 .md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.emoji>img {
   border-radius: 4px;
 }
-.md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.file .download-btn {
+.md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.chat-file .download-btn {
   display: none;
 }
 .md-text .tag-plugin.chat.wechat >.content >.chatcell >.user-main >.talk.voice {
@@ -5205,6 +5241,7 @@ p>strong>span.tag-plugin.icon {
   border-radius: 16px;
 }
 .tag-plugin.image .image-bg .image-download {
+  z-index: 2;
   position: absolute;
   bottom: 8px;
   right: 8px;
@@ -6785,6 +6822,9 @@ details.toc[open] >div.body section .header+.doc_tree {
   font-size: 1em;
   margin-bottom: 4px;
 }
+:root[data-theme="dark"] .tag-plugin.ds-vote .body button {
+  background: var(--theme-a20);
+}
 @media (prefers-color-scheme: dark) {
   .tag-plugin.ds-vote .body button {
     background: var(--theme-a20);
@@ -7082,6 +7122,9 @@ details.toc[open] >div.body section .header+.doc_tree {
   -webkit-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
 }
+:root[data-theme="dark"] .search-wrapper >.search-form:before {
+  background: var(--bg-a20);
+}
 @media screen and (prefers-color-scheme: dark) {
   .search-wrapper >.search-form:before {
     background: var(--bg-a20);
@@ -7105,6 +7148,9 @@ details.toc[open] >div.body section .header+.doc_tree {
 }
 .search-wrapper .search-input::placeholder {
   color: var(--text-p3);
+}
+:root[data-theme="dark"] .search-wrapper .search-input::placeholder {
+  color: var(--text-p2);
 }
 @media screen and (prefers-color-scheme: dark) {
   .search-wrapper .search-input::placeholder {
@@ -7256,6 +7302,9 @@ details.toc[open] >div.body section .header+.doc_tree {
   background-image: rgba(255,255,255,0.8);
   filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity));
 }
+:root[data-theme="dark"] .l_left .sidebg {
+  --background-opacity: 0.6;
+}
 @media screen and (prefers-color-scheme: dark) {
   .l_left .sidebg {
     --background-opacity: 0.6;
@@ -7291,13 +7340,17 @@ details.toc[open] >div.body section .header+.doc_tree {
 }
 @media screen and (min-width: 667px) {
   .l_left .leftbar-container:before {
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.05);
     box-shadow: inset 0 0 32px 1px rgba(255,255,255,0.5);
     backdrop-filter: saturate(300%);
     -webkit-backdrop-filter: saturate(300%);
     mask: linear-gradient(#000, rgba(0,0,0,0.5), 70%, transparent, 90%, transparent);
     -webkit-mask: linear-gradient(#000, rgba(0,0,0,0.5), 70%, transparent, 90%, transparent);
   }
+}
+:root[data-theme="dark"] .l_left .leftbar-container:before {
+  background: rgba(255,255,255,0.05);
+  box-shadow: inset 0 0 32px 1px rgba(255,255,255,0.1);
 }
 @media screen and (prefers-color-scheme: dark) {
   .l_left .leftbar-container:before {
