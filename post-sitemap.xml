@@ -9,6 +9,14 @@
 
 
     <url>
+        <loc>https://blog.vconet.top/archives/genshin-in-linux/</loc>
+        <lastmod>2026-02-19T10:18:56.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://blog.vconet.top/archives/hires-in-linux/</loc>
         <lastmod>2026-02-08T08:32:34.000Z</lastmod>
         <changefreq>weekly</changefreq>
