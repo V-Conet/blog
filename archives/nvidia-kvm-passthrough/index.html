@@ -77,9 +77,9 @@
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="ee90339e-f6e2-457d-86ee-ba4f417c1afb"></script>
 </head>
-<body><div class="sitebg"><div class="siteblur"></div></div>
+<body><div class="sitebg"><div class="siteblur"></div></div><div id="l_cover">
 
-<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+</div><div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://blog.vconet.top/static/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
@@ -146,7 +146,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MODULES=(vfio_pci vfio vfio_iommu_type1 nvidia nvidia_modeset nvidia_uvm nvidia_drm)</span><br><span class="line"># 如果你的内核版本小于 6.2, 那你可你需要添加 vfio_virqfd 这个模块</span><br><span class="line"># 为了在有需要的时候才直通显卡，需要保留此处的 nvidia 驱动</span><br></pre></td></tr></table></figure>
 
 <p>重新生成 <code>Initramfs</code>：</p>
-<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_9" value="mkinitcpio -P"><button class="copy-btn" onclick="util.copy(&quot;copy_9&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_3" value="mkinitcpio -P"><button class="copy-btn" onclick="util.copy(&quot;copy_3&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>至此，宿主机的配置就算完成了</p>
 <h2 id="配置虚拟机"><a href="#配置虚拟机" class="headerlink" title="配置虚拟机"></a>配置虚拟机</h2><p>这部分我会略去一些特殊情况和问题，如果有没办法解决的问题，可以去看看 <code>Lan Tian</code>  的两篇教程</p>
@@ -165,23 +165,23 @@
 <h2 id="启动直通！"><a href="#启动直通！" class="headerlink" title="启动直通！"></a>启动直通！</h2><p>目前，配置好的虚拟机还不能启动，现在需要我们先手动卸载 NVIDIA 驱动，将 NVIDIA 交给 VFIO</p>
 <h3 id="手动切换显卡"><a href="#手动切换显卡" class="headerlink" title="手动切换显卡"></a>手动切换显卡</h3><ol>
 <li><p>手动关闭所有占用 NVIDIA 显卡的进程，进程可通过 lsof 查看：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_10" value="lsof /dev/nvidia*"><button class="copy-btn" onclick="util.copy(&quot;copy_10&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_4" value="lsof /dev/nvidia*"><button class="copy-btn" onclick="util.copy(&quot;copy_4&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 </li>
 <li><p>暂停 nvidia 服务：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_11" value="sudo systemctl stop nvidia-persistenced"><button class="copy-btn" onclick="util.copy(&quot;copy_11&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_5" value="sudo systemctl stop nvidia-persistenced"><button class="copy-btn" onclick="util.copy(&quot;copy_5&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 </li>
 <li><p>卸载 NVIDIA 驱动：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_12" value="sudo modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia ght"><button class="copy-btn" onclick="util.copy(&quot;copy_12&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_6" value="sudo modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia ght"><button class="copy-btn" onclick="util.copy(&quot;copy_6&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 </li>
 <li><p>绑定 VFIO：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_13" value="sudo modprobe vfio-pci ids=10de:28e0"><button class="copy-btn" onclick="util.copy(&quot;copy_13&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_7" value="sudo modprobe vfio-pci ids=10de:28e0"><button class="copy-btn" onclick="util.copy(&quot;copy_7&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>此处的 <code>ids=xxx</code> 需要所有的 NVIDIA 设备都交给 VFIO，通过 <code>lspci -nn | grep NVIDIA</code> 查看，多个设备使用 <code>,</code> 分隔</p>
 <p><em>我的设备在 Linux 下只有 VGA，并没有出现 Audio 设备</em></p>
 </li>
 </ol>
 <p>完成上面的步骤后，通过下面的指令查看显卡是否成果交给 VFIO：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_14" value="sudo dmesg | grep -i vfio"><button class="copy-btn" onclick="util.copy(&quot;copy_14&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_8" value="sudo dmesg | grep -i vfio"><button class="copy-btn" onclick="util.copy(&quot;copy_8&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>如果出现类似下面的信息，即为成功：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[  170.607580] vfio-pci 0000:01:00.0: vgaarb: VGA decodes changed: olddecodes=none,decodes=io+mem:owns=none</span><br><span class="line">[  170.607741] vfio_pci: add [10de:28e0[ffffffff:ffffffff]] class 0x000000/00000000</span><br></pre></td></tr></table></figure>
@@ -195,7 +195,7 @@
 <p>无论上面那种方法，都需要先安装一个虚拟显示器软件比如 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/VirtualDrivers/Virtual-Display-Driver">VDD</a>，串流方案比较简单，不需要再配置虚拟机</p>
 <h3 id="Looking-Glass"><a href="#Looking-Glass" class="headerlink" title="Looking Glass"></a>Looking Glass</h3><p>我在这里介绍一下 Looking Glass 方案，虚拟机上只需要安装 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://looking-glass.io/artifact/bleeding/host">Looking Glass Host 版</a>，宿主机上的配置有下面两种办法</p>
 <h4 id="KVMFR"><a href="#KVMFR" class="headerlink" title="KVMFR"></a>KVMFR</h4><p>这是官方推荐的方案，通过 DMA 传输数据，能提供更好的画面和更好的帧率</p>
-<h5 id="安装模块"><a href="#安装模块" class="headerlink" title="安装模块"></a>安装模块</h5><div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_15" value="paru -S looking-glass-rc-module-dkms"><button class="copy-btn" onclick="util.copy(&quot;copy_15&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<h5 id="安装模块"><a href="#安装模块" class="headerlink" title="安装模块"></a>安装模块</h5><div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_9" value="paru -S looking-glass-rc-module-dkms"><button class="copy-btn" onclick="util.copy(&quot;copy_9&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <ol>
 <li><p>设置开机加载 kvmfr 模块，创建 <code>/etc/modules-load.d/looking-glass.conf</code>：</p>
@@ -236,10 +236,10 @@
 <p>解决办法比较粗暴，我有一套单独的键鼠，直通后不影响笔记本的键盘和触控板</p>
 <p>为了保证随时可以切换连接状态，不应在 virt-manager 里直接添加 <code>USB 主机设备</code>，而是用 <code>virsh</code> 这个 CLI 工具</p>
 <p>连接：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_16" value="virsh attach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_16&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_10" value="virsh attach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_10&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>断开：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_17" value="virsh detach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_17&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_11" value="virsh detach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_11&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>定义键鼠的 XML 格式如下：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">hostdev</span> <span class="attr">mode</span>=<span class="string">&quot;subsystem&quot;</span> <span class="attr">type</span>=<span class="string">&quot;usb&quot;</span> <span class="attr">managed</span>=<span class="string">&quot;yes&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">vendor</span> <span class="attr">id</span>=<span class="string">&quot;0x3554&quot;</span>/&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">product</span> <span class="attr">id</span>=<span class="string">&quot;0xfa09&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">hostdev</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -248,12 +248,12 @@
 <p>步骤和上面的差不多</p>
 <ol>
 <li><p>卸载 <code>vfio-pic</code> 驱动：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_18" value="sudo modprobe -r vfio-pci"><button class="copy-btn" onclick="util.copy(&quot;copy_18&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div></li>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_12" value="sudo modprobe -r vfio-pci"><button class="copy-btn" onclick="util.copy(&quot;copy_12&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div></li>
 <li><p>重新加载 NVIDIA 驱动：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_19" value="sudo modprobe nvidia_drm nvidia_modeset nvidia_uvm nvidia"><button class="copy-btn" onclick="util.copy(&quot;copy_19&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_13" value="sudo modprobe nvidia_drm nvidia_modeset nvidia_uvm nvidia"><button class="copy-btn" onclick="util.copy(&quot;copy_13&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 </li>
 <li><p>重启 nvidia 服务：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_20" value="sudo systemctl restart nvidia-persistenced"><button class="copy-btn" onclick="util.copy(&quot;copy_20&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div></li>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_14" value="sudo systemctl restart nvidia-persistenced"><button class="copy-btn" onclick="util.copy(&quot;copy_14&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div></li>
 </ol>
 <h2 id="GUI"><a href="#GUI" class="headerlink" title="GUI"></a>GUI</h2><p>虽然上面的方法实现了自由切换，但我不想每次都手动完成</p>
 <p>于是，我用 PySide6 写了一个简单的 GUI 用来简化流程，毕竟点点点总比一个个输方便</p>
@@ -315,7 +315,7 @@
       <div class='title cap theme'>相关文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="/archives/genshin-in-linux/" title="如何在 Linux 下玩原神？"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item" href="/archives/linux-access-radminlan/" title="在 Linux 下访问 Radmin LAN 网络"><span class="title">在 Linux 下访问 Radmin LAN 网络</span><span class="excerpt">众所周知，Radmin LAN 并没有 Linux 版本，而有时仍需要访问对方的 Radmin LAN 网络，本文提供一种可行方案：让 Linux 通过一台 Windows Server 主机做 NAT 转发，借此访问整个 Radmi...</span></a><a class="item" href="/archives/zerotier-for-alpine/" title="为 Alpine 提供 ZeroTier"><span class="title">为 Alpine 提供 ZeroTier</span></a><a class="item" href="/archives/nec-8-pve/" title="NEC 8小主机：打通 PVE 内外网"><span class="title">NEC 8小主机：打通 PVE 内外网</span><span class="excerpt">前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="/archives/genshin-in-linux/" title="如何在 Linux 下玩原神？"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item" href="/archives/linux-access-radminlan/" title="在 Linux 下访问 Radmin LAN 网络"><span class="title">在 Linux 下访问 Radmin LAN 网络</span><span class="excerpt">众所周知，Radmin LAN 并没有 Linux 版本，而有时仍需要访问对方的 Radmin LAN 网络，本文提供一种可行方案：让 Linux 通过一台 Windows Server 主机做 NAT 转发，借此访问整个 Radmi...</span></a><a class="item" href="/archives/nec-8-pve/" title="NEC 8小主机：打通 PVE 内外网"><span class="title">NEC 8小主机：打通 PVE 内外网</span><span class="excerpt">前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路</span></a><a class="item" href="/archives/zerotier-for-alpine/" title="为 Alpine 提供 ZeroTier"><span class="title">为 Alpine 提供 ZeroTier</span></a></div></section></div>
 
 
   <div class="related-wrap md-text" id="comments">
@@ -354,6 +354,23 @@
 <script type="text/javascript">
   window.canonical = {"closeEnable":true,"closeText":"关闭提示","originalHost":"blog.vconet.top","officialHosts":["localhost"],"encoded":"YmxvZy52Y29uZXQudG9w"};
   window.canonical["param"] = {"permalink":"https://blog.vconet.top/archives/nvidia-kvm-passthrough/","checklink":"/js/plugins/video.js"};
+  // Fix: Ensure page is at the correct top position on data load
+  if (history.scrollRestoration) {
+    history.scrollRestoration = 'auto';
+  }
+  (function() {
+    const scrollHandler = () => {
+      const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
+      const startEl = document.getElementById('start');
+      if (wikiCover && startEl) {
+        window.scrollTo(0, startEl.offsetTop);
+      } else {
+        window.scrollTo(0, 0);
+      }
+    };
+    if (document.readyState !== 'loading') scrollHandler();
+    else document.addEventListener('DOMContentLoaded', scrollHandler);
+  })();
   const ctx = {
     date_suffix: {
       just: `刚刚`,
@@ -386,8 +403,6 @@
     marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
     lazyload: `/%5Bobject%20Object%5D`
   }
-  
-
 </script>
 
 <script type="text/javascript">
@@ -410,9 +425,10 @@
       this.list.push(f);
     };
     this.remove = (name) => {
-      for (let index = 0; index < this.list.length; index++) {
+      // 倒序遍历避免 splice 后的索引问题
+      for (let index = this.list.length - 1; index >= 0; index--) {
         const e = this.list[index];
-        if (e.name == name) {
+        if (e.name === name) {
           this.list.splice(index, 1);
         }
       }
@@ -492,11 +508,22 @@
       return ss;
     },
 
+    // 已加载脚本缓存
+    _loadedScripts: new Set(),
+
+    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免 PJAX 导航时的状态混淆)
+    _loadedElements: new WeakSet(),
+
     js: (src, opt) => new Promise((resolve, reject) => {
-      var script = document.createElement('script');
       if (src.startsWith('/')) {
         src = ctx.root + src.substring(1);
       }
+      // 如果脚本已加载，直接返回
+      if (utils._loadedScripts.has(src)) {
+        resolve();
+        return;
+      }
+      var script = document.createElement('script');
       script.src = src;
       if (opt) {
         for (let key of Object.keys(opt)) {
@@ -511,22 +538,40 @@
         const loadState = this.readyState
         if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
         script.onload = script.onreadystatechange = null
+        utils._loadedScripts.add(src);
         resolve()
       }
       document.head.appendChild(script)
     }),
 
-    jq: (fn) => {
+    // PJAX 事件监听器管理
+    _pjaxListeners: new Set(),
+    
+    jq: (fn, pjax = true) => {
       if (typeof jQuery === 'undefined') {
         utils.js(deps.jquery).then(fn)
       } else {
         fn()
       }
+      if (pjax && !fn._pjax_registered) {
+        document.addEventListener('pjax:complete', fn);
+        fn._pjax_registered = true;
+        utils._pjaxListeners.add(fn); // 追踪监听器以便清理
+      }
+    },
+    
+    // 清理所有 PJAX 事件监听器
+    cleanupPjaxListeners: () => {
+      utils._pjaxListeners.forEach(fn => {
+        document.removeEventListener('pjax:complete', fn);
+        fn._pjax_registered = false;
+      });
+      utils._pjaxListeners.clear();
     },
 
     onLoading: (el) => {
       if (el) {
-        if ($(el).find('.loading-wrap').length == 0){
+        if ($(el).find('.loading-wrap').length === 0){
           $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
         }
       }
@@ -544,6 +589,10 @@
       }
     },
     request: (el, url, callback, onFailure) => {
+      // 检查元素实例是否已加载 (而不是检查属性)
+      if (el && utils._loadedElements.has(el)) {
+        return;
+      }
       const maxRetry = 3;
       let retryCount = 0;
 
@@ -573,6 +622,8 @@
             return resp;
           }).then(data => {
             if (timedOut) return;
+            // 标记元素实例为已加载
+            if (el) utils._loadedElements.add(el);
             utils.onLoadSuccess?.(el);
             callback(data);
             resolve(data);
@@ -631,7 +682,99 @@
       window.requestAnimationFrame(fn)
     },
     dark: {},
+
+    // 插件初始化管理器 - 统一处理 DOMContentLoaded 和 pjax:complete 事件
+    _pluginInitializers: [],
+    _pluginCleanups: new Map(), // 存储每个插件的清理函数
+    
+    initPlugin: (initFn, name, options = {}) => {
+      if (!initFn || typeof initFn !== 'function') return;
+      
+      // 避免重复注册
+      const pluginName = name || initFn.name;
+      if (utils._pluginInitializers.some(p => p.name === pluginName)) return;
+      
+      // 包装初始化函数，添加防重复执行的保护
+      const wrappedInit = () => {
+        try {
+          // 在执行前先清理旧的资源
+          if (utils._pluginCleanups.has(pluginName)) {
+            const cleanup = utils._pluginCleanups.get(pluginName);
+            if (typeof cleanup === 'function') {
+              cleanup();
+            }
+          }
+          
+          // 执行初始化，可能返回清理函数
+          const cleanup = initFn();
+          
+          // 如果初始化函数返回了清理函数，保存它
+          if (typeof cleanup === 'function') {
+            utils._pluginCleanups.set(pluginName, cleanup);
+          }
+        } catch (error) {
+          console.error(`[Plugin ${pluginName}] 初始化失败:`, error);
+        }
+      };
+      
+      utils._pluginInitializers.push({ 
+        fn: wrappedInit, 
+        name: pluginName,
+        options: options 
+      });
+      
+      // 如果 DOM 已经加载完成，立即执行
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        wrappedInit();
+      } else {
+        // 否则等待 DOMContentLoaded
+        window.addEventListener('DOMContentLoaded', wrappedInit, { once: true });
+      }
+    },
+
+    // 重新初始化所有插件（用于 PJAX 等场景）
+    reinitPlugins: () => {
+      utils._pluginInitializers.forEach(plugin => {
+        // 跳过标记为不需要重新初始化的插件
+        if (plugin.options.skipReinit) return;
+        
+        try {
+          plugin.fn();
+        } catch (error) {
+          console.error(`[Plugin ${plugin.name}] 重新初始化失败:`, error);
+        }
+      });
+    },
+    
+    // 清理所有插件资源
+    cleanupPlugins: () => {
+      utils._pluginCleanups.forEach((cleanup, name) => {
+        try {
+          cleanup();
+        } catch (error) {
+          console.error(`[Plugin ${name}] 清理失败:`, error);
+        }
+      });
+      utils._pluginCleanups.clear();
+    },
+    
+    // 清理所有资源（用于页面卸载或重置）
+    cleanupAll: () => {
+      utils.cleanupPlugins();
+      utils.cleanupPjaxListeners();
+    },
   };
+
+  // 自动处理 PJAX 事件
+  document.addEventListener('pjax:before', () => {
+    // 在导航前清理旧的 PJAX 监听器（如果需要重新注册）
+    // 注意：这里不清理，因为监听器应该是持久的
+    // utils.cleanupPjaxListeners();
+  });
+  
+  document.addEventListener('pjax:complete', () => {
+    utils.reinitPlugins();
+  });
 
   // utils.dark.mode 当前模式 dark or light
   // utils.dark.toggle() 暗黑模式触发器
@@ -728,7 +871,7 @@
       container = document.querySelector(container);
     }
     if (!container) return;
-    
+
     const images = container.querySelectorAll('img');
     images.forEach((img) => {
       if (img.classList.contains('lazy')) return;
@@ -761,7 +904,7 @@
       window.lazyLoadInstance.update();
     }
   }
-  
+
 </script>
 
 <!-- required -->
@@ -838,107 +981,150 @@
 
 <!-- optional -->
 
-  <script type="module">
-  const el = document.getElementById('twikoo_container');
-  util.viewportLazyload(el, load_twikoo, false);
-
-  function load_twikoo() {
-    if (!el) return;
-    utils.js('https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js', {defer: true}).then(function () {
-      const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
-      twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js","envId":"https://comments.vconet.top/"}, {
-        el: '#twikoo_container',
-        path: path,
-      }));
-    });
-  }
+  <script>
+  (function() {
+    const lazyload = false;
+    
+    function initTwikoo() {
+      const el = document.getElementById('twikoo_container');
+      if (!el) return;
+      
+      function load_twikoo() {
+        utils.js('https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js', {defer: true}).then(function () {
+          const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+          twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js","envId":"https://comments.vconet.top/"}, {
+            el: '#twikoo_container',
+            path: path,
+          }));
+        });
+      }
+      
+      util.viewportLazyload(el, load_twikoo, lazyload);
+    }
+    
+    // Store in global stellar namespace for PJAX reinitialization
+    window.stellar = window.stellar || {};
+    window.stellar.initComments = window.stellar.initComments || {};
+    window.stellar.initComments.twikoo = initTwikoo;
+    
+    // Initialize on page load
+    initTwikoo();
+  })();
 </script>
 
 
 
 <script defer>
-  window.addEventListener('DOMContentLoaded', (event) => {
+  const initServices = () => {
+    // 用于存储需要清理的资源
+    let timers = [];
+    
     ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"},"rss":{"js":"/js/services/rss.js"}}`));
     for (let id of Object.keys(ctx.services)) {
       const js = ctx.services[id].js;
       if (id == 'siteinfo') {
-        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
-        if (ctx.cardlinks?.length > 0) {
+        const cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (cardlinks?.length > 0) {
           utils.js(js, { defer: true }).then(function () {
-            setCardLink(ctx.cardlinks);
+            setCardLink(cardlinks);
           });
         }
+      } else if (id == 'ghinfo') {
+        const els = document.querySelectorAll('.ds-ghinfo');
+        if (els.length > 0) {
+          utils.js(js, { defer: true });
+        }
       } else if (id == 'voice') {
-        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
-        if (ctx.voiceAudios?.length > 0) {
+        const voiceAudios = document.querySelectorAll('.voice>audio');
+        if (voiceAudios?.length > 0) {
           utils.js(js, { defer: true }).then(function () {
-            createVoiceDom(ctx.voiceAudios);
+            createVoiceDom(voiceAudios);
           });
         }
       } else if (id == 'video') {
-        ctx.videos = document.querySelectorAll('.video>video');
-        if (ctx.videos?.length > 0) {
+        const videos = document.querySelectorAll('.video>video');
+        if (videos?.length > 0) {
           utils.js(js, { defer: true }).then(function () {
-            videoEvents(ctx.videos);
+            videoEvents(videos);
           });
         }
       } else if (id == 'download-file') {
-        ctx.files = document.querySelectorAll('.chat-file');
-        if (ctx.files?.length > 0) {
+        const files = document.querySelectorAll('.chat-file');
+        if (files?.length > 0) {
           utils.js(js, { defer: true }).then(function () {
-            downloadFileEvent(ctx.files);
+            downloadFileEvent(files);
           });
         }
       } else {
         const els = document.getElementsByClassName(`ds-${id}`);
         if (els?.length > 0) {
           utils.jq(() => {
-            if (id == 'timeline' || 'memos' || 'marked') {
+            if (id == 'timeline' || id == 'memos' || id == 'marked') {
               utils.js(deps.marked).then(function () {
                 utils.js(js, { defer: true });
               });
             } else {
               utils.js(js, { defer: true });
             }
-          });
+          }, false);
         }
+      }
+    }
+
+    // search
+    if (ctx.search && typeof searchFunc === 'function') {
+      const $inputArea = $("input#search-input");
+      if ($inputArea.length > 0 && !$inputArea[0]._searchInitialized) {
+        const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
+        const filter = $inputArea.attr('data-filter') || '';
+        searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
+        // 标记为已初始化，防止重复绑定
+        $inputArea[0]._searchInitialized = true;
       }
     }
 
     // chat iphone time
     let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+    let firstAdjustInterval = null;
+    let mainInterval = null;
 
     if (phoneTimes.length > 0) {
       NowTime();
-      var date = new Date();
-      var sec = date.getSeconds();
-      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
-    }
+      const date = new Date();
+      const sec = date.getSeconds();
+      firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+      timers.push(firstAdjustInterval);
 
-    function firstAdjustTime() {
-      NowTime();
-      clearInterval(firstAdjustInterval);
-      setInterval(NowTime, 1000 * 60);
-    }
-
-    function NowTime() {
-      for (let i = 0; i < phoneTimes.length; ++i) {
-        var timeSpan = phoneTimes[i];
-        var date = new Date();
-        var hour = date.getHours();
-        var min = date.getMinutes();
-        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      function firstAdjustTime() {
+        NowTime();
+        if (firstAdjustInterval) {
+          clearInterval(firstAdjustInterval);
+          firstAdjustInterval = null;
+        }
+        mainInterval = setInterval(NowTime, 1000 * 60);
+        timers.push(mainInterval);
       }
-    };
 
-    function check(val) {
-      if (val < 10) {
-        return ("0" + val);
+      function NowTime() {
+        for (let i = 0; i < phoneTimes.length; ++i) {
+          const timeSpan = phoneTimes[i];
+          const date = new Date();
+          const hour = date.getHours();
+          const min = date.getMinutes();
+          timeSpan.innerHTML = check(hour) + ":" + check(min);
+        }
+      };
+
+      function check(val) {
+        if (val < 10) {
+          return ("0" + val);
+        }
+        return (val);
       }
-      return (val);
     }
 
-    // chat quote
+    // chat quote - 存储事件监听器以便清理
+    const quoteClickHandlers = new Map();
     const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
       entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
           observer.unobserve(entry.target);
@@ -953,7 +1139,7 @@
 
     var chatQuotes = document.querySelectorAll(".chat .talk .quote");
     chatQuotes.forEach((quote) => {
-      quote.addEventListener('click', function () {
+      const handler = function () {
         var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
         if (chatCellDom) {
           var chatDiv = chatCellDom.parentElement;
@@ -972,9 +1158,41 @@
           }
           chat_quote_obverser.observe(chatCellDom);
         }
-      });
+      };
+      quote.addEventListener('click', handler);
+      quoteClickHandlers.set(quote, handler); // 保存处理器引用
     });
-  });
+
+    // 返回清理函数，用于清理定时器和观察器
+    return () => {
+      // 清理所有定时器（包括可能未完成的 firstAdjustInterval）
+      timers.forEach(timer => {
+        if (timer) clearInterval(timer);
+      });
+      timers = [];
+      if (firstAdjustInterval) {
+        clearInterval(firstAdjustInterval);
+        firstAdjustInterval = null;
+      }
+      if (mainInterval) {
+        clearInterval(mainInterval);
+        mainInterval = null;
+      }
+      
+      // 断开观察器
+      if (chat_quote_obverser) {
+        chat_quote_obverser.disconnect();
+      }
+      
+      // 移除所有 click 事件监听器
+      quoteClickHandlers.forEach((handler, quote) => {
+        quote.removeEventListener('click', handler);
+      });
+      quoteClickHandlers.clear();
+    };
+  };
+
+  utils.initPlugin(initServices, 'services');
 </script>
 
 <script>
@@ -1029,7 +1247,7 @@
   }
 </script>
 <script>
-  window.addEventListener('DOMContentLoaded', (event) => {
+  utils.initPlugin(() => {
     const swiper_api = document.getElementById('swiper-api');
     if (swiper_api != undefined) {
       utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
@@ -1052,7 +1270,7 @@
         });
       })
     }
-  });
+  }, 'swiper');
 </script>
 
 <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async></script>
@@ -1078,17 +1296,21 @@
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    window.codeElements = document.querySelectorAll('.code');
-    if (window.codeElements.length > 0) {
+  utils.initPlugin(() => {
+    const codeElements = document.querySelectorAll('.code');
+    if (codeElements.length > 0) {
       ctx.copycode = {
         default_text: `Copy`,
         success_text: `Copied`,
         toast: `复制成功`,
       };
-      utils.js('/js/plugins/copycode.js');
+      utils.js('/js/plugins/copycode.js', { defer: true }).then(() => {
+        if (typeof createCopyButtons === 'function') {
+          createCopyButtons(codeElements);
+        }
+      });
     }
-  });
+  }, 'copycode');
 </script>
 
 
