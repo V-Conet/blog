@@ -1,0 +1,1478 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  <link rel="canonical" href="https://blog.vconet.top/archives/dn42-intro/">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>DN42 之旅：搭建多节点 BGP 网络 - VConet的杂物间</title>
+
+  
+    <meta name="description" content="前言本文用以记录自己加入 DN42 网络的历程，本人是初入 BGP 的小白，对于文章中出现的各种不严谨内容和各种低级错误，请大佬们手下留情，可在评论区指出。 欢迎和我 Peer：VCNET DN42">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DN42 之旅：搭建多节点 BGP 网络">
+<meta property="og:url" content="https://blog.vconet.top/archives/dn42-intro/">
+<meta property="og:site_name" content="VConet的杂物间">
+<meta property="og:description" content="前言本文用以记录自己加入 DN42 网络的历程，本人是初入 BGP 的小白，对于文章中出现的各种不严谨内容和各种低级错误，请大佬们手下留情，可在评论区指出。 欢迎和我 Peer：VCNET DN42">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.vconet.top/static/avatar.jpg">
+<meta property="article:published_time" content="2026-03-06T04:04:21.000Z">
+<meta property="article:modified_time" content="2026-03-06T04:04:21.000Z">
+<meta property="article:author" content="VConet">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="DN42">
+<meta property="article:tag" content="Bird">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="异地组网">
+<meta property="article:tag" content="NAT">
+<meta property="article:tag" content="iBGP">
+<meta property="article:tag" content="eBGP iptables">
+<meta property="article:tag" content="WireGuard">
+<meta property="article:tag" content="Zerotier">
+<meta property="article:tag" content="FlapAlerted">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://blog.vconet.top/static/avatar.jpg">
+  
+  
+  
+  <meta name="keywords" content="Linux,DN42,Bird,Docker,异地组网,NAT,iBGP,eBGP iptables,WireGuard,Zerotier,FlapAlerted">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+    <link rel="shortcut icon" href="https://blog.vconet.top/static/favicon.png">
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg"},"dateCreated":"2026-03-06T12:04:21+08:00","dateModified":"2026-03-06T12:04:21+08:00","datePublished":"2026-03-06T12:04:21+08:00","description":"前言本文用以记录自己加入 DN42 网络的历程，本人是初入 BGP 的小白，对于文章中出现的各种不严谨内容和各种低级错误，请大佬们手下留情，可在评论区指出。\n欢迎和我 Peer：VCNET DN42","headline":"DN42 之旅：搭建多节点 BGP 网络","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/dn42-intro/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg","logo":{"@type":"ImageObject","url":"https://blog.vconet.top/static/avatar.jpg"}},"url":"https://blog.vconet.top/archives/dn42-intro/","keywords":"Linux, DN42, Bird, Docker, 异地组网, NAT, iBGP, eBGP iptables, WireGuard, Zerotier, FlapAlerted","thumbnailUrl":"https://static.vconet.top/2026/d227901ef864352a2c23ff804cf4330c.png","image":1}</script>
+  <meta name="yandex-verification" content="7724ebe7e7e09ce8" /><link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet"><style>
+  @font-face {
+    font-family: "ZSFT-443";
+    src: url("https://fontsapi.zeoseven.com/443/main.woff2") format("woff2"),
+    url("https://fontsapi-storage.zeoseven.com/443/main.woff2") format("woff2");
+    font-display: swap;
+  }
+  @media (max-width: 768px) {
+    body > .sitebg {
+      background-attachment: scroll;
+      background-position: center center;
+    }
+  }
+</style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="ee90339e-f6e2-457d-86ee-ba4f417c1afb"></script>
+</head>
+<body><div class="sitebg"><div class="siteblur"></div></div><div id="l_cover"></div><div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://blog.vconet.top/static/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="DN42" href="/dn42/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M6 4.71c.78.711 2.388 2.653 2.575 4.737C8.75 11.396 10.035 12.98 12 13c.755.008 1.518-.537 1.516-1.292c0-.233-.039-.472-.099-.692A1.4 1.4 0 0 1 13.5 10c.61-1.257 1.81-1.595 2.76-2.278c.421-.303.806-.623.975-.88c.469-.71.937-2.131.703-2.842M22 13c-.33.931-.562 3.375-4.282 3.414c0 0-3.293 0-4.281 1.862c-.791 1.49-.33 3.103 0 3.724" opacity=".5"/></g></svg></a><a class="nav-item" title="关于我" href="/about/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/archives/dn42-intro/"><span class="title">DN42 之旅：搭建多节点 BGP 网络</span></a><a class="item title" href="/archives/genshin-in-linux/"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item title" href="/archives/hires-in-linux/"><span class="title">Linux 上 iBasso DC04U 原生 DSD 直出指南</span></a><a class="item title" href="/archives/zerotier-for-alpine/"><span class="title">为 Alpine 提供 ZeroTier</span></a><a class="item title" href="/archives/linux-access-radminlan/"><span class="title">在 Linux 下访问 Radmin LAN 网络</span></a><a class="item title" href="/archives/nvidia-kvm-passthrough/"><span class="title">告别重启：Linux 下的 NVIDIA 显卡直通</span></a><a class="item title" href="/archives/nec-8-pve/"><span class="title">NEC 8小主机：打通 PVE 内外网</span></a><a class="item title" href="/archives/goodix-fp-reader/"><span class="title">Linux下使用咸鱼铝合金指纹识别器</span></a><a class="item title" href="/archives/uki-sbctl-secureboot/"><span class="title">UKI+sbctl：启用 Secure Boot 最简单的方法</span></a><a class="item title" href="/archives/mailu-with-caddy/"><span class="title">Caddy反向代理搭建Mailu邮局踩坑记录</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/V-Conet" target="_blank" rel="external nofollow noopener noreferrer"><img src="/static/github.svg"/></a><a class="social" href="https://t.me/v_conet" target="_blank" rel="external nofollow noopener noreferrer"><img src="/static/telegram.svg"/></a><a class="social" href="https://git.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><img src="/static/forgejo.svg"/></a><a class="social" href="https://oplist.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><img src="/static/oplist.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top"><img class="lazy bg" data-src="https://static.vconet.top/2026/d227901ef864352a2c23ff804cf4330c.png">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/DN42/">DN42</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-03-06T04:04:21.000Z">2026-03-06</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-03-06T04:04:21.000Z">2026-03-06</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>DN42 之旅：搭建多节点 BGP 网络</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文用以记录自己加入 DN42 网络的历程，本人是初入 BGP 的小白，对于文章中出现的各种不严谨内容和各种低级错误，请大佬们手下留情，可在评论区指出。</p>
+<p>欢迎和我 Peer：<a href="https://blog.vconet.top/dn42/">VCNET DN42</a></p>
+<span id="more"></span>
+
+<h2 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h2><p>iYoRoy 的博客有详细的过程，我就不再重复了：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.iyoroy.cn/archives/84/">DN42探究日记 - Ep.1 加入DN42网络</a>。</p>
+<h2 id="选择-BGP-Daemon"><a href="#选择-BGP-Daemon" class="headerlink" title="选择 BGP Daemon"></a>选择 BGP Daemon</h2><p>参考各位大佬的教程，我决定使用 Bird v3 为我的 BGP Daemon，以 Debian 13 为例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt -y install apt-transport-https ca-certificates wget</span><br><span class="line">wget -O /usr/share/keyrings/cznic-labs-pkg.gpg https://pkg.labs.nic.cz/gpg</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;deb [signed-by=/usr/share/keyrings/cznic-labs-pkg.gpg] https://pkg.labs.nic.cz/bird3 trixie main&quot;</span> &gt; /etc/apt/sources.list.d/cznic-labs-bird3.list</span><br><span class="line">apt update &amp;&amp; apt -y install bird3 wireguard wireguard-tools</span><br></pre></td></tr></table></figure>
+
+<p>Debian 软件源中的 Bird 版本比较旧，需要安装上面的最新版</p>
+<p>其他系统及 Bird v2 软件源可查看：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://pkg.labs.nic.cz/doc/?project=bird">CZ.NIC Labs 📦 Repos Setup Docs</a> </p>
+<h3 id="bird-conf"><a href="#bird-conf" class="headerlink" title="bird.conf"></a>bird.conf</h3><p>修改 <code>/etc/bird/bird.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">define OWNAS =  4242423322;</span><br><span class="line">define OWNIP =  172.23.100.180;</span><br><span class="line">define OWNIPv6 = fd48:8669:9f9f::8;</span><br><span class="line">define OWNNET = 172.23.100.160/27;</span><br><span class="line">define OWNNETv6 = fd48:8669:9f9f::/48;</span><br><span class="line">define OWNNETSET = [172.23.100.160/27+];</span><br><span class="line">define OWNNETSETv6 = [fd48:8669:9f9f::/48+];</span><br><span class="line"></span><br><span class="line">router id OWNIP;</span><br><span class="line"></span><br><span class="line">protocol device &#123;</span><br><span class="line">  scan time 10;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function is_self_net() &#123;</span><br><span class="line">  return net ~ OWNNETSET;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function is_self_net_v6() &#123;</span><br><span class="line">  return net ~ OWNNETSETv6;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function is_valid_network() &#123;</span><br><span class="line">  return net ~ [</span><br><span class="line">  172.20.0.0/14&#123;21,29&#125;, # dn42</span><br><span class="line">  172.20.0.0/24&#123;28,32&#125;, # dn42 Anycast</span><br><span class="line">  172.21.0.0/24&#123;28,32&#125;, # dn42 Anycast</span><br><span class="line">  172.22.0.0/24&#123;28,32&#125;, # dn42 Anycast</span><br><span class="line">  172.23.0.0/24&#123;28,32&#125;, # dn42 Anycast</span><br><span class="line">  172.31.0.0/16+,       # ChaosVPN</span><br><span class="line">  10.100.0.0/14+,       # ChaosVPN</span><br><span class="line">  10.127.0.0/16&#123;16,32&#125;, # neonetwork</span><br><span class="line">  10.0.0.0/8&#123;15,24&#125;     # Freifunk.net</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function is_valid_network_v6() &#123;</span><br><span class="line">  return net ~ [</span><br><span class="line">  fd00::/8&#123;44,64&#125; # ULA address space as per RFC 4193</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">protocol kernel &#123;</span><br><span class="line">  scan time 20;</span><br><span class="line">  ipv6 &#123;</span><br><span class="line">    import none;</span><br><span class="line">    export filter &#123;</span><br><span class="line">      if source = RTS_STATIC then reject;</span><br><span class="line">      krt_prefsrc = OWNIPv6;</span><br><span class="line">      accept;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">protocol kernel &#123;</span><br><span class="line">  scan time 20;</span><br><span class="line">  ipv4 &#123;</span><br><span class="line">    import none;</span><br><span class="line">    export filter &#123;</span><br><span class="line">      if source = RTS_STATIC then reject;</span><br><span class="line">      krt_prefsrc = OWNIP;</span><br><span class="line">      accept;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">protocol static &#123;</span><br><span class="line">  route OWNNET reject;</span><br><span class="line">  ipv4 &#123;</span><br><span class="line">    import all;</span><br><span class="line">    export none;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">protocol static &#123;</span><br><span class="line">  route OWNNETv6 reject;</span><br><span class="line">  ipv6 &#123;</span><br><span class="line">    import all;</span><br><span class="line">    export none;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">include &quot;rpki.conf&quot;;</span><br><span class="line">include &quot;ospf.conf&quot;;</span><br><span class="line">include &quot;ibgp.conf&quot;;</span><br><span class="line">include &quot;ebgp.conf&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>首先修改自己的网络信息：</p>
+<ul>
+<li>OWNAS 修改为你的 ASN，如：4242423322</li>
+<li>OWNIP 修改为此节点所分配的 IPv4 地址，如：172.23.100.180</li>
+<li>OWNIPv6 修改为此节点所分配的 IPv6 地址，如：fd48:8669:9f9f::8</li>
+<li>OWNNET 修改为你所拥有的 IPv4 网段，如：172.23.100.160&#x2F;27</li>
+<li>OWNNETv6 修改为你所拥有的 IPv6 网段，如：fd48:8669:9f9f::&#x2F;48</li>
+<li>OWNNETSET 和 OWNNETSETv6 同 上两个，但不要忘记末尾的 <code>+</code></li>
+</ul>
+<h3 id="rpki-conf"><a href="#rpki-conf" class="headerlink" title="rpki.conf"></a>rpki.conf</h3><p>修改 <code>/etc/bird/rpki.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">roa4 table dn42_roa;</span><br><span class="line">roa6 table dn42_roa_v6;</span><br><span class="line"></span><br><span class="line">protocol rpki dn42_rpki &#123;</span><br><span class="line">  roa4 &#123; table dn42_roa; &#125;;</span><br><span class="line">  roa6 &#123; table dn42_roa_v6; &#125;;</span><br><span class="line">  remote &quot;rpki.akae.re&quot; port 8082;</span><br><span class="line">  refresh 30;</span><br><span class="line">  retry 5;</span><br><span class="line">  expire 600;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<div class="tag-plugin colorful note" color="cyan"><div class="title">什么是&nbsp;ROA</div><div class="body"><p>ROA是数字签名对象，将地址绑定到AS号码，并由地址持有者签名。ROA提供了一种验证IP地址块持有者是否已授权特定AS在域间路由环境中为该地址块发起路由的方法。[RFC6482]中描述了ROA。ROA旨在满足为域间路由添加安全性的要求。</p></div></div>
+
+<p>为 DN42 启用 ROA 检查，能有效防止 BGP 劫持和错误配置导致的路由泄露，而使用 RPKI，为我们省去了手动配置 ROA 表和更新的麻烦.</p>
+<h3 id="ebgp-conf"><a href="#ebgp-conf" class="headerlink" title="ebgp.conf"></a>ebgp.conf</h3><p>修改 <code>/etc/bird/ebgp.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">template bgp dn42_peers &#123;</span><br><span class="line">  local as OWNAS;</span><br><span class="line">  path metric 1;</span><br><span class="line"></span><br><span class="line">  ipv4 &#123;</span><br><span class="line">    extended next hop;</span><br><span class="line">    #import limit 1000 action block; #限制从他人哪里导入路由的数量</span><br><span class="line">    import keep filtered;</span><br><span class="line">    import filter &#123;</span><br><span class="line">      if is_valid_network() &amp;&amp; !is_self_net() then &#123;</span><br><span class="line">        if (roa_check(dn42_roa, net, bgp_path.last) != ROA_VALID) then &#123;</span><br><span class="line">          print &quot;[dn42] ROA check failed for &quot;, net, &quot; ASN &quot;, bgp_path.last;</span><br><span class="line">          reject;</span><br><span class="line">        &#125;</span><br><span class="line">        accept;</span><br><span class="line">      &#125;</span><br><span class="line">      reject;</span><br><span class="line">    &#125;;</span><br><span class="line">    export filter &#123;</span><br><span class="line">      if is_valid_network() &amp;&amp; source ~ [RTS_STATIC, RTS_BGP] then accept;</span><br><span class="line">      reject;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ipv6 &#123;</span><br><span class="line">    #import limit 1000 action block;</span><br><span class="line">    import keep filtered;</span><br><span class="line">    import filter &#123;</span><br><span class="line">      if is_valid_network_v6() &amp;&amp; !is_self_net_v6() then &#123;</span><br><span class="line">        if (roa_check(dn42_roa_v6, net, bgp_path.last) != ROA_VALID) then &#123;</span><br><span class="line">          print &quot;[dn42] ROA check failed for &quot;, net, &quot; ASN &quot;, bgp_path.last;</span><br><span class="line">          reject;</span><br><span class="line">        &#125;</span><br><span class="line">        accept;</span><br><span class="line">      &#125;</span><br><span class="line">      reject;</span><br><span class="line">    &#125;;</span><br><span class="line">    export filter &#123;</span><br><span class="line">      if is_valid_network_v6() &amp;&amp; source ~ [RTS_STATIC, RTS_BGP] then accept;</span><br><span class="line">      reject;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">include &quot;dn42_peers/*&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>此文件定义了和他人互 Peer 的模板并启用了 ROA 过滤，和他人互 Peer 的配置保存在 <code>/etc/bird/dn42_peers</code> 内。</p>
+<h2 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h2><h3 id="sysctl"><a href="#sysctl" class="headerlink" title="sysctl"></a>sysctl</h3><p>在 DN42 内，每个节点几乎都是其他人的路由器，而系统默认并不允许数据包转发并且有严格的数据包过滤，因此需要如下设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.ip_forward=1&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv6.conf.default.forwarding=1&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv6.conf.all.forwarding=1&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.conf.default.rp_filter=0&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;net.ipv4.conf.all.rp_filter=0&quot;</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+
+<p>尤其需要注意 <del>人品过滤器</del> <psw>rp_filter</psw>，有时 ping 不通他人很可能就是它导致的。</p>
+<p>如果你不放心，可使用下面的 bash 脚本一键将 <code>dn42</code> 开头的网卡的 rp_filter 关闭：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">for</span> net_dev <span class="keyword">in</span> /proc/sys/net/ipv4/conf/dn42*/rp_filter; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> 0 &gt; <span class="string">&quot;<span class="variable">$net_dev</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Dummy-网卡"><a href="#Dummy-网卡" class="headerlink" title="Dummy 网卡"></a>Dummy 网卡</h3><p>我们需要一个 Dummy 网卡绑定本机的 DN42 网络信息，在此，我选择使用 <code>ifupdown</code> 来统一配置我的所有节点。</p>
+<p>编辑 <code>/etc/network/interfaces</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">auto dn42</span><br><span class="line">iface dn42 inet static</span><br><span class="line">    address 172.23.100.180</span><br><span class="line">    netmask 255.255.255.255</span><br><span class="line">    pre-up ip link add dn42 type dummy || true</span><br><span class="line">    up ip link set dn42 up</span><br><span class="line">iface dn42 inet6 static</span><br><span class="line">    address fd48:8669:9f9f::8/128</span><br></pre></td></tr></table></figure>
+
+<p>请记得修改为自己的 IP。</p>
+<p>使用 <code>ifup dn42</code> 与 <code>ifdown dn42</code> 启用 &amp; 禁用网卡。</p>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>根据我自己的经验，我更推荐 Podman 而非 Docker。我曾花了两天时间解决无法对外 ping 的问题，最后发现是 Docker 的 iptables 规则引起的。如果你一定要用 Docker 且遇到类似问题，可尝试添加下面的 iptables 规则：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">iptables -I DOCKER-USER 1 -i dn42+ -o zt+ -j ACCEPT</span><br><span class="line">iptables -I DOCKER-USER 1 -i zt+ -o dn42+ -j ACCEPT</span><br><span class="line"></span><br><span class="line">ip6tables -I DOCKER-USER 1 -i dn42+ -o zt+ -j ACCEPT</span><br><span class="line">ip6tables -I DOCKER-USER 1 -i zt+ -o dn42+ -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<h2 id="与他人互-Peer"><a href="#与他人互-Peer" class="headerlink" title="与他人互 Peer"></a>与他人互 Peer</h2><h3 id="WireGuard"><a href="#WireGuard" class="headerlink" title="WireGuard"></a>WireGuard</h3><p>与他人互 Peer 之前，通常需要双方建立 P2P 隧道，其原因可以借用蓝天的原话：</p>
+<blockquote>
+<p>DN42 中几乎每个 Peering 都是建立在隧道软件（即 VPN）之上的，原因如下：</p>
+<ul>
+<li>DN42 各个用户的节点分布在世界各地，隧道软件可以对数据进行基本的加密和保护；</li>
+<li>DN42 使用的是私有地址，如果直接在互联网上传输，会被防火墙直接丢弃，甚至可能会被主机商认为你在 <code>IP Spoofing</code>（伪造来源 IP 地址），违反服务条款，造成严重后果。</li>
+</ul>
+</blockquote>
+<p>而 DN42 的参与者们用的最多的就是 WireGuard 和 GRE&#x2F;IPSec，而前者配置较为简单，也有一定的加密能力。</p>
+<h4 id="生成密钥对"><a href="#生成密钥对" class="headerlink" title="生成密钥对"></a>生成密钥对</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wg genkey | <span class="built_in">tee</span> privatekey | wg pubkey &gt; publickey</span><br></pre></td></tr></table></figure>
+
+<p>请保存好自己的公私钥。</p>
+<h3 id="互-Peer"><a href="#互-Peer" class="headerlink" title="互 Peer"></a>互 Peer</h3><p>对于新人，可以通过 potat0 的 Telegram 机器人自动 Peer：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://t.me/Potat0_DN42_Bot">@Potat0_DN42_Bot</a>，亦或是 iEdon 的网自动 Peer：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://iedon.net/nodes">iEdon Net</a>，还有 Kioubit 的网页自动 Peer：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://dn42.g-load.eu/">Kioubit Network</a>.</p>
+<h4 id="互-Peer-信息"><a href="#互-Peer-信息" class="headerlink" title="互 Peer 信息"></a>互 Peer 信息</h4><p>通过自动机器人或网页，亦或是他人的主页，我们既需要获得对方如下信息，也需要给对方提供自己的如下信息：</p>
+<ul>
+<li>公钥</li>
+<li>公网地址（Endpoint）</li>
+<li>DN42 的 ASN</li>
+<li>IPv6 LLA</li>
+<li>是否支持ENH(Extended Next Hop)，注意：若使用v6交换路由而不启用ENH则无法交换v4路由</li>
+</ul>
+<p>在获得了对方上述信息后，我们需要在 <code>/etc/wireguard</code> 下创建一个文件，我的命名习惯为：<code>dn42-424242XXXX.conf</code>，填入如下内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 424242XXX - @YYY   # 对方的 ASN 及联系方式，方便后期查找</span></span><br><span class="line"><span class="section">[Interface]</span></span><br><span class="line"><span class="attr">ListenPort</span> = &lt;开放给对方的端口 UDP&gt;</span><br><span class="line"><span class="attr">Table</span> = <span class="literal">off</span></span><br><span class="line"><span class="attr">MTU</span> = <span class="number">1420</span>			 <span class="comment"># MTU，一般不需要修改</span></span><br><span class="line"><span class="comment">#将私钥存放到 /etc/wireguard/dn42-privatekey 不需要每次都复制一遍</span></span><br><span class="line"><span class="attr">PostUp</span> = wg set %i private-key /etc/wireguard/dn42-privatekey</span><br><span class="line"><span class="attr">PostUp</span> = ip addr add &lt;你的 LLA 地址&gt;/<span class="number">64</span> peer &lt;对方的 LLA 地址&gt;/<span class="number">64</span> dev %i</span><br><span class="line"><span class="attr">PostUp</span> = ip addr add &lt;你的 ULA 地址&gt;/<span class="number">128</span> dev %i</span><br><span class="line"><span class="attr">PostUp</span> = ip addr add &lt;你的 IPv4 地址&gt;/<span class="number">32</span> dev %i</span><br><span class="line"><span class="section">[Peer]</span></span><br><span class="line"><span class="attr">PublicKey</span> = &lt;对方的公钥&gt;</span><br><span class="line"><span class="attr">Endpoint</span> =  &lt;对方提供给你的 Endpoint&gt;</span><br><span class="line"><span class="attr">AllowedIPs</span> = <span class="number">172.20</span>.<span class="number">0.0</span>/<span class="number">14</span>, <span class="number">10.0</span>.<span class="number">0.0</span>/<span class="number">8</span>, <span class="number">172.31</span>.<span class="number">0.0</span>/<span class="number">16</span>, fd00::/<span class="number">8</span>, fe80::/<span class="number">64</span></span><br></pre></td></tr></table></figure>
+
+<p><em>关于端口，有一个通常做法：20000 + 对方 ASN 后四位</em></p>
+<details class="tag-plugin colorful folding" ><summary><p>完整示例</p>
+</summary><div class="body"><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 4242422547 - @lantian1998</span></span><br><span class="line"><span class="section">[Interface]</span></span><br><span class="line"><span class="attr">ListenPort</span> = <span class="number">22547</span></span><br><span class="line"><span class="attr">Table</span> = <span class="literal">off</span></span><br><span class="line"><span class="attr">MTU</span> = <span class="number">1420</span></span><br><span class="line"><span class="attr">PostUp</span> = wg set %i private-key /etc/wireguard/dn42-privatekey</span><br><span class="line"><span class="attr">PostUp</span> = ip addr add fe80::<span class="number">3322</span>/<span class="number">64</span> peer fe80::<span class="number">2547</span>/<span class="number">64</span> dev %i</span><br><span class="line"><span class="attr">PostUp</span> = ip addr add fd48:<span class="number">8669</span>:<span class="number">9</span>f9f::<span class="number">8</span>/<span class="number">128</span> dev %i</span><br><span class="line"><span class="attr">PostUp</span> = ip addr add <span class="number">172.23</span>.<span class="number">100.180</span>/<span class="number">32</span> dev %i</span><br><span class="line"><span class="section">[Peer]</span></span><br><span class="line"><span class="attr">PublicKey</span> = xelzwt1j0aoKjsQnnq8jMjZNLbLucBPwPTvHgFH/czs=</span><br><span class="line"><span class="attr">Endpoint</span> =  alice.lantian.pub:<span class="number">23322</span></span><br><span class="line"><span class="attr">AllowedIPs</span> = <span class="number">172.20</span>.<span class="number">0.0</span>/<span class="number">14</span>, <span class="number">10.0</span>.<span class="number">0.0</span>/<span class="number">8</span>, <span class="number">172.31</span>.<span class="number">0.0</span>/<span class="number">16</span>, fd00::/<span class="number">8</span>, fe80::/<span class="number">64</span></span><br></pre></td></tr></table></figure> </div></details>
+
+<p>保存并运行：</p>
+<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_1" value="wg-quick up <文件名（不需要 .conf 后缀）>"><button class="copy-btn" onclick="util.copy(&quot;copy_1&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+
+<p>通过 <code>wg show &lt;文件名（不需要 .conf 后缀）&gt;</code> 即可查看隧道连接状况：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">root@hkg ~ <span class="comment"># wg show dn42-4242422547</span></span><br><span class="line">interface: dn42-4242422547</span><br><span class="line">  public key: AHEJ0dXDDxJF0EapR7Ssx2eQV9ReB/OvkWPu7ypWbkA=</span><br><span class="line">  private key: (hidden)</span><br><span class="line">  listening port: 22547</span><br><span class="line"></span><br><span class="line">peer: xelzwt1j0aoKjsQnnq8jMjZNLbLucBPwPTvHgFH/czs=</span><br><span class="line">  endpoint: 5.102.125.26:23322</span><br><span class="line">  allowed ips: 172.20.0.0/14, 10.0.0.0/8, 172.31.0.0/16, fd00::/8, fe80::/64</span><br><span class="line">  latest handshake: 25 seconds ago</span><br><span class="line">  transfer: 96.59 MiB received, 532.45 MiB sent</span><br></pre></td></tr></table></figure>
+
+<p>开机自启动：</p>
+<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_2" value="systemctl enable wg-quick@<文件名（不需要 .conf 后缀）>"><button class="copy-btn" onclick="util.copy(&quot;copy_2&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+
+<h4 id="配置-eBGP"><a href="#配置-eBGP" class="headerlink" title="配置 eBGP"></a>配置 eBGP</h4><p>在 <code>/etc/bird/dn42_peers</code> 下新建 <code>&lt;ASN&gt;.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp &lt;BGP 会话名&gt; from dn42_peers &#123;</span><br><span class="line">    neighbor &lt;对方的 LLA 地址&gt; % &#x27;&lt;WireGuard 隧道名&gt;&#x27; external;</span><br><span class="line">    description &quot;&lt;对方联系信息 非必需&gt;&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是：之前的 eBGP 模板内已经默认启用了 Extended next hop（因为绝大部分 Peer 都是默认启用的），不再需要如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp &lt;BGP 会话名&gt; from dn42_peers &#123;</span><br><span class="line">    neighbor &lt;对方的 LLA 地址&gt; % &#x27;&lt;WireGuard 隧道名&gt;&#x27; external;</span><br><span class="line">    description &quot;&lt;对方联系信息 非必需&gt;&quot;;</span><br><span class="line">    </span><br><span class="line">    ipv4&#123;</span><br><span class="line">        extended next hop;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<details class="tag-plugin colorful folding" ><summary><p>完整示例</p>
+</summary><div class="body"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp DN42_4242422547_v6 from dn42_peers &#123;</span><br><span class="line">    neighbor fe80::2547 % &#x27;dn42-4242422547&#x27; external;</span><br><span class="line">    description &quot;@lantian1998&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> </div></details>
+
+<p>测试 LLA 是否可连通，可使用：</p>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_3" value="ping6 <对方 LLA 地址>%<WireGuard 隧道名>"><button class="copy-btn" onclick="util.copy(&quot;copy_3&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+
+<p>如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@hkg ~# ping6 fe80::2547%dn42-4242422547</span><br><span class="line">PING fe80::2547%dn42-4242422547 (fe80::2547%dn42-4242422547) 56 data bytes</span><br><span class="line">64 bytes from fe80::2547%dn42-4242422547: icmp_seq=1 ttl=64 time=1.80 ms</span><br><span class="line">64 bytes from fe80::2547%dn42-4242422547: icmp_seq=2 ttl=64 time=1.70 ms</span><br><span class="line">64 bytes from fe80::2547%dn42-4242422547: icmp_seq=3 ttl=64 time=1.79 ms</span><br><span class="line">64 bytes from fe80::2547%dn42-4242422547: icmp_seq=4 ttl=64 time=1.81 ms</span><br><span class="line">^C</span><br><span class="line">--- fe80::2547%dn42-4242422547 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 3005ms</span><br><span class="line">rtt min/avg/max/mdev = 1.701/1.775/1.806/0.043 ms</span><br></pre></td></tr></table></figure>
+<p>当一切处理妥当后运行 <code>birdc c</code> 重载配置，使用 <code>birdc s p</code> 查看当前 BGP 会话：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">root@hkg ~# birdc s p</span><br><span class="line">BIRD 3.2.0 ready.</span><br><span class="line">Name       Proto      Table      State  Since         Info</span><br><span class="line">DN42_4242422547_v6 BGP        ---        up     2026-03-03    Established   </span><br><span class="line">dn42_rpki  RPKI       ---        up     2026-03-03    Established</span><br><span class="line">device1    Device     ---        up     2026-03-03    </span><br><span class="line">kernel1    Kernel     master6    up     2026-03-03    </span><br><span class="line">kernel2    Kernel     master4    up     2026-03-03    </span><br><span class="line">static1    Static     master4    up     2026-03-03    </span><br><span class="line">static2    Static     master6    up     2026-03-03   </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h5 id="不使用-MP-BGP"><a href="#不使用-MP-BGP" class="headerlink" title="不使用 MP-BGP"></a>不使用 MP-BGP</h5><p>如果只想交互其中一种路由，则不需要对方的 LLA，而是需要对方的 IPv4 或 IPv6（取决于你要传播哪种路由）</p>
+<p>并使用如下 eBGP 配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp &lt;BGP 会话名&gt; from dn42_peers &#123;</span><br><span class="line">    neighbor &lt;对方的 IPv4/v6 地址&gt; as &lt;对方ASN&gt;;</span><br><span class="line">    description &quot;&lt;对方联系信息 非必需&gt;&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，已完成一台节点的互 Peer。</p>
+<h2 id="内网互联"><a href="#内网互联" class="headerlink" title="内网互联"></a>内网互联</h2><p>目前，还只是单个节点和他人 Peer，而当我们有多个节点之后，就需要让节点内部相互联通，我目前的网络架构如下：</p>
+<pre class="mermaid">graph LR
+subgraph zt[ZeroTier Underlay]
+	us[LAX, US]
+	hk[HKG, CN]
+	de[DEU, DE]
+	cn1[CNVO, CN]
+	cn2[Homelab, CN]
+	
+	us <--> hk
+	us <--> de
+	us <--> cn1
+	us <--> cn2
+	hk <--> de
+	hk <--> cn1
+	hk <--> cn2
+	de <--> cn1
+	de <--> cn2
+	cn1 <--> cn2
+end</pre>
+
+<p>我将 ZeroTier 作为 L2 使用并组成 Fullmesh <psw>单纯是我懒得维护 n(n-1)/2 条 wg 隧道</psw></p>
+<p>内网 BGP 的办法有两种：OSPF 和 Babel <psw>但我在 ZeroTier 下使用 Babel 发生了一些问题，遂用回了 OSPF</psw></p>
+<p>基于上面的信息，我决定暂时使用 OSPF Broadcast 的配置。</p>
+<h3 id="IGP"><a href="#IGP" class="headerlink" title="IGP"></a>IGP</h3><div class="tag-plugin colorful note" color="cyan"><div class="title">什么是&nbsp;IGP</div><div class="body"><p>内部网关协议（英语：Interior Gateway Protocol，缩写为 IGP）是指在一个自治系统（AS）内部所使用的一种路由协议。<br/>与此相对，外部网关协议用来在自治系统之间确定网络可达性、并通过内部网关协议来解析某个自治系统内部的路由。</p></div></div>
+
+<h4 id="ospf-conf"><a href="#ospf-conf" class="headerlink" title="ospf.conf"></a>ospf.conf</h4><p>修改 <code>/etc/bird/ospf.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">protocol ospf v3 dn42_vcnet_ospf &#123;</span><br><span class="line">  ipv4 &#123;</span><br><span class="line">    import where is_self_net() &amp;&amp; source != RTS_BGP;</span><br><span class="line">    export where is_self_net() &amp;&amp; source != RTS_BGP;</span><br><span class="line">  &#125;;</span><br><span class="line">  include &quot;ospf-area.conf&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">protocol ospf v3 dn42_vcnet_ospf6 &#123;</span><br><span class="line">  ipv6 &#123;</span><br><span class="line">    import where is_self_net_v6() &amp;&amp; source != RTS_BGP;</span><br><span class="line">    export where is_self_net_v6() &amp;&amp; source != RTS_BGP;</span><br><span class="line">  &#125;;</span><br><span class="line">  include &quot;ospf-area.conf&quot;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ospf-area-conf"><a href="#ospf-area-conf" class="headerlink" title="ospf-area.conf"></a>ospf-area.conf</h4><p>修改 <code>/etc/bird/ospf-area.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">area 0.0.0.0 &#123;</span><br><span class="line">  # Dummy 网卡名称</span><br><span class="line">  interface &quot;dn42&quot; &#123; stub; &#125;;</span><br><span class="line">  # ZeroTier 网卡名称</span><br><span class="line">  interface &quot;ztugawjlkq&quot; &#123;</span><br><span class="line">    cost 160;</span><br><span class="line">    type broadcast;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>由于 ZeroTier 同一个网络的网卡名是不变的，这里 interface 的类型只能是  <code>broadcast</code>.</p>
+<p>如果你使用 WireGuard 来组成 Fullmesh，应该使用 <code>ptp</code>，可以精细控制 cost.</p>
+<p>使用 <code>birdc c</code> 重载配置后，可通过 <code>birdc show ospf neighbors</code> 查看 OSPF 邻居信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">root@hkg ~ # birdc show ospf neighbors</span><br><span class="line">BIRD 3.2.0 ready.</span><br><span class="line">dn42_vcnet_ospf:</span><br><span class="line">Router ID   	Pri	    State     	DTime	Interface  Router IP</span><br><span class="line">172.23.100.165	 1	Full/Other	35.257	ztugawjlkq fe80::3c49:e1ff:fe5a:792d</span><br><span class="line">172.23.100.170	 1	Full/BDR  	38.259	ztugawjlkq fe80::3c29:c0ff:fefc:66f7</span><br><span class="line">172.23.100.167	 1	Full/Other	31.441	ztugawjlkq fe80::3ce2:48ff:febb:b986</span><br><span class="line">172.23.100.166	 1	Full/Other	24.565	ztugawjlkq fe80::3cf1:97ff:fee8:b68f</span><br><span class="line"></span><br><span class="line">dn42_vcnet_ospf6:</span><br><span class="line">Router ID   	Pri	    State     	DTime	Interface  Router IP</span><br><span class="line">172.23.100.165	 1	Full/Other	35.257	ztugawjlkq fe80::3c49:e1ff:fe5a:792d</span><br><span class="line">172.23.100.170	 1	Full/BDR  	38.263	ztugawjlkq fe80::3c29:c0ff:fefc:66f7</span><br><span class="line">172.23.100.167	 1	Full/Other	31.441	ztugawjlkq fe80::3ce2:48ff:febb:b986</span><br><span class="line">172.23.100.166	 1	Full/Other	34.562	ztugawjlkq fe80::3cf1:97ff:fee8:b68f</span><br></pre></td></tr></table></figure>
+
+<h3 id="iBGP"><a href="#iBGP" class="headerlink" title="iBGP"></a>iBGP</h3><p>通常情况下，建立 iBGP 需要各个节点组成 Fullmesh，修改 <code>/etc/bird/ibgp.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">template bgp ibgpeers &#123;</span><br><span class="line">  local as OWNAS;</span><br><span class="line">  ipv4 &#123;</span><br><span class="line">    import filter &#123;</span><br><span class="line">      import where source = RTS_BGP &amp;&amp; is_valid_network() &amp;&amp; !is_self_net();</span><br><span class="line">      export where source = RTS_BGP &amp;&amp; is_valid_network() &amp;&amp; !is_self_net();</span><br><span class="line">      next hop self;</span><br><span class="line">      extended next hop;</span><br><span class="line">    &#125;;</span><br><span class="line">    ipv6 &#123;</span><br><span class="line">      import where source = RTS_BGP &amp;&amp; is_valid_network_v6() &amp;&amp; !is_self_net_v6();</span><br><span class="line">      export where source = RTS_BGP &amp;&amp; is_valid_network_v6() &amp;&amp; !is_self_net_v6();</span><br><span class="line">      next hop self;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">include &quot;ibgp/*&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>详细解释来自 iYoRoy：</p>
+<blockquote>
+<p>导入和导出规则确保iBGP仅处理BGP协议学到的路由，并且过滤掉IGP的路由防止环回</p>
+<p><code>next hop self</code><strong>是必须的</strong>，指示 BIRD 在向 iBGP  邻居导出路由时，将下一跳重写为边界路由器自身的IP地址（而非原始的外部下一跳）。因为内部路由器无法直接访问外部邻居地址，若不重写则会被认定为地址不可达。重写后，内部路由器只需通过 IGP 路由将流量送至边界路由器，由边界路由器完成最终的外部转发。</p>
+<p>因为我希望使用IPv6地址建立MP-BGP，通过IPv6路由IPv4，因此在IPv4中启用了<code>extended next hop</code></p>
+</blockquote>
+<p>接下来，需要给每台节点设置一个 iBGP Peer 配置，在 <code>/etc/bird/ibgp/</code> 下创建文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp &#x27;&lt;BGP 会话名&gt;&#x27; from ibgpeers &#123;</span><br><span class="line">  neighbor &lt;其他节点的 IPv6 ULA 地址&gt; as OWNAS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<details class="tag-plugin colorful folding" ><summary><p>完整示例</p>
+</summary><div class="body"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp &#x27;dn42_ibgp_us&#x27; from ibgpeers&#123;</span><br><span class="line">    neighbor fd48:8669:9f9f::5 as OWNAS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> </div></details>
+
+<p>运行 <code>birdc c</code> 重载配置即可。</p>
+<h2 id="优化路由"><a href="#优化路由" class="headerlink" title="优化路由"></a>优化路由</h2><p>在完成上面的基础配置后，我们已经可以连上 DN42 的网络了，但此时的选路并非最优，尤其是当你的节点和非本地节点互 Peer 的时候。</p>
+<h3 id="BGP-Community"><a href="#BGP-Community" class="headerlink" title="BGP Community"></a>BGP Community</h3><div class="tag-plugin colorful note" color="cyan"><div class="title">Community属性介绍</div><div class="body"><p>团体属性是一组有相同特征的目的地址的集合。团体属性用来简化路由策略的应用和降低维护管理的难度，利用团体可以使多个AS中的一组BGP设备共享相同的策略。团体是一个路由属性，在BGP对等体之间传播，且不受AS的限制。BGP设备在将带有团体属性的路由发布给其它对等体之前，可以先改变此路由原有的团体属性。</p></div></div>
+
+<p>简单来说，BGP Community 就是给路由打标签，不同的标签有助于我们对路由进行区分和管理。</p>
+<p>来自 iYoRoy 的介绍：</p>
+<blockquote>
+<p>…（本文）仅针对地理位置信息添加BGP Communities并进行优选。一般来说这样就足够了。<del>（还有个原因是其他的我还没太搞明白）</del><br>注意: 我们应该<strong>只对自己的AS添加地理位置信息相关的BGP Communities</strong>，不应当对邻居传递来的路由添加相关条目。若对邻居的路由加上自己的地区Communities则会造成<strong>伪造路由起源</strong>，引发<strong>路由劫持</strong>。下游可能会误判流量路径，将本应直连的流量绕道至你的网络，增加延迟的同时大量消耗你的网络的流量。（Large Communities除外，Large Community有一套验证机制可以防止此类事情发生，但是不在本文讨论范围内）</p>
+</blockquote>
+<p>我们需要首先找到自己节点所在的国家、地区，按照 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://dn42.dev/howto/BGP-communities">BGP-communities #Route Origin 小节</a>所列出的代码，在 <code>/etc/bird/bird.conf</code> 里面添加下面两行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">define DN42_REGION = 52;   	# 52代表亚洲东部地区</span><br><span class="line">define DN42_COUNTRY= 1344; 	# 1344代表香港</span><br></pre></td></tr></table></figure>
+
+<p>之后，修改 <code>/etc/bird/ebgp.conf</code> 的 <code>dn42_peer</code> 模板：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">         export filter &#123;</span><br><span class="line"><span class="deletion">-            if is_valid_network() &amp;&amp; source ~ [RTS_STATIC, RTS_BGP] then accept;</span></span><br><span class="line"><span class="addition">+            if is_valid_network() &amp;&amp; source ~ [RTS_STATIC, RTS_BGP] then&#123;</span></span><br><span class="line"><span class="addition">+                if (is_self_net()) then &#123;      				# 检查是否是自己的路由</span></span><br><span class="line"><span class="addition">+                    bgp_community.add((64511, DN42_REGION));  	# 打上大洲级别的区域信息</span></span><br><span class="line"><span class="addition">+                    bgp_community.add((64511, DN42_COUNTRY)); 	# 打上国家/地区信息</span></span><br><span class="line"><span class="addition">+                &#125;</span></span><br><span class="line"><span class="addition">+                accept;</span></span><br><span class="line"><span class="addition">+            &#125;</span></span><br><span class="line">             reject;</span><br><span class="line">         &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>上面是 IPv4 块里面的，修改 IPv6 块的 export filter 时，记得将 <code>is_valid_network()</code> 和 <code>is_self_net()</code> 修改为 <code>is_valid_network_v6()</code> 和 <code>is_self_net_v6()</code>.</p>
+<p>至此，我们成功给自己的路由打上了标签。</p>
+<h3 id="local-pref"><a href="#local-pref" class="headerlink" title="local_pref"></a>local_pref</h3><div class="tag-plugin colorful note" color="cyan"><div class="title">local_pref</div><div class="body"><p>当一条BGP路由器中存在多条去往同一目标网络的 BGP 路由时，BGP 协议会对这些 BGP 路由属性进行比较，从而筛选出最佳到达目标网络的通达路径；本地优先属性，只在IBGP对等体之间进行交换，即：同一AS内进行，不会通告给AS 域外；用于判断流量离开AS时选择的最佳路由；</p></div></div>
+
+<p>现在，我们要利用他人的 Communities 标签进行路由优选。</p>
+<p>下面是我暂时使用的规则：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">function</span> ebgp_calculate_pref() &#123;</span><br><span class="line">    <span class="comment"># 基础优先级</span></span><br><span class="line">    <span class="attribute">int</span> pref = <span class="number">1000</span>; </span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 同区域 +100</span></span><br><span class="line">    <span class="attribute">if</span> bgp_community <span class="regexp">~ [(64511,</span> DN42_REGION)] then </span><br><span class="line">        pref = pref + <span class="number">100</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 同国家 +50</span></span><br><span class="line">    <span class="attribute">if</span> bgp_community <span class="regexp">~ [(64511,</span> DN42_COUNTRY)] then </span><br><span class="line">        pref = pref + <span class="number">50</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># eBGP邻居 +200</span></span><br><span class="line">    <span class="attribute">if</span> bgp_path.len = <span class="number">1</span> then </span><br><span class="line">        pref = pref + <span class="number">200</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">return</span> pref;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可保存在 <code>/etc/bird/ebgp.conf</code> 的开头，同时修改 eBGP 的 Peer 模板：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ipv4 &#123;</span><br><span class="line">  extended next hop;</span><br><span class="line">  import keep filtered;</span><br><span class="line">  import filter &#123;</span><br><span class="line">    if is_valid_network() &amp;&amp; !is_self_net() then &#123;</span><br><span class="line">      if (roa_check(dn42_roa, net, bgp_path.last) != ROA_VALID) then &#123;</span><br><span class="line">        print &quot;[dn42] ROA check failed for &quot;, net, &quot; ASN &quot;, bgp_path.last;</span><br><span class="line">        reject;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="addition">+	  bgp_local_pref = ebgp_calculate_pref();</span></span><br><span class="line">      accept;</span><br><span class="line">    &#125;</span><br><span class="line">    reject;</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>IPv6 同样，只需要在相同位置添加即可。</p>
+<h3 id="iBGP-的-local-pref"><a href="#iBGP-的-local-pref" class="headerlink" title="iBGP 的 local_pref"></a>iBGP 的 local_pref</h3><p>这部分是我在配置好 IGP 与 iBGP 后出现的一个问题：内部的某个节点（Node 1）有一条最优路由，而其他节点（Node 2,3）会绕道前面的节点（Node 1），即使其他节点有更合适的路由可选。</p>
+<p>下面的配置有待观察。</p>
+<p>修改 <code>/etc/bird/ibgp.conf</code>：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">template bgp ibgpeers &#123;</span><br><span class="line">  local as OWNAS;</span><br><span class="line">  ipv4 &#123;</span><br><span class="line"><span class="deletion">-	import where source = RTS_BGP &amp;&amp; is_valid_network() &amp;&amp; !is_self_net();</span></span><br><span class="line"><span class="addition">+   import filter &#123;</span></span><br><span class="line"><span class="addition">+     if source = RTS_BGP &amp;&amp; is_valid_network() &amp;&amp; !is_self_net() then &#123;</span></span><br><span class="line"><span class="addition">+       bgp_local_pref = 200;</span></span><br><span class="line"><span class="addition">+       accept;</span></span><br><span class="line"><span class="addition">+     &#125;</span></span><br><span class="line"><span class="addition">+   &#125;;</span></span><br><span class="line">    export where source = RTS_BGP &amp;&amp; is_valid_network() &amp;&amp; !is_self_net();</span><br><span class="line">    next hop self;</span><br><span class="line">    extended next hop;</span><br><span class="line">  &#125;;</span><br><span class="line">  ipv6 &#123;</span><br><span class="line"><span class="deletion">-	import where source = RTS_BGP &amp;&amp; is_valid_network_v6() &amp;&amp; !is_self_net_v6();</span></span><br><span class="line"><span class="addition">+   import filter &#123;</span></span><br><span class="line"><span class="addition">+     if source = RTS_BGP &amp;&amp; is_valid_network_v6() &amp;&amp; !is_self_net_v6() then &#123;</span></span><br><span class="line"><span class="addition">+       bgp_local_pref = 200;</span></span><br><span class="line"><span class="addition">+       accept;</span></span><br><span class="line"><span class="addition">+     &#125;</span></span><br><span class="line"><span class="addition">+   &#125;;</span></span><br><span class="line">    export where source = RTS_BGP &amp;&amp; is_valid_network_v6() &amp;&amp; !is_self_net_v6();</span><br><span class="line">    next hop self;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>上面的配置是将来自 iBGP 的外部路由降低优先级，让本地节点优先使用 eBGP 的路由。</p>
+<h2 id="BGP-Dampening"><a href="#BGP-Dampening" class="headerlink" title="BGP Dampening"></a>BGP Dampening</h2><div class="tag-plugin colorful note" color="cyan"><div class="title">什么是&nbsp;BGP&nbsp;Flapping</div><div class="body"><p>BGP Flapping 指的是同一条路由的路径在短时间内发生大量变化，一般源于一个网络反复广播、撤销广播这一条路由。每次广播或撤销路由时，这个网络会把这条路由传递给所有与它相连的 Peer，这些 Peer 会根据这条路由计算出新的最佳路径，然后把新路径传递给它们的 Peer，与此类推。</p></div></div>
+
+<p>你能想象吗：</p>
+<table>
+<thead>
+<tr>
+<th align="center">Prefix</th>
+<th align="center">Duration</th>
+<th align="center">Changes</th>
+<th align="center">Rate</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">fd75:7775::&#x2F;48</td>
+<td align="center">7d 20:13:20</td>
+<td align="center">18.314 million</td>
+<td align="center">52&#x2F;s</td>
+</tr>
+</tbody></table>
+<p>最近这个由网段引发的路由更改竟然高达 1800 万！</p>
+<p>为了抑制这种现象，我们会用上 Kioubit 开发的 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Kioubit/FlapAlerted">FlapAlerted</a>.</p>
+<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">flapalerted:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/kioubit/flapalerted</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">host</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--asn&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;4242422547&quot;</span>  			<span class="comment"># 修改成你自己的 ASN</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--bgpListenAddress&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;127.0.0.1:1790&quot;</span> 		<span class="comment"># BGP 会话监听端口，稍后你的 BGP 软件需要连接到这个端口</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--httpAPIListenAddress&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;127.0.0.1:8080&quot;</span>  		<span class="comment"># HTTP API 监听端口，稍后 StayRTR 需要连接到这个端口</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;-routeChangeCounter&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;120&quot;</span>  					<span class="comment"># 路由路径在一分钟内需要变更的次数才会被列入前缀列表。默认值 600</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;-overThresholdTarget&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5&quot;</span>  					<span class="comment"># 连续多少分钟速率达到或超过 routeChangeCounter 才会触发事件。默认 10</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;-underThresholdTarget&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;30&quot;</span>  					<span class="comment"># 连续多少分钟速率低于 routeChangeCounter 才会移除事件。默认 15</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">stayrtr:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">rpki/stayrtr</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">host</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--bind&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;127.0.0.1:8083&quot;</span>  		<span class="comment"># RPKI-to-Router 协议的监听地址</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--metrics.addr&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;127.0.0.1:8084&quot;</span>  		<span class="comment"># Prometheus 格式统计信息 API 的监听地址</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--cache&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;http://127.0.0.1:8080/flaps/active/roa&quot;</span>  <span class="comment"># 修改成你的 FlapAlerted 服务器地址</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--rtr.expire&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;3600&quot;</span>  				<span class="comment"># 如果 FlapAlerted 服务器离线，保留现有的信息多长时间</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--rtr.refresh&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;300&quot;</span>  					<span class="comment"># 多长时间从 FlapAlerted 服务器刷新一次信息</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;--rtr.retry&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;300&quot;</span>  					<span class="comment"># 如果 FlapAlerted 服务器离线，多长时间后重试</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">flapalerted</span></span><br></pre></td></tr></table></figure>
+
+<p>启动 FlapAlerted 和 StayRTR 后，新建 <code>/etc/bird/flap.conf</code> 将路由信息传给 FlapAlerted：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp dn42_flapalerted &#123;</span><br><span class="line">  local as OWNAS; </span><br><span class="line"></span><br><span class="line">  # 修改成 FlapAlerted 设置的 ASN 和 BGP IP/端口。</span><br><span class="line">  # 这里我们使用和自己网络相同的 ASN，是为了利用 BGP 协议不会把来自 iBGP 的路由（即自己其它节点的路由）转发给 iBGP Peer 的特点。</span><br><span class="line">  # 除非你开启了 add paths 选项，否则来自自己其它节点的路由只会包含最优的路由，如果 Flapping 发生在次优路由就会被隐藏。</span><br><span class="line">  # 因此建议有多个节点的用户在每个节点上都单独和 FlapAlerted 建立连接。</span><br><span class="line">  </span><br><span class="line">  neighbor &lt;FlapAlerted 的地址&gt; as OWNAS port 1790;</span><br><span class="line"></span><br><span class="line">  ipv4 &#123;</span><br><span class="line">    # 开启 add paths 选项，把非最优路由也发给 FlapAlerted，让次优路由 Flapping 也可见。</span><br><span class="line">    add paths on;</span><br><span class="line">    export all;</span><br><span class="line">    import none; # 不需要从 FlapAlerted 接收任何路由</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ipv6 &#123;</span><br><span class="line">    add paths on;</span><br><span class="line">    export all;</span><br><span class="line">    import none;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 新建专用于 FlapAlerted 的 ROA 表</span><br><span class="line">roa4 table roa_flap_v4;</span><br><span class="line">roa6 table roa_flap_v6;</span><br><span class="line"></span><br><span class="line">protocol rpki dn42_rpki_flapalerted &#123;</span><br><span class="line">  roa4 &#123; table roa_flap_v4; &#125;;</span><br><span class="line">  roa6 &#123; table roa_flap_v6; &#125;;</span><br><span class="line">  remote 10.22.44.5 port 8083; # 修改成 StayRTR 监听的端口</span><br><span class="line">  max version 1;</span><br><span class="line">  retry keep 15; # 如果连接中断，每 10 秒重连一次</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在前文，我们已经配置了 ROA 过滤，因此需要新建一个新 ROA 表，记得在 <code>/etc/bird/bird.conf</code> 里引入此配置文件。</p>
+<p>现在，我们需要修改 eBGP 中模板的导入过滤规则：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">  ipv4 &#123;</span><br><span class="line">    extended next hop;</span><br><span class="line">    import keep filtered;</span><br><span class="line">    import filter &#123;</span><br><span class="line">      if is_valid_network() &amp;&amp; !is_self_net() then &#123;</span><br><span class="line">        if (roa_check(dn42_roa, net, bgp_path.last) != ROA_VALID) then &#123;</span><br><span class="line">          print &quot;[dn42] ROA check failed for &quot;, net, &quot; ASN &quot;, bgp_path.last;</span><br><span class="line">          reject;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="addition">+       if (roa_check(roa_flap_v4, net, bgp_path.last) = ROA_INVALID) then &#123;</span></span><br><span class="line"><span class="addition">+         # 路由频繁变更，被 FlapAlerted 劫持去了 AS0，Bird 认为路由来自错误的 ASN</span></span><br><span class="line"><span class="addition">+         reject;</span></span><br><span class="line"><span class="addition">+       &#125;</span></span><br><span class="line">        bgp_local_pref = ebgp_calculate_pref();</span><br><span class="line">        accept;</span><br><span class="line">      &#125;</span><br><span class="line">      reject;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>IPv6 类似，只需要将 <code>roa_flap_v4</code> 修改为 <code>roa_flap_v6</code> 即可。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>最后，加入 DN42 的过程还是挺有乐趣的.</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>在这里介绍一下 Bird 中文社区的作品：</p>
+<p>BIRD-LSP 是一个专为 BIRD2 配置文件打造的现代化工具链项目，提供 Language Server Protocol (LSP) 支持、代码格式化 (Formatter &amp; Parser) 与静态分析 (Linter) 能力。</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://marketplace.visualstudio.com/items?itemName=birdcc.bird2-lsp">VSCode 安装</a> | <a target="_blank" rel="noopener external nofollow noreferrer" href="https://open-vsx.org/extension/birdcc/bird2-lsp">OpenVSX 安装</a></p>
+<p>目前支持的特性 (v0.3.0):</p>
+<ul>
+<li><p>🎨 语法高亮 | 基于 Tree-sitter 的高精度语法解析</p>
+</li>
+<li><p>🔍 实时诊断 | 内置 32+ 条 Lint 规则 + 跨文件分析</p>
+</li>
+<li><p>📝 代码格式化 | 基于 🦀 Rust + dprint 插件实现的高性能格式化库</p>
+</li>
+<li><p>🔎 悬停提示 | 对 conf 关键词提供 用法示例&#x2F;类型提示&#x2F;文档说明</p>
+</li>
+<li><p>🏗 符号导航 | 跳转到定义、查找引用（支持跨文件）</p>
+</li>
+</ul>
+<p>*目前 BIRD LSP 还处于 Beta 阶段，部署在生产环节之前请谨慎评估</p>
+<p>👩‍💻 GitHub 开源地址, 欢迎 Star: <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bird-chinese-community/BIRD-LSP">https://github.com/bird-chinese-community/BIRD-LSP</a></p>
+</article>
+<div class="article-footer">
+    <section id="references">
+      <div class="header"><span>参考资料</span></div>
+      <div class="body">
+        <ul>
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://bird.xmsl.dev/docs/user-guide/">用户指南·目录 (User Guide) | BIRD 中文文档</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://routing.wiki/beginner/multi-location/igp">IGP：打通内网 | Routing Wiki</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://lantian.pub/article/modify-website/dn42-experimental-network-2020.lantian/">DN42 实验网络介绍及注册教程（2022-12 更新） - Lantian</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://lantian.pub/article/modify-website/dn42-flapalerted-reduce-flapping.lantian/">在 DN42 中使用 FlapAlerted 抑制 Flapping - Lantian</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.iyoroy.cn/archives/84/">DN42探究日记 - Ep.1 加入DN42网络 - 悠笙の开发日记</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.iyoroy.cn/archives/103/">DN42探究日记 - Ep.2 通过OSPF搭建内部网络并启用iBGP - 悠笙の开发日记</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://jlu5.com/blog/dn42-multiple-servers-ibgp-igps">Multiple servers on dn42: iBGP and IGPs | jlu5</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://blog.byteloid.one/2026/01/01/dn42-day1-igp-babel-and-ibgp-rr/">从零开始的 DN42（Day 1）：IGP Babel 与 IBGP RR 路由反射器 -  Bingxin Blog</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://wiki.dn42.us/howto/Bird2">howto&#x2F;Bird2 - DN42 Wiki</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://dn42.dev/howto/BGP-communities">BGP-communities - DN42 Wiki</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://support.huawei.com/enterprise/zh/doc/EDOC1100333468/443d911b">S300, S500, S2700, S5700, S6700 V200R023C00 配置指南-IP单播路由 - 华为</a></p>
+
+        </li>
+        
+        <li class="post-title">
+          <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cnblogs.com/juzib/p/18336203">BGP 属性local_preference 本地优先 - 橘子飞飞</a></p>
+
+        </li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    
+
+
+    <section id="share">
+      <div class="header"><span>分享文章</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.vconet.top/archives/dn42-intro/" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/dn42-intro/&title=DN42 之旅：搭建多节点 BGP 网络 - VConet的杂物间&pics=https://static.vconet.top/2026/d227901ef864352a2c23ff804cf4330c.png&summary=前言本文用以记录自己加入 DN42 网络的历程，本人是初入 BGP 的小白，对于文章中出现的各种不严谨内容和各种低级错误，请大佬们手下留情，可在评论区指出。
+欢迎和我 Peer：VCNET DN42"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=DN42 之旅：搭建多节点 BGP 网络 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/dn42-intro/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.vconet.top/archives/dn42-intro/"/>
+        </div>
+        
+      </div>
+    </section>
+    </div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/archives/genshin-in-linux/">如何在 Linux 下玩原神？</a></div></section></div>
+
+<div class="related-wrap" id="related-posts">
+    <section class='header'>
+      <div class='title cap theme'>相关文章</div>
+    </section>
+    <section class='body'>
+    <div class="related-posts"><a class="item" href="/archives/nec-8-pve/" title="NEC 8小主机：打通 PVE 内外网"><span class="title">NEC 8小主机：打通 PVE 内外网</span><span class="excerpt">前言本文记录了我在 NEC 8代小主机上折腾 PVE 的过程，也希望能为想搭建类似内外网环境的朋友提供一些思路</span></a><a class="item" href="/archives/zerotier-for-alpine/" title="为 Alpine 提供 ZeroTier"><span class="title">为 Alpine 提供 ZeroTier</span></a><a class="item" href="/archives/genshin-in-linux/" title="如何在 Linux 下玩原神？"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item" href="/archives/linux-access-radminlan/" title="在 Linux 下访问 Radmin LAN 网络"><span class="title">在 Linux 下访问 Radmin LAN 网络</span><span class="excerpt">众所周知，Radmin LAN 并没有 Linux 版本，而有时仍需要访问对方的 Radmin LAN 网络，本文提供一种可行方案：让 Linux 通过一台 Windows Server 主机做 NAT 转发，借此访问整个 Radmi...</span></a></div></section></div>
+
+
+  <div class="related-wrap md-text" id="comments">
+    <section class='header cmt-title cap theme'>
+      <p>快来参与讨论吧~</p>
+
+    </section>
+    <section class='body cmt-body twikoo'>
+      
+
+<div id="twikoo_container"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+    </section>
+  </div>
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right"><div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C"><span class="toc-text">注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%8B%A9-BGP-Daemon"><span class="toc-text">选择 BGP Daemon</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bird-conf"><span class="toc-text">bird.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rpki-conf"><span class="toc-text">rpki.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ebgp-conf"><span class="toc-text">ebgp.conf</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="toc-text">系统配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sysctl"><span class="toc-text">sysctl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dummy-%E7%BD%91%E5%8D%A1"><span class="toc-text">Dummy 网卡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8"><span class="toc-text">容器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E4%BB%96%E4%BA%BA%E4%BA%92-Peer"><span class="toc-text">与他人互 Peer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WireGuard"><span class="toc-text">WireGuard</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%AF%86%E9%92%A5%E5%AF%B9"><span class="toc-text">生成密钥对</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%92-Peer"><span class="toc-text">互 Peer</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%92-Peer-%E4%BF%A1%E6%81%AF"><span class="toc-text">互 Peer 信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-eBGP"><span class="toc-text">配置 eBGP</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8D%E4%BD%BF%E7%94%A8-MP-BGP"><span class="toc-text">不使用 MP-BGP</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E4%BA%92%E8%81%94"><span class="toc-text">内网互联</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IGP"><span class="toc-text">IGP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ospf-conf"><span class="toc-text">ospf.conf</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ospf-area-conf"><span class="toc-text">ospf-area.conf</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iBGP"><span class="toc-text">iBGP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E8%B7%AF%E7%94%B1"><span class="toc-text">优化路由</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BGP-Community"><span class="toc-text">BGP Community</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#local-pref"><span class="toc-text">local_pref</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iBGP-%E7%9A%84-local-pref"><span class="toc-text">iBGP 的 local_pref</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BGP-Dampening"><span class="toc-text">BGP Dampening</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-compose-yml"><span class="toc-text">docker-compose.yml</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-text">其他</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"closeEnable":true,"closeText":"关闭提示","originalHost":"blog.vconet.top","officialHosts":["localhost"],"encoded":"YmxvZy52Y29uZXQudG9w"};
+  window.canonical["param"] = {"permalink":"https://blog.vconet.top/archives/dn42-intro/","checklink":"/js/plugins/video.js"};
+  // Fix: Ensure page is at the correct top position on data load
+  if (history.scrollRestoration) {
+    history.scrollRestoration = 'auto';
+  }
+  (function() {
+    const scrollHandler = () => {
+      const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
+      const startEl = document.getElementById('start');
+      if (wikiCover && startEl) {
+        window.scrollTo(0, startEl.offsetTop);
+      } else {
+        window.scrollTo(0, 0);
+      }
+    };
+    if (document.readyState !== 'loading') scrollHandler();
+    else document.addEventListener('DOMContentLoaded', scrollHandler);
+  })();
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":[],"codeblock":true,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      // 倒序遍历避免 splice 后的索引问题
+      for (let index = this.list.length - 1; index >= 0; index--) {
+        const e = this.list[index];
+        if (e.name === name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 已加载样式缓存
+    _loadedStyles: new Set(),
+
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      // 如果样式已加载，直接返回 null
+      if (utils._loadedStyles.has(href)) {
+        return null;
+      }
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      // 标记样式为已加载 (在创建元素后立即标记，防止重复创建)
+      utils._loadedStyles.add(href);
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 已加载脚本缓存
+    _loadedScripts: new Set(),
+
+    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免 PJAX 导航时的状态混淆)
+    _loadedElements: new WeakSet(),
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      // 如果脚本已加载，直接返回
+      if (utils._loadedScripts.has(src)) {
+        resolve();
+        return;
+      }
+      var script = document.createElement('script');
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        utils._loadedScripts.add(src);
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // PJAX 事件监听器管理
+    _pjaxListeners: new Set(),
+    
+    jq: (fn, pjax = true) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+      if (pjax && !fn._pjax_registered) {
+        document.addEventListener('pjax:complete', fn);
+        fn._pjax_registered = true;
+        utils._pjaxListeners.add(fn); // 追踪监听器以便清理
+      }
+    },
+    
+    // 清理所有 PJAX 事件监听器
+    cleanupPjaxListeners: () => {
+      utils._pjaxListeners.forEach(fn => {
+        document.removeEventListener('pjax:complete', fn);
+        fn._pjax_registered = false;
+      });
+      utils._pjaxListeners.clear();
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        if ($(el).find('.loading-wrap').length === 0){
+          $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+        }
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      // 检查元素实例是否已加载 (而不是检查属性)
+      if (el && utils._loadedElements.has(el)) {
+        return;
+      }
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            // 标记元素实例为已加载
+            if (el) utils._loadedElements.add(el);
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+
+    // 插件初始化管理器 - 统一处理 DOMContentLoaded 和 pjax:complete 事件
+    _pluginInitializers: [],
+    _pluginCleanups: new Map(), // 存储每个插件的清理函数
+    
+    initPlugin: (initFn, name, options = {}) => {
+      if (!initFn || typeof initFn !== 'function') return;
+      
+      // 避免重复注册
+      const pluginName = name || initFn.name;
+      if (utils._pluginInitializers.some(p => p.name === pluginName)) return;
+      
+      // 包装初始化函数，添加防重复执行的保护
+      const wrappedInit = () => {
+        try {
+          // 在执行前先清理旧的资源
+          if (utils._pluginCleanups.has(pluginName)) {
+            const cleanup = utils._pluginCleanups.get(pluginName);
+            if (typeof cleanup === 'function') {
+              cleanup();
+            }
+          }
+          
+          // 执行初始化，可能返回清理函数
+          const cleanup = initFn();
+          
+          // 如果初始化函数返回了清理函数，保存它
+          if (typeof cleanup === 'function') {
+            utils._pluginCleanups.set(pluginName, cleanup);
+          }
+        } catch (error) {
+          console.error(`[Plugin ${pluginName}] 初始化失败:`, error);
+        }
+      };
+      
+      utils._pluginInitializers.push({ 
+        fn: wrappedInit, 
+        name: pluginName,
+        options: options 
+      });
+      
+      // 如果 DOM 已经加载完成，立即执行
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        wrappedInit();
+      } else {
+        // 否则等待 DOMContentLoaded
+        window.addEventListener('DOMContentLoaded', wrappedInit, { once: true });
+      }
+    },
+
+    // 重新初始化所有插件（用于 PJAX 等场景）
+    reinitPlugins: () => {
+      utils._pluginInitializers.forEach(plugin => {
+        // 跳过标记为不需要重新初始化的插件
+        if (plugin.options.skipReinit) return;
+        
+        try {
+          plugin.fn();
+        } catch (error) {
+          console.error(`[Plugin ${plugin.name}] 重新初始化失败:`, error);
+        }
+      });
+    },
+    
+    // 清理所有插件资源
+    cleanupPlugins: () => {
+      utils._pluginCleanups.forEach((cleanup, name) => {
+        try {
+          cleanup();
+        } catch (error) {
+          console.error(`[Plugin ${name}] 清理失败:`, error);
+        }
+      });
+      utils._pluginCleanups.clear();
+    },
+    
+    // 清理所有资源（用于页面卸载或重置）
+    cleanupAll: () => {
+      utils.cleanupPlugins();
+      utils.cleanupPjaxListeners();
+    },
+  };
+
+  // 自动处理 PJAX 事件
+  document.addEventListener('pjax:before', () => {
+    // 在导航前清理旧的 PJAX 监听器（如果需要重新注册）
+    // 注意：这里不清理，因为监听器应该是持久的
+    // utils.cleanupPjaxListeners();
+  });
+  
+  document.addEventListener('pjax:complete', () => {
+    utils.reinitPlugins();
+  });
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+  <script>
+  (function() {
+    const lazyload = false;
+    
+    function initTwikoo() {
+      const el = document.getElementById('twikoo_container');
+      if (!el) return;
+      
+      function load_twikoo() {
+        utils.js('https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js', {defer: true}).then(function () {
+          const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+          twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js","envId":"https://comments.vconet.top/"}, {
+            el: '#twikoo_container',
+            path: path,
+          }));
+        });
+      }
+      
+      util.viewportLazyload(el, load_twikoo, lazyload);
+    }
+    
+    // Store in global stellar namespace for PJAX reinitialization
+    window.stellar = window.stellar || {};
+    window.stellar.initComments = window.stellar.initComments || {};
+    window.stellar.initComments.twikoo = initTwikoo;
+    
+    // Initialize on page load
+    initTwikoo();
+  })();
+</script>
+
+
+
+<script defer>
+  const initServices = () => {
+    // 用于存储需要清理的资源
+    let timers = [];
+    
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"},"rss":{"js":"/js/services/rss.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        const cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(cardlinks);
+          });
+        }
+      } else if (id == 'ghinfo') {
+        const els = document.querySelectorAll('.ds-ghinfo');
+        if (els.length > 0) {
+          utils.js(js, { defer: true });
+        }
+      } else if (id == 'voice') {
+        const voiceAudios = document.querySelectorAll('.voice>audio');
+        if (voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        const videos = document.querySelectorAll('.video>video');
+        if (videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        const files = document.querySelectorAll('.chat-file');
+        if (files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || id == 'memos' || id == 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          }, false);
+        }
+      }
+    }
+
+    // search
+    if (ctx.search && typeof searchFunc === 'function') {
+      const $inputArea = $("input#search-input");
+      if ($inputArea.length > 0 && !$inputArea[0]._searchInitialized) {
+        const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
+        const filter = $inputArea.attr('data-filter') || '';
+        searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
+        // 标记为已初始化，防止重复绑定
+        $inputArea[0]._searchInitialized = true;
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+    let firstAdjustInterval = null;
+    let mainInterval = null;
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      const date = new Date();
+      const sec = date.getSeconds();
+      firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+      timers.push(firstAdjustInterval);
+
+      function firstAdjustTime() {
+        NowTime();
+        if (firstAdjustInterval) {
+          clearInterval(firstAdjustInterval);
+          firstAdjustInterval = null;
+        }
+        mainInterval = setInterval(NowTime, 1000 * 60);
+        timers.push(mainInterval);
+      }
+
+      function NowTime() {
+        for (let i = 0; i < phoneTimes.length; ++i) {
+          const timeSpan = phoneTimes[i];
+          const date = new Date();
+          const hour = date.getHours();
+          const min = date.getMinutes();
+          timeSpan.innerHTML = check(hour) + ":" + check(min);
+        }
+      };
+
+      function check(val) {
+        if (val < 10) {
+          return ("0" + val);
+        }
+        return (val);
+      }
+    }
+
+    // chat quote - 存储事件监听器以便清理
+    const quoteClickHandlers = new Map();
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      const handler = function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      };
+      quote.addEventListener('click', handler);
+      quoteClickHandlers.set(quote, handler); // 保存处理器引用
+    });
+
+    // 返回清理函数，用于清理定时器和观察器
+    return () => {
+      // 清理所有定时器（包括可能未完成的 firstAdjustInterval）
+      timers.forEach(timer => {
+        if (timer) clearInterval(timer);
+      });
+      timers = [];
+      if (firstAdjustInterval) {
+        clearInterval(firstAdjustInterval);
+        firstAdjustInterval = null;
+      }
+      if (mainInterval) {
+        clearInterval(mainInterval);
+        mainInterval = null;
+      }
+      
+      // 断开观察器
+      if (chat_quote_obverser) {
+        chat_quote_obverser.disconnect();
+      }
+      
+      // 移除所有 click 事件监听器
+      quoteClickHandlers.forEach((handler, quote) => {
+        quote.removeEventListener('click', handler);
+      });
+      quoteClickHandlers.clear();
+    };
+  };
+
+  utils.initPlugin(initServices, 'services');
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  utils.initPlugin(() => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  }, 'swiper');
+</script>
+<script defer type="text/javascript" src="https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js"></script>
+<script>
+  utils.initPlugin(() => {
+    const els = document.querySelectorAll('.mermaid');
+    if (els.length > 0) {
+      const mermaid_config = {
+        startOnLoad: false,
+        theme:
+          "auto" == "auto" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "neutral",
+        logLevel: 3,
+        themeVariables: {
+          darkMode: true
+        },
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          curve: "linear"
+        },
+        gantt: {
+          axisFormat: "%Y/%m/%d"
+        },
+        sequence: {
+          actorMargin: 50
+        }
+      }
+      mermaid.initialize(mermaid_config);
+      mermaid.run();
+    }
+  }, 'mermaid');
+</script><script>
+  utils.initPlugin(() => {
+    const codeElements = document.querySelectorAll('.code');
+    if (codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js', { defer: true }).then(() => {
+        if (typeof createCopyButtons === 'function') {
+          createCopyButtons(codeElements);
+        }
+      });
+    }
+  }, 'copycode');
+</script>
+
+
+<!-- inject -->
+
+</div><div class="page-loading-bar"><img src="https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd"></div></body></html>
