@@ -6,7 +6,7 @@
   <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
   <link rel="canonical" href="https://blog.vconet.top/archives/goodix-fp-reader/">
   
-  <meta name="generator" content="Hexo 7.3.0">
+  <meta name="generator" content="Hexo 8.1.1">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   
   <meta name="renderer" content="webkit">
@@ -32,8 +32,8 @@
 <meta property="article:modified_time" content="2025-08-22T12:18:00.000Z">
 <meta property="article:author" content="VConet">
 <meta property="article:tag" content="Archlinux">
-<meta property="article:tag" content="fprint">
 <meta property="article:tag" content="C">
+<meta property="article:tag" content="fprint">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://blog.vconet.top/static/avatar.jpg">
   
@@ -147,29 +147,41 @@
   </div>
   
 
-<h3 id="pam-规则"><a href="#pam-规则" class="headerlink" title="pam 规则"></a>pam 规则</h3><p>默认情况下，Archlinux 下的 polkit 并不会将启用自己的 pam 规则，需要自己手动启用：</p>
+### pam 规则
+
+默认情况下，Archlinux 下的 polkit 并不会将启用自己的 pam 规则，需要自己手动启用：
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> /usr/lib/pam.d/polkit-1 /etc/pam.d/</span><br></pre></td></tr></table></figure>
 
-<p>并修改：</p>
+并修改：
+
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在顶端添加如下内容</span><br><span class="line">auth		sufficient  	pam_fprintd.so</span><br></pre></td></tr></table></figure>
 
-<p>如果你想同时使用指纹或密码，请从 AUR 安装 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://aur.archlinux.org/packages/pam-fprint-grosshack">pam-fprint-grosshack </a> 包</p>
-<p>对于一些不支持输入空密码的身份验证，如 Gnome 的 polkit 代理，也请安装该软件包并使用下面的规则</p>
+如果你想同时使用指纹或密码，请从 AUR 安装 [pam-fprint-grosshack ](https://aur.archlinux.org/packages/pam-fprint-grosshack) 包
+
+对于一些不支持输入空密码的身份验证，如 Gnome 的 polkit 代理，也请安装该软件包并使用下面的规则
+
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># auth            sufficient      pam_fprintd_grosshack.so</span><br><span class="line"># auth            sufficient      pam_unix.so try_first_pass nullok</span><br></pre></td></tr></table></figure>
 
-<h3 id="polkit-规则"><a href="#polkit-规则" class="headerlink" title="polkit 规则"></a>polkit 规则</h3><p>目前，Bitwarden 并不会自动添加所需的 polkt 规则，需要手动将下面的内容添加到 <code>/usr/share/polkit-1/actions/com.bitwarden.Bitwarden.policy</code></p>
+### polkit 规则
+
+目前，Bitwarden 并不会自动添加所需的 polkt 规则，需要手动将下面的内容添加到 `/usr/share/polkit-1/actions/com.bitwarden.Bitwarden.policy`
+
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">policyconfig</span> <span class="keyword">PUBLIC</span></span></span><br><span class="line"><span class="meta"> <span class="string">&quot;-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"> <span class="string">&quot;http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">policyconfig</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">id</span>=<span class="string">&quot;com.bitwarden.Bitwarden.unlock&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">description</span>&gt;</span>Unlock Bitwarden<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">message</span>&gt;</span>Authenticate to unlock Bitwarden<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">defaults</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">allow_any</span>&gt;</span>no<span class="tag">&lt;/<span class="name">allow_any</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">allow_inactive</span>&gt;</span>no<span class="tag">&lt;/<span class="name">allow_inactive</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">allow_active</span>&gt;</span>auth_self<span class="tag">&lt;/<span class="name">allow_active</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">defaults</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">policyconfig</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="Bitwarden-设置"><a href="#Bitwarden-设置" class="headerlink" title="Bitwarden 设置"></a>Bitwarden 设置</h3><blockquote>
-<p>仅讨论 KDE&#x2F;Gnome</p>
-</blockquote>
-<p>在使用 Bitwarden 提供的 <code>使用系统身份验证解锁</code> 功能前，请确保你的桌面环境已经为你启用了自己的 <code>密码库</code>，否则 <strong>Bitwarden 的设置里不会有 <code>使用系统身份验证解锁</code> 选项</strong></p>
-<p>KDE 和 Gnome 下分别为 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://wiki.archlinuxcn.org/wiki/KDE_Wallet">Kwallet</a> &amp; <a target="_blank" rel="noopener external nofollow noreferrer" href="https://wiki.archlinuxcn.org/wiki/GNOME/Keyring">Gnome&#x2F;keyring</a></p>
-<blockquote>
-<p>KDE 的 Kwallet 有可能不会激活自己的 D-Bus 服务，需要<a target="_blank" rel="noopener external nofollow noreferrer" href="https://wiki.archlinuxcn.org/wiki/KDE_Wallet#Automatic_D-Bus_activation">手动干预</a></p>
-</blockquote>
-<p>在启用 kwallet&#x2F;gnome-keyring 之后，便可打开 Bitwarden，勾选 <code>使用系统身份验证解锁</code></p>
-<p>下次解锁密码库时，便可使用指纹解锁</p>
+### Bitwarden 设置
+
+> 仅讨论 KDE/Gnome
+
+在使用 Bitwarden 提供的 `使用系统身份验证解锁` 功能前，请确保你的桌面环境已经为你启用了自己的 `密码库`，否则 **Bitwarden 的设置里不会有 `使用系统身份验证解锁` 选项**
+
+KDE 和 Gnome 下分别为 [Kwallet](https://wiki.archlinuxcn.org/wiki/KDE_Wallet) & [Gnome/keyring](https://wiki.archlinuxcn.org/wiki/GNOME/Keyring)
+
+> KDE 的 Kwallet 有可能不会激活自己的 D-Bus 服务，需要[手动干预][1]
+
+在启用 kwallet/gnome-keyring 之后，便可打开 Bitwarden，勾选 `使用系统身份验证解锁`
+
+下次解锁密码库时，便可使用指纹解锁
 <div class="tag-plugin video-player" style="max-width:100%;">
   <video controls preload playsinline webkit-playsinline>
   <source src="https://static.vconet.top/1595440453.webm"" type="video/mp4">Your browser does not support the video tag.
@@ -237,7 +249,7 @@
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8"><span class="toc-text">安装驱动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%87%E9%A1%B6-Linux-%E6%94%AF%E6%8C%81%E6%83%85%E5%86%B5"><span class="toc-text">汇顶 Linux 支持情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E5%86%99%E5%9B%BA%E4%BB%B6"><span class="toc-text">刷写固件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#55b4%E3%80%8155a4"><span class="toc-text">55b4、55a4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5584"><span class="toc-text">5584</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bitwarden"><span class="toc-text">Bitwarden</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pam-%E8%A7%84%E5%88%99"><span class="toc-text">pam 规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#polkit-%E8%A7%84%E5%88%99"><span class="toc-text">polkit 规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bitwarden-%E8%AE%BE%E7%BD%AE"><span class="toc-text">Bitwarden 设置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%80%9C%E4%BD%BF%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E8%A7%A3%E9%94%81%E2%80%9D-%E4%B8%8D%E8%A7%81%E4%BA%86%EF%BC%9F"><span class="toc-text">“使用系统身份验证解锁” 不见了？</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8"><span class="toc-text">安装驱动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%87%E9%A1%B6-Linux-%E6%94%AF%E6%8C%81%E6%83%85%E5%86%B5"><span class="toc-text">汇顶 Linux 支持情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E5%86%99%E5%9B%BA%E4%BB%B6"><span class="toc-text">刷写固件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#55b4%E3%80%8155a4"><span class="toc-text">55b4、55a4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5584"><span class="toc-text">5584</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bitwarden"><span class="toc-text">Bitwarden</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%80%9C%E4%BD%BF%E7%94%A8%E7%B3%BB%E7%BB%9F%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E8%A7%A3%E9%94%81%E2%80%9D-%E4%B8%8D%E8%A7%81%E4%BA%86%EF%BC%9F"><span class="toc-text">“使用系统身份验证解锁” 不见了？</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
