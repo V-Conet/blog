@@ -225,7 +225,7 @@
 
 <p>至此，已完成一台节点的互 Peer。</p>
 <h2 id="内网互联"><a href="#内网互联" class="headerlink" title="内网互联"></a>内网互联</h2><p>目前，还只是单个节点和他人 Peer，而当我们有多个节点之后，就需要让节点内部相互联通，我目前的网络架构如下：</p>
-<pre class="mermaid">graph LR
+<pre class="mermaid">graph TD
 subgraph zt[ZeroTier Underlay]
 	us[LAX, US]
 	hk[HKG, CN]
@@ -1144,9 +1144,9 @@ end</pre>
       if (!el) return;
       
       function load_twikoo() {
-        utils.js('https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js', {defer: true}).then(function () {
+        utils.js('https://gcore.jsdelivr.net/npm/twikoo@1.7/dist/twikoo.all.min.js', {defer: true}).then(function () {
           const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
-          twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js","envId":"https://comments.vconet.top/"}, {
+          twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/twikoo@1.7/dist/twikoo.all.min.js","envId":"https://comments.vconet.top/"}, {
             el: '#twikoo_container',
             path: path,
           }));
@@ -1426,7 +1426,7 @@ end</pre>
     }
   }, 'swiper');
 </script>
-<script defer type="text/javascript" src="https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js"></script>
+<script defer type="text/javascript" src="https://gcore.jsdelivr.net/npm/mermaid@v11/dist/mermaid.min.js"></script>
 <script>
   utils.initPlugin(() => {
     const els = document.querySelectorAll('.mermaid');
@@ -1438,7 +1438,7 @@ end</pre>
             window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "dark"
             : "neutral",
-        logLevel: 4,
+        logLevel: 3,
         themeVariables: {
           darkMode: true
         },
@@ -1455,12 +1455,7 @@ end</pre>
         }
       }
       mermaid.initialize(mermaid_config);
-      if (typeof mermaid.run === 'function') {
-        // Prefer v10+ signature but keep backward-compat
-        mermaid.run({ querySelector: '.mermaid' });
-      } else if (typeof mermaid.init === 'function') {
-        mermaid.init(undefined, els);
-      }
+      mermaid.run();
     }
   }, 'mermaid');
 </script><script>
