@@ -28,8 +28,8 @@
 <meta property="og:description" content="DN42 Network网络维护信息&nbsp;Network&nbsp;Maintenance&nbsp;InformationTG 频道(TG Channel)：@as423322    ASN: 4242423322 Maintainer: VCONET-MNT IPv4: 172.23.100.160&#x2F;27 IPv6: fd48:8669:9f9f::&#x2F;48 Domain: vc.dn">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog.vconet.top/static/avatar.jpg">
-<meta property="article:published_time" content="2026-05-02T04:00:43.926Z">
-<meta property="article:modified_time" content="2026-05-02T04:00:43.926Z">
+<meta property="article:published_time" content="2026-07-12T07:01:16.211Z">
+<meta property="article:modified_time" content="2026-07-12T07:01:16.211Z">
 <meta property="article:author" content="VConet">
 <meta property="article:tag" content="VConet, blog, Linux, Tech">
 <meta name="twitter:card" content="summary">
@@ -104,7 +104,7 @@
   <span class="sep"></span>
   <a class="cap breadcrumb" href="/dn42/">VCNET DN42</a>
   </div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-05-02T04:00:43.926Z">2026-05-02</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-05-02T04:00:43.926Z">2026-05-02</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-07-12T07:01:16.211Z">2026-07-12</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-07-12T07:01:16.211Z">2026-07-12</time></span></div></div></div>
     
     <div class="bottom only-title">
       
@@ -129,7 +129,14 @@
 <h2 id="中文"><a href="#中文" class="headerlink" title="中文"></a>中文</h2><p>我的实例：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://lg-dn42.vconet.top/">Looking Glass</a>，<a target="_blank" rel="noopener external nofollow noreferrer" href="https://flap-dn42.vconet.top/">FlapAlerted</a>，<a target="_blank" rel="noopener external nofollow noreferrer" href="https://status.vconet.top/">节点状态</a></p>
 <h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><p>通过 <code>anycast.vc.dn42</code> 提供 DNS 递归解析服务.</p>
 <p>提供 <code>speed.vc.dn42</code> 速度测试服务，位于 AMS - NL.</p>
-<p>通过 <code>sip.vc.dn42</code> 提供 SIP 服务.</p>
+<p>通过 <code>sip.vc.dn42</code> 提供 Tel42 SIP 服务，可拨打 +04243322：</p>
+<ul>
+<li>9100 Audio&#x2F;SMS Echo</li>
+<li>9200 Number Readout&#x2F; Send SMS to Any Target</li>
+<li>9300 Radio On Line</li>
+<li>9400 vFAX (<a target="_blank" rel="noopener external nofollow noreferrer" href="https://vfax.vc.dn42/">https://vfax.vc.dn42</a>)</li>
+</ul>
+<p>通过 <code>busrzi.dn42</code> 提供无需登录注册的类不蒜子统计服务，位于 LAX - US.</p>
 <h3 id="节点"><a href="#节点" class="headerlink" title="节点:"></a>节点:</h3><p>推荐使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://t.me/VCNET_DN42_Bot">@VCNET_DN42_Bot</a> 机器人自动互 Peer</p>
 <h4 id="全自动"><a href="#全自动" class="headerlink" title="全自动"></a>全自动</h4><h5 id="AMS-NL-Aluy"><a href="#AMS-NL-Aluy" class="headerlink" title="AMS, NL, Aluy"></a>AMS, NL, Aluy</h5><p>感谢 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://aluy.net/">Aluy</a> 的提供的免费 VPS （来自 LET 社区）</p>
 <table>
@@ -284,13 +291,21 @@
 <td align="center">IPv4</td>
 </tr>
 </tbody></table>
-<h3 id="手动-Peering"><a href="#手动-Peering" class="headerlink" title="手动 Peering"></a>手动 Peering</h3><p>仅接受 Wireguard 或 ZeroTier，请将以下信息发送至 <a href="mailto:&#100;&#110;&#52;&#50;&#64;&#118;&#99;&#x6f;&#110;&#x65;&#x74;&#46;&#116;&#x6f;&#x70;" rel="external nofollow noreferrer">dn42@vconet.top</a></p>
+<h3 id="手动-Peering"><a href="#手动-Peering" class="headerlink" title="手动 Peering"></a>手动 Peering</h3><p>仅接受 Wireguard 或 ZeroTier，请将以下信息发送至 <a href="mailto:&#x64;&#110;&#x34;&#50;&#x40;&#118;&#99;&#x6f;&#110;&#101;&#x74;&#x2e;&#116;&#x6f;&#112;" rel="external nofollow noreferrer">dn42@vconet.top</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">您的信息：</span><br><span class="line">ASN: 424242xxxx</span><br><span class="line"></span><br><span class="line">Server: 您要 peer 的节点名称</span><br><span class="line"></span><br><span class="line">PublicKey: 您的 WireGuard 公钥</span><br><span class="line">PresharedKey: 您的 WireGuard Preshared 密钥，如果需要</span><br><span class="line">Endpoint: 您提供的 Endpoint，若没有请注明</span><br><span class="line"></span><br><span class="line">DN42 IPv4: (可选，常用 IPv6 链路地址)</span><br><span class="line">DN42 IPv6: (IPv6 链路地址或您的 DN42 IPv6 地址)</span><br><span class="line"></span><br><span class="line">Transmit Routes: (IPv6/IPv4/both)</span><br><span class="line">Multi-Protocol BGP: (true/false)</span><br><span class="line">Extended Next Hop: (true/false)</span><br></pre></td></tr></table></figure>
 
 <h2 id="English"><a href="#English" class="headerlink" title="English"></a>English</h2><ul>
 <li>Instances: <a target="_blank" rel="noopener external nofollow noreferrer" href="https://lg-dn42.vconet.top/">Looking Glass</a>, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://flap-dn42.vconet.top/">FlapAlerted</a>, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://status.vconet.top/">Node Status</a></li>
 </ul>
-<h3 id="Services"><a href="#Services" class="headerlink" title="Services"></a>Services</h3><p>Provide recursive DNS service through <code>anycast.vc.dn42</code>.<br>Provide speed test service through <code>speed.vc.dn42</code>, located in AMS - NL.<br>Provide SIP service through <code>sip.vc.dn42</code>.</p>
+<h3 id="Services"><a href="#Services" class="headerlink" title="Services"></a>Services</h3><p>Provide recursive DNS service through <code>anycast.vc.dn42</code>.<br>Provide speed test service through <code>speed.vc.dn42</code>, located in AMS - NL.<br>Provide Tel42 SIP service through <code>sip.vc.dn42</code>, you can dial +04243322:</p>
+<ul>
+<li>9100 Audio&#x2F;SMS Echo</li>
+<li>9200 Number Readout&#x2F; Send SMS to Any Target</li>
+<li>9300 Radio On Line</li>
+<li>9400 vFAX (<a target="_blank" rel="noopener external nofollow noreferrer" href="https://vfax.vc.dn42/">https://vfax.vc.dn42</a>)</li>
+<li></li>
+</ul>
+<p>Provide Busrzi service through <code>busrzi.dn42</code>, a non-login and non-registration statistics service, located in LAX - US.</p>
 <h3 id="Nodes"><a href="#Nodes" class="headerlink" title="Nodes:"></a>Nodes:</h3><p>It is recommended to use <a target="_blank" rel="noopener external nofollow noreferrer" href="https://t.me/VCNET_DN42_Bot">@VCNET_DN42_Bot</a> bot for automatic peering.</p>
 <h4 id="Fully-Automatic"><a href="#Fully-Automatic" class="headerlink" title="Fully Automatic"></a>Fully Automatic</h4><h5 id="AMS-NL-Aluy-1"><a href="#AMS-NL-Aluy-1" class="headerlink" title="AMS, NL, Aluy"></a>AMS, NL, Aluy</h5><p>Thanks to <a target="_blank" rel="noopener external nofollow noreferrer" href="https://aluy.net/">Aluy</a> for providing a free VPS (From LET community)</p>
 <table>
@@ -445,7 +460,7 @@
 <td align="center">IPv4</td>
 </tr>
 </tbody></table>
-<h3 id="Manual-Peering"><a href="#Manual-Peering" class="headerlink" title="Manual Peering"></a>Manual Peering</h3><p>Only WireGuard or ZeroTier are accepted. Please send the following information to <a href="mailto:&#x64;&#x6e;&#x34;&#50;&#x40;&#x76;&#x63;&#111;&#110;&#101;&#x74;&#46;&#116;&#x6f;&#x70;" rel="external nofollow noreferrer">dn42@vconet.top</a></p>
+<h3 id="Manual-Peering"><a href="#Manual-Peering" class="headerlink" title="Manual Peering"></a>Manual Peering</h3><p>Only WireGuard or ZeroTier are accepted. Please send the following information to <a href="mailto:&#x64;&#110;&#52;&#x32;&#64;&#118;&#x63;&#x6f;&#x6e;&#x65;&#116;&#46;&#x74;&#x6f;&#112;" rel="external nofollow noreferrer">dn42@vconet.top</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Your information:</span><br><span class="line">ASN: 424242xxxx</span><br><span class="line"></span><br><span class="line">Server: Node you want to peer with</span><br><span class="line"></span><br><span class="line">PublicKey: Your WireGuard Public Key</span><br><span class="line">PresharedKey: Your WireGuard Preshared Key, if needed</span><br><span class="line">Endpoint: Your provided Endpoint, please specify if not available</span><br><span class="line"></span><br><span class="line">DN42 IPv4: (optional, IPv6 LLA preferred)</span><br><span class="line">DN42 IPv6: (IPv6 LLA or your DN42 IPv6 if not using MP-BGP)</span><br><span class="line"></span><br><span class="line">Transmit Routes: (IPv6/IPv4/both)</span><br><span class="line">Multi-Protocol BGP: (true/false)</span><br><span class="line">Extended Next Hop: (true/false)</span><br></pre></td></tr></table></figure></article>
 
   <div class="related-wrap md-text" id="comments">
