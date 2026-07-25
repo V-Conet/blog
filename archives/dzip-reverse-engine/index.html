@@ -195,40 +195,6 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── dir_a</span><br><span class="line">│   ├── Markdown 文档.txt</span><br><span class="line">│   └── Microsoft PowerPoint 幻灯片.pptx</span><br><span class="line">├── dir_b</span><br><span class="line">│   ├── 欢迎使用文档应用.docx</span><br><span class="line">│   └── 平面示意图.pdf</span><br><span class="line">├── h.ogg</span><br><span class="line">├── HOYO-MiX - 如歌的秘数 Choir&#x27;s Cypher [mqms2].ogg</span><br><span class="line">└── test.txt</span><br><span class="line"></span><br><span class="line">3 directories, 7 files</span><br></pre></td></tr></table></figure>
 
 <p>用 APP 压缩成 dzip，使用我们自己写的 parser 解压，结果和原文件逐字节一致，至此，无密码 dzip 的解压已解决，之后就是如何处理加密 dzip。</p>
-<!-- ## 压缩等级：一段小插曲
-
-这个 `解压专家` APP 里有个选项可以调压缩等级，我比较好奇他有没有在这这方面做什么手脚。于是我逐一压测了等级 1–9，结果发现：
-
-```
-dir_test.dzip   (L1)   flags=0x080e  (bits 1,2,3,11) -- 两位置位
-dir_test_2.dzip (L2)   flags=0x080c  (bit 2,3,11)
-dir_test_3.dzip (L3)   flags=0x0808  (bit 3,11)
-dir_test_4.dzip (L4)   flags=0x0808
-dir_test_5.dzip (L5)   flags=0x0808
-dir_test_6.dzip (L6)   flags=0x0808
-dir_test_7.dzip (L7)   flags=0x0808
-dir_test_8.dzip (L8)   flags=0x080a  (bit 1,3,11)
-dir_test_9.dzip (L9)   flags=0x080a
-```
-
-两个发现：
-
-1. **所有文件大小完全一样**（974 字节），每条目的 `comp_size`/`uncomp_size` 也一样；
-2. **唯一变的是 GP flag 的 bit 1 和 bit 2**；bit 3（数据描述符）和 bit 11（UTF-8）是固定的。
-
-原因是测试数据太小（4–5 字节），deflate 在任何等级下产出的字节流都一样，所以压缩等级对输出**毫无影响**，只是写进了两个信息位里。我用真实大文件（49MB 的 ogg/pdf/pptx/docx）验证了这一点：这时不同等级的 `comp_size` 才拉开差距，但也就差千分之零点几--因为这些数据本身已经是压缩过的，deflate 榨不动多少，等级 3 甚至偶尔比等级 9 还小一点点。
-
-把等级到位的映射记下来（这编码器自定义的，和 PKWARE 官方语义还不一致，别按官方含义读）：
-
-| zlib 等级 | bit1 (0x02) | bit2 (0x04) |  flags   |
-| :-------: | :---------: | :---------: | :------: |
-| 1 / 默认  |      1      |      1      | `0x080e` |
-|     2     |      0      |      1      | `0x080c` |
-|    3–7    |      0      |      0      | `0x0808` |
-|   8、9    |      1      |      0      | `0x080a` |
-
-这俩位是信息性的，APPNOTE 也要求解压器忽略它们，所以对解压没影响。记下纯粹是好奇。 -->
-
 <h2 id="破解加密"><a href="#破解加密" class="headerlink" title="破解加密"></a>破解加密</h2><p>先看一个最小的加密样本 <code>test.dzip</code>（297 字节，里面就一个 <code>test.txt</code>，内容 <code>hello,world</code>）：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00000000</span>: <span class="number">5541</span> <span class="number">0304</span> <span class="number">3300</span> <span class="number">0908</span> <span class="number">6300</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span>  UA..<span class="number">3.</span>..c.......</span><br><span class="line"><span class="number">00000010</span>: <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0b00</span> <span class="number">0000</span> <span class="number">0800</span> <span class="number">0b00</span> <span class="number">7465</span>  ..............te</span><br><span class="line"><span class="number">00000020</span>: <span class="number">7374</span> <span class="number">2e74</span> <span class="number">7874</span> <span class="number">0199</span> <span class="number">0700</span> <span class="number">0100</span> <span class="number">4145</span> <span class="number">0308</span>  st.txt......AE..</span><br><span class="line"><span class="number">00000030</span>: <span class="number">008f</span> <span class="number">7330</span> <span class="number">97</span>a0 b4c0 <span class="number">7</span>a21 <span class="number">5788</span> <span class="number">22</span>c1 a6f6  ..s0....z!W.<span class="string">&quot;...</span></span><br><span class="line"><span class="string">00000040: 8b19 ef96 3038 8dac 879d f34f 6969 7856  ....08.....OiixV</span></span><br><span class="line"><span class="string">00000050: 366c de4c a894 1998 4914 5541 0708 fed1  6l.L....I.UA....</span></span><br><span class="line"><span class="string">00000060: 887a 2900 0000 0b00 0000 5541 0102 3303  .z).......UA..3.</span></span><br><span class="line"><span class="string">00000070: 3300 0908 6300 0000 0000 fed1 887a 2900  3...c........z).</span></span><br><span class="line"><span class="string">00000080: 0000 0b00 0000 0800 3300 0000 0000 0000  ........3.......</span></span><br><span class="line"><span class="string">00000090: 8000 b081 0000 0000 7465 7374 2e74 7874  ........test.txt</span></span><br><span class="line"><span class="string">000000a0: 0199 0700 0100 4145 0308 0051 1a24 0017  ......AE...Q.$..</span></span><br><span class="line"><span class="string">000000b0: 0020 0077 df26 3f49 1233 56d2 8a4a 8715  . .w.&amp;?I.3V..J..</span></span><br><span class="line"><span class="string">000000c0: d25b f5b9 80be eeb5 03ca b46e a61a c9f3  .[.........n....</span></span><br><span class="line"><span class="string">000000d0: 320e da55 4105 0600 0000 0001 0001 0069  2..UA..........i</span></span><br><span class="line"><span class="string">000000e0: 0000 006a 0000 0000 00c1 76ec 436f 1bfb  ...j......v.Co..</span></span><br><span class="line"><span class="string">000000f0: ed8a fe2b bece 534c 916b e11d 724b 0139  ...+..SL.k..rK.9</span></span><br><span class="line"><span class="string">00000100: 8985 d6c3 cc23 2023 e402 01b0 be3c 99af  .....# #.....&lt;..</span></span><br><span class="line"><span class="string">00000110: a5d5 2ee7 6ed6 c541 019a 45b6 5b65 6ded  ....n..A..E.[em.</span></span><br><span class="line"><span class="string">00000120: 2e11 e56b 0ed7 ffdd 5c                   ...k....\</span></span><br></pre></td></tr></table></figure>
 
