@@ -2586,6 +2586,47 @@ div.toast.show {
 .l_cover.post {
   height: inherit;
 }
+.l_cover.home {
+  overflow: hidden;
+}
+.l_cover.home .home-cover {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: var(--gap-max);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.l_cover.home .home-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.45));
+  pointer-events: none;
+}
+.l_cover.home .cover-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+}
+.l_cover.home .cover-wrap .cover-title {
+  color: inherit;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+}
+.l_cover.home .cover-wrap .description {
+  color: inherit;
+  opacity: 0.92;
+}
+.l_cover.home .cover-wrap .start-wrap {
+  margin-top: 2.5rem;
+}
 .l_cover .cover-wrap {
   margin-bottom: 0;
   display: flex;

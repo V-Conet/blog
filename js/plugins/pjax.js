@@ -388,6 +388,35 @@
   }
 
   /**
+   * Execute scripts from the cover area after PJAX replacement
+   */
+  function executeCoverScripts(doc) {
+    const coverRoot = doc.querySelector('#l_cover');
+    if (!coverRoot) return;
+
+    const scripts = coverRoot.querySelectorAll('script');
+    scripts.forEach(oldScript => {
+      const newScript = document.createElement('script');
+      Array.from(oldScript.attributes).forEach(attr => {
+        newScript.setAttribute(attr.name, attr.value);
+      });
+
+      const scriptContent = oldScript.textContent || oldScript.innerHTML;
+      if (oldScript.type === 'module') {
+        const blob = new Blob([scriptContent], { type: 'text/javascript' });
+        const url = URL.createObjectURL(blob);
+        newScript.src = url;
+        newScript.onload = () => URL.revokeObjectURL(url);
+        newScript.onerror = () => URL.revokeObjectURL(url);
+      } else if (!oldScript.src) {
+        newScript.textContent = scriptContent;
+      }
+
+      document.head.appendChild(newScript);
+    });
+  }
+
+  /**
    * Navigate to a new page using PJAX
    */
   async function navigate(url, options = {}) {
@@ -404,11 +433,11 @@
 
     try {
       // Check if we need to animate out (scroll to content start) if current page has cover
-      const currentWikiCover = document.querySelector('#l_cover .l_cover.wiki');
+      const currentFullscreenCover = document.querySelector('#l_cover .l_cover.wiki, #l_cover .l_cover.home');
       const startEl = document.getElementById('start');
       let scrollPromise = Promise.resolve();
       
-      if (currentWikiCover && startEl && !isPop) {
+      if (currentFullscreenCover && startEl && !isPop) {
         // Scroll to #start so content slides up to top (pushing cover out of view)
         const rect = startEl.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -440,6 +469,9 @@
       // Replace content
       replaceContent(contents, config.selectors, doc);
 
+      // Execute scripts embedded in the cover area
+      executeCoverScripts(doc);
+
       // Execute comment scripts from the new page
       executeCommentScripts(doc);
 
@@ -447,10 +479,10 @@
       if (!isPop) {
         // 如果有全屏 wiki cover，滚动到内容区域 (#start)
         // 否则滚动到顶部
-        const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
+        const fullscreenCover = document.querySelector('#l_cover .l_cover.wiki, #l_cover .l_cover.home');
         const newStartEl = document.getElementById('start');
         
-        if (wikiCover && newStartEl) {
+        if (fullscreenCover && newStartEl) {
           // 立即跳转到目标位置，不使用动画（避免与导航前的滚动冲突）
           const rect = newStartEl.getBoundingClientRect();
           const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
