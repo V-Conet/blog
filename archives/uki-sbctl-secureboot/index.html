@@ -3,12 +3,12 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.40.0" theme-name="Stellar" theme-version="1.40.0">
   <link rel="canonical" href="https://blog.vconet.top/archives/uki-sbctl-secureboot/">
   
   <meta name="generator" content="Hexo 8.1.2">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
-  
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin><link rel="preconnect" href="https://unpkg.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <meta name="renderer" content="webkit">
   <meta name="force-rendering" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
@@ -19,12 +19,11 @@
   <meta name="theme-color" content="#f9fafb">
   <title>UKI+sbctl：启用 Secure Boot 最简单的方法 - VConet的杂物间</title>
 
-  
-    <meta name="description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。">
+  <meta name="description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UKI+sbctl：启用 Secure Boot 最简单的方法">
 <meta property="og:url" content="https://blog.vconet.top/archives/uki-sbctl-secureboot/">
-<meta property="og:site_name" content="VConet的杂物间">
+<meta property="og:site_name" content="UKI+sbctl：启用 Secure Boot 最简单的方法">
 <meta property="og:description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog.vconet.top/static/avatar.jpg">
@@ -36,8 +35,7 @@
 <meta property="article:tag" content="UKI">
 <meta property="article:tag" content="sbctl">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://blog.vconet.top/static/avatar.jpg">
-  
+<meta name="twitter:image" content="https://blog.vconet.top/static/avatar.jpg"><meta name="twitter:title" content="UKI+sbctl：启用 Secure Boot 最简单的方法">
   
   
   <meta name="keywords" content="Archlinux,Secure Boot,UKI,sbctl">
@@ -53,7 +51,8 @@
     
   
 
-  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+  <link rel="preload" href="/css/main.css?v=1.40.0" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=1.40.0">
 
 
   
@@ -79,34 +78,47 @@
 </style>
 <script defer src="https://analysis.vconet.top/script.js" data-website-id="ee90339e-f6e2-457d-86ee-ba4f417c1afb"></script>
 </head>
-<body><div class="sitebg"><div class="siteblur"></div></div><div id="l_cover"></div><div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<body><div class="sitebg"><div class="siteblur"></div></div><div id="l_cover"></div><div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left leftbar-card"><div class="sidebg"></div><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://blog.vconet.top/static/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
 
-<div class="nav-area">
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg"></div><img no-lazy class="avatar" src="https://blog.vconet.top/static/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
 
-<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="DN42" href="/dn42/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M6 4.71c.78.711 2.388 2.653 2.575 4.737C8.75 11.396 10.035 12.98 12 13c.755.008 1.518-.537 1.516-1.292c0-.233-.039-.472-.099-.692A1.4 1.4 0 0 1 13.5 10c.61-1.257 1.81-1.595 2.76-2.278c.421-.303.806-.623.975-.88c.469-.71.937-2.131.703-2.842M22 13c-.33.931-.562 3.375-4.282 3.414c0 0-3.293 0-4.281 1.862c-.791 1.49-.33 3.103 0 3.724" opacity=".5"/></g></svg></a><a class="nav-item" title="友链" href="/friends/" style="color:#FF9800"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48"><!-- Icon from IconPark Outline by ByteDance - https://github.com/bytedance/IconPark/blob/master/LICENSE --><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20"/><path d="M31 7v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M31 7v17"/><path d="m16.636 6.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m16.636 6.636l14.142 14.142"/><path d="M7 17h17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M7 17h17"/><path d="M20.364 17.636L6.222 31.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M20.364 17.636L6.222 31.778"/><path d="M17 25v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M17 25v17"/><path d="m17.636 27.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m17.636 27.636l14.142 14.142"/><path d="M24 31h18z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 31h18"/><path d="M42.364 16.636L28.222 30.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M42.364 16.636L28.222 30.778M24 31a7 7 0 1 0 0-14a7 7 0 0 0 0 14"/></g></svg></a><a class="nav-item" title="关于我" href="/about/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
-</div>
-<div class="widgets">
+
 <div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
+<div class="widgets">
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="leftbar-active-icon-grad" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+<div class="nav-area">
 
-
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/archives/dzip-reverse-engine/"><span class="title">逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES</span></a><a class="item title" href="/archives/kde-plm-fix/"><span class="title">KDE PLM 的问题及解决方案</span></a><a class="item title" href="/archives/stellar-friends/"><span class="title">为 Stellar 主题实现更轻量的动态友链</span></a><a class="item title" href="/archives/linux-wpa-eap-issue/"><span class="title">wpa_supplicant 后端无法连接 802.1x WiFi</span></a><a class="item title" href="/archives/dn42-intro/"><span class="title">DN42 之旅：搭建多节点 BGP 网络</span></a><a class="item title" href="/archives/genshin-in-linux/"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item title" href="/archives/hires-in-linux/"><span class="title">Linux 上 iBasso DC04U 原生 DSD 直出指南</span></a><a class="item title" href="/archives/zerotier-for-alpine/"><span class="title">为 Alpine 提供 ZeroTier</span></a><a class="item title" href="/archives/linux-access-radminlan/"><span class="title">在 Linux 下访问 Radmin LAN 网络</span></a><a class="item title" href="/archives/nvidia-kvm-passthrough/"><span class="title">告别重启：Linux 下的 NVIDIA 显卡直通</span></a></div></widget>
+<nav class="menu dis-select"><a class="nav-item active themed" style="--item-grad:url(#menu-grad-post);--item-theme:#1BCDFC" title="博客" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg><span>博客</span><span class="active-dot"></span>
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-post" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-dn42);--item-theme:#3DC550" title="DN42" href="/dn42/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M6 4.71c.78.711 2.388 2.653 2.575 4.737C8.75 11.396 10.035 12.98 12 13c.755.008 1.518-.537 1.516-1.292c0-.233-.039-.472-.099-.692A1.4 1.4 0 0 1 13.5 10c.61-1.257 1.81-1.595 2.76-2.278c.421-.303.806-.623.975-.88c.469-.71.937-2.131.703-2.842M22 13c-.33.931-.562 3.375-4.282 3.414c0 0-3.293 0-4.281 1.862c-.791 1.49-.33 3.103 0 3.724" opacity=".5"/></g></svg><span>DN42</span>
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-dn42" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-friends);--item-theme:#FF9800" title="友链" href="/friends/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48"><!-- Icon from IconPark Outline by ByteDance - https://github.com/bytedance/IconPark/blob/master/LICENSE --><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20"/><path d="M31 7v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M31 7v17"/><path d="m16.636 6.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m16.636 6.636l14.142 14.142"/><path d="M7 17h17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M7 17h17"/><path d="M20.364 17.636L6.222 31.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M20.364 17.636L6.222 31.778"/><path d="M17 25v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M17 25v17"/><path d="m17.636 27.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m17.636 27.636l14.142 14.142"/><path d="M24 31h18z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 31h18"/><path d="M42.364 16.636L28.222 30.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M42.364 16.636L28.222 30.778M24 31a7 7 0 1 0 0-14a7 7 0 0 0 0 14"/></g></svg><span>友链</span>
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-friends" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-about);--item-theme:#F44336" title="关于我" href="/about/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg><span>关于我</span>
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-about" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+</a></nav>
 </div>
-<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/V-Conet" target="_blank" rel="external nofollow noopener noreferrer"><svg aria-hidden="true" role="img" class="color-icon-primary" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a><a class="social" href="https://t.me/v_conet" target="_blank" rel="external nofollow noopener noreferrer"><img src="/static/telegram.svg"/></a><a class="social" href="https://git.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><img src="/static/forgejo.svg" /></a><a class="social" href="https://blog.vconet.top/atom.xml" target="_blank" rel="external nofollow noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div></footer>
+
+
+<widget class="widget-wrapper slide-up recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/archives/dzip-reverse-engine/"><span class="title">逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES</span></a><a class="item title" href="/archives/kde-plm-fix/"><span class="title">KDE PLM 的问题及解决方案</span></a><a class="item title" href="/archives/stellar-friends/"><span class="title">为 Stellar 主题实现更轻量的动态友链</span></a><a class="item title" href="/archives/linux-wpa-eap-issue/"><span class="title">wpa_supplicant 后端无法连接 802.1x WiFi</span></a><a class="item title" href="/archives/dn42-intro/"><span class="title">DN42 之旅：搭建多节点 BGP 网络</span></a><a class="item title" href="/archives/genshin-in-linux/"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item title" href="/archives/hires-in-linux/"><span class="title">Linux 上 iBasso DC04U 原生 DSD 直出指南</span></a><a class="item title" href="/archives/zerotier-for-alpine/"><span class="title">为 Alpine 提供 ZeroTier</span></a><a class="item title" href="/archives/linux-access-radminlan/"><span class="title">在 Linux 下访问 Radmin LAN 网络</span></a><a class="item title" href="/archives/nvidia-kvm-passthrough/"><span class="title">告别重启：Linux 下的 NVIDIA 显卡直通</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https:&#x2F;&#x2F;github.com&#x2F;V-Conet" target="_blank" rel="external nofollow noopener noreferrer"><svg aria-hidden="true" role="img" class="color-icon-primary" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a><a class="social" href="https:&#x2F;&#x2F;t.me&#x2F;v_conet" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/static/telegram.svg"/></a><a class="social" href="https:&#x2F;&#x2F;git.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/static/forgejo.svg" /></a><a class="social" href="https:&#x2F;&#x2F;blog.vconet.top&#x2F;atom.xml" target="_blank" rel="external nofollow noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
 
 
 
 
-<div class="article banner top"><img class="lazy bg" data-src="https://static.vconet.top/612702643.png">
+
+<div class="article-banner-wrap slide-up"><div class="article banner top" style="--bg-url:url('https://static.vconet.top/612702643.png')"><img class="lazy bg" data-src="https://static.vconet.top/612702643.png">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-02-04T14:38:00.000Z">2025-02-04</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-02-04T14:38:00.000Z">2025-02-04</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-02-04T14:38:00.000Z">2025-02-04</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-02-04T14:38:00.000Z">2025-02-04</time></span></div>
+</div></div>
     
     <div class="bottom only-title">
       
@@ -117,7 +129,8 @@
     </div>
     
   </div>
-  </div><article class="md-text content"><h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h2><p>上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。</p>
+  </div></div>
+<article class="md-text content slide-up"><h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h2><p>上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。</p>
 <span id="more"></span>
 
 
@@ -126,36 +139,36 @@
 <p>我所使用的内核为 <code>linux-zen</code>，下面的配置请注意修改</p>
 </blockquote>
 <h3 id="修改内核命令行参数"><a href="#修改内核命令行参数" class="headerlink" title="修改内核命令行参数"></a>修改内核命令行参数</h3><p>创建<code>/etc/kernel/cmdline</code>如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root=UUID=系统的分区UUID rw splash loglevel=3</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root=UUID=系统的分区UUID rw splash loglevel=3</span><br></pre></td></tr></tbody></table></figure>
 
-<p><em>注：Btrfs分区可能需要添加 rootflags&#x3D;subvol&#x3D;XXX 的挂载参数，可以在grub生成的文件中寻找</em></p>
-<h3 id="修改-mkinitcpio-预设"><a href="#修改-mkinitcpio-预设" class="headerlink" title="修改 mkinitcpio 预设"></a>修改 mkinitcpio 预设</h3><p>编辑<code>/etc/mkinitcpio.d/linux-zen.preset</code>，取消 “<em>PRESET</em>_image&#x3D;XXX” “<em>PRESET</em>_uki&#x3D;XXX”的注释，并且修改存储位置，保存到 <code>EFI</code> 分区内</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">mkinitcpio preset file <span class="keyword">for</span> the <span class="string">&#x27;linux-zen&#x27;</span> package</span></span><br><span class="line"></span><br><span class="line">ALL_config=&quot;/etc/mkinitcpio.conf&quot;</span><br><span class="line">ALL_kver=&quot;/boot/vmlinuz-linux-zen&quot;</span><br><span class="line"></span><br><span class="line">PRESETS=(&#x27;default&#x27; &#x27;fallback&#x27;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">##我的EFI分区挂载在/boot下，故作此修改###</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_config=<span class="string">&quot;/etc/mkinitcpio.conf&quot;</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_image=<span class="string">&quot;/boot/initramfs-linux-zen.img&quot;</span></span></span><br><span class="line">default_uki=&quot;/boot/EFI/Linux/arch-linux-zen.efi&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_options=<span class="string">&quot;--splash /usr/share/systemd/bootctl/splash-arch.bmp&quot;</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">fallback_config=<span class="string">&quot;/etc/mkinitcpio.conf&quot;</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">fallback_image=<span class="string">&quot;/boot/initramfs-linux-zen-fallback.img&quot;</span></span></span><br><span class="line">fallback_uki=&quot;/boot/EFI/Linux/arch-linux-zen-fallback.efi&quot;</span><br><span class="line">fallback_options=&quot;-S autodetect&quot;</span><br></pre></td></tr></table></figure>
+<p><em>注：Btrfs分区可能需要添加 rootflags=subvol=XXX 的挂载参数，可以在grub生成的文件中寻找</em></p>
+<h3 id="修改-mkinitcpio-预设"><a href="#修改-mkinitcpio-预设" class="headerlink" title="修改 mkinitcpio 预设"></a>修改 mkinitcpio 预设</h3><p>编辑<code>/etc/mkinitcpio.d/linux-zen.preset</code>，取消 “<em>PRESET</em>_image=XXX” “<em>PRESET</em>_uki=XXX”的注释，并且修改存储位置，保存到 <code>EFI</code> 分区内</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">mkinitcpio preset file <span class="keyword">for</span> the <span class="string">'linux-zen'</span> package</span></span><br><span class="line"></span><br><span class="line">ALL_config="/etc/mkinitcpio.conf"</span><br><span class="line">ALL_kver="/boot/vmlinuz-linux-zen"</span><br><span class="line"></span><br><span class="line">PRESETS=('default' 'fallback')</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">##我的EFI分区挂载在/boot下，故作此修改###</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_config=<span class="string">"/etc/mkinitcpio.conf"</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_image=<span class="string">"/boot/initramfs-linux-zen.img"</span></span></span><br><span class="line">default_uki="/boot/EFI/Linux/arch-linux-zen.efi"</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_options=<span class="string">"--splash /usr/share/systemd/bootctl/splash-arch.bmp"</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">fallback_config=<span class="string">"/etc/mkinitcpio.conf"</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">fallback_image=<span class="string">"/boot/initramfs-linux-zen-fallback.img"</span></span></span><br><span class="line">fallback_uki="/boot/EFI/Linux/arch-linux-zen-fallback.efi"</span><br><span class="line">fallback_options="-S autodetect"</span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="构建-UKI"><a href="#构建-UKI" class="headerlink" title="构建 UKI"></a>构建 UKI</h3><p>确保 <code>EFI</code> 目录已挂载，运行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p EFI_MOUNT_POINT/EFI/Linux</span><br><span class="line">mkinitcpio -p linux-zen</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p EFI_MOUNT_POINT/EFI/Linux</span><br><span class="line">mkinitcpio -p linux-zen</span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="添加引导"><a href="#添加引导" class="headerlink" title="添加引导"></a>添加引导</h3><p>遵循一切从简的理念，使用 <code>efibootmgr</code> 添加引导</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">efibootmgr --create \</span><br><span class="line">    -d /dev/nvmeXXX -p 1 \</span><br><span class="line">    --label <span class="string">&quot;Arch Linux&quot;</span> \</span><br><span class="line">    --loader <span class="string">&quot;EFI/Linux/arch-linux-zen.efi&quot;</span></span><br><span class="line"><span class="comment">#nvmeXXX EFI分区</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">efibootmgr --create \</span><br><span class="line">    -d /dev/nvmeXXX -p 1 \</span><br><span class="line">    --label <span class="string">"Arch Linux"</span> \</span><br><span class="line">    --loader <span class="string">"EFI/Linux/arch-linux-zen.efi"</span></span><br><span class="line"><span class="comment">#nvmeXXX EFI分区</span></span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="签名-UKI"><a href="#签名-UKI" class="headerlink" title="签名 UKI"></a>签名 UKI</h3><blockquote>
 <p>如果此时已经配置好 <code>sbctl</code> 和 Secure Boot，可直接通过 <code>sbctl sign -s /EFI_MOUNT_POINT/EFI/Linux/arch-linux-zen.efi</code> 结束本文</p>
 <p>至此，您可以抛弃 Grub 了，享受快人一步的开机😏</p>
 </blockquote>
 <p>通过以下命令删除不再使用的自动签名</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sbctl remove-file /boot/grub/x86_64-efi/grub.efi</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sbctl remove-file /boot/grub/x86_64-efi/grub.efi</span><br></pre></td></tr></tbody></table></figure>
 
 <blockquote>
 <p>如果还没有安装 <code>sbctl</code>，请继续阅读</p>
 </blockquote>
 <h4 id="设置-Secure-Boot"><a href="#设置-Secure-Boot" class="headerlink" title="设置 Secure Boot"></a>设置 Secure Boot</h4><p>进入设备 BIOS，将 <code>Secure Boot</code> 进入设置模式 <code>Setup Mode</code></p>
 <p>进入Archlinux，安装 <code>sbctl</code> 包，运行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sbctl enroll-keys -m</span><br><span class="line">sbctl sign -s /EFI_MOUNT_POINT/EFI/Linux/arch-linux-zen.efi</span><br><span class="line"><span class="comment"># 你也许还需要签名这个（Windows）</span></span><br><span class="line">sbctl sign -s /EFI_MOUNT_POINT/EFI/Boot/bootx64.efi</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sbctl enroll-keys -m</span><br><span class="line">sbctl sign -s /EFI_MOUNT_POINT/EFI/Linux/arch-linux-zen.efi</span><br><span class="line"><span class="comment"># 你也许还需要签名这个（Windows）</span></span><br><span class="line">sbctl sign -s /EFI_MOUNT_POINT/EFI/Boot/bootx64.efi</span><br></pre></td></tr></tbody></table></figure>
 
 <p>重启至 BIOS 开启 Secure Boot </p>
 <p>至此，UKI + sbctl 最简单 Secure Boot 设置就大功告成了</p>
 </article>
-<div class="article-footer">
+<div class="article-footer slide-up">
     <section id="references">
       <div class="header"><span>参考资料</span></div>
       <div class="body">
@@ -179,28 +192,28 @@
     <section id="share">
       <div class="header"><span>分享文章</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.vconet.top/archives/uki-sbctl-secureboot/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/uki-sbctl-secureboot/&title=UKI+sbctl：启用 Secure Boot 最简单的方法 - VConet的杂物间&pics=https://static.vconet.top/612702643.png&summary=前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=UKI+sbctl：启用 Secure Boot 最简单的方法 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/uki-sbctl-secureboot/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https:&#x2F;&#x2F;blog.vconet.top&#x2F;archives&#x2F;uki-sbctl-secureboot&#x2F;" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fuki-sbctl-secureboot%2F&title=UKI%2Bsbctl%EF%BC%9A%E5%90%AF%E7%94%A8%20Secure%20Boot%20%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E6%B3%95%20-%20VConet%E7%9A%84%E6%9D%82%E7%89%A9%E9%97%B4&pics=https%3A%2F%2Fstatic.vconet.top%2F612702643.png&summary=%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81%E4%B8%8A%E4%B8%80%E7%AF%87%20Archboot%20%E5%AE%9E%E7%8E%B0%20Secure%20Boot%20%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E7%9A%84%E5%8A%9E%E6%B3%95%EF%BC%8C%E8%A7%89%E5%BE%97%E8%BF%98%E6%98%AF%E4%B8%8D%E5%A4%9F%E7%AE%80%E5%8D%95%EF%BC%8C%E8%80%8C%E4%B8%94%E6%88%91%E7%8E%B0%E5%9C%A8%E4%B9%9F%E4%B8%8D%E9%9C%80%E8%A6%81%E9%80%9A%E8%BF%87%20Grub%20%E5%BC%95%E5%AF%BC%20Windows%20%E5%92%8C%E5%85%B6%E4%BB%96%E7%B3%BB%E7%BB%9F%EF%BC%8C%E9%81%82%E6%9C%89%E6%9C%AC%E6%96%87%E3%80%82"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=UKI%2Bsbctl%EF%BC%9A%E5%90%AF%E7%94%A8%20Secure%20Boot%20%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E6%B3%95%20-%20VConet%E7%9A%84%E6%9D%82%E7%89%A9%E9%97%B4&amp;body=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fuki-sbctl-secureboot%2F" rel="external nofollow noreferrer"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.vconet.top/archives/uki-sbctl-secureboot/"/>
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fuki-sbctl-secureboot%2F"/>
         </div>
         
       </div>
     </section>
     </div>
 
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/archives/goodix-fp-reader/">Linux下使用咸鱼铝合金指纹识别器</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/archives/mailu-with-caddy/">Caddy反向代理搭建Mailu邮局踩坑记录</a></div></section></div>
+<div class="related-wrap slide-up" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/archives/goodix-fp-reader/">Linux下使用咸鱼铝合金指纹识别器</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/archives/mailu-with-caddy/">Caddy反向代理搭建Mailu邮局踩坑记录</a></div></section></div>
 
-<div class="related-wrap" id="related-posts">
+<div class="related-wrap slide-up" id="related-posts">
     <section class='header'>
       <div class='title cap theme'>相关文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="/archives/arch-secure-boot-by-archboot/" title="借助Archboot安装Archlinux并开启安全启动"><span class="title">借助Archboot安装Archlinux并开启安全启动</span><span class="excerpt">借助Archboot安装Archlinux并开启安全启动</span></a><a class="item" href="/archives/gaomon-linux-tablet/" title="高漫M6的Linux版GaomonTablet"><span class="title">高漫M6的Linux版GaomonTablet</span><span class="excerpt">这是一篇水文~ 记录一下 Linux 下使用手绘板的自定义按键和滚轮</span></a><a class="item" href="/archives/goodix-fp-reader/" title="Linux下使用咸鱼铝合金指纹识别器"><span class="title">Linux下使用咸鱼铝合金指纹识别器</span><span class="excerpt">记录Linux下使用咸鱼铝合金指纹识别器</span></a><a class="item" href="/archives/genshin-in-linux/" title="如何在 Linux 下玩原神？"><span class="title">如何在 Linux 下玩原神？</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="&#x2F;archives&#x2F;arch-secure-boot-by-archboot&#x2F;" title="借助Archboot安装Archlinux并开启安全启动"><span class="title">借助Archboot安装Archlinux并开启安全启动</span><span class="excerpt">借助Archboot安装Archlinux并开启安全启动</span></a><a class="item" href="&#x2F;archives&#x2F;gaomon-linux-tablet&#x2F;" title="高漫M6的Linux版GaomonTablet"><span class="title">高漫M6的Linux版GaomonTablet</span><span class="excerpt">这是一篇水文~ 记录一下 Linux 下使用手绘板的自定义按键和滚轮</span></a><a class="item" href="&#x2F;archives&#x2F;goodix-fp-reader&#x2F;" title="Linux下使用咸鱼铝合金指纹识别器"><span class="title">Linux下使用咸鱼铝合金指纹识别器</span><span class="excerpt">记录Linux下使用咸鱼铝合金指纹识别器</span></a><a class="item" href="&#x2F;archives&#x2F;dzip-reverse-engine&#x2F;" title="逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES"><span class="title">逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES</span><span class="excerpt">记录逆向一种 UA 魔数变体 ZIP（.dzip）及其加密层的过程。容器是标准 ZIP 换了签名前缀，加密层是 WinZip AES，但原生库 libDZIP.so 在派生密钥前往用户密码末尾追加了一个随机字节。全文含 hex、反编译...</span></a></div></section></div>
 
 
-  <div class="related-wrap md-text" id="comments">
+  <div class="related-wrap md-text slide-up" id="comments">
     <section class='header cmt-title cap theme'>
       <p>快来参与讨论吧~</p>
 
@@ -208,19 +221,20 @@
     <section class='body cmt-body twikoo'>
       
 
-<div id="twikoo_container"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+<div id="twikoo_container" class="with-fancybox"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
     </section>
   </div>
 
 
 
-<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
+<footer class="page-footer slide-up footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.40.0">Stellar 1.40.0</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right"><div class="widgets">
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="toc-text">前情提要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%86%85%E6%A0%B8%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-text">修改内核命令行参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-mkinitcpio-%E9%A2%84%E8%AE%BE"><span class="toc-text">修改 mkinitcpio 预设</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA-UKI"><span class="toc-text">构建 UKI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%BC%95%E5%AF%BC"><span class="toc-text">添加引导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%BE%E5%90%8D-UKI"><span class="toc-text">签名 UKI</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-Secure-Boot"><span class="toc-text">设置 Secure Boot</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+<widget class="widget-wrapper slide-up toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="toc-text">前情提要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%86%85%E6%A0%B8%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-text">修改内核命令行参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-mkinitcpio-%E9%A2%84%E8%AE%BE"><span class="toc-text">修改 mkinitcpio 预设</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA-UKI"><span class="toc-text">构建 UKI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%BC%95%E5%AF%BC"><span class="toc-text">添加引导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%BE%E5%90%8D-UKI"><span class="toc-text">签名 UKI</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-Secure-Boot"><span class="toc-text">设置 Secure Boot</span></a></li></ol></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -233,7 +247,7 @@
 
 
 <script type="text/javascript">
-  window.canonical = {"closeEnable":true,"closeText":"关闭提示","originalHost":"blog.vconet.top","officialHosts":["localhost"],"encoded":"YmxvZy52Y29uZXQudG9w"};
+  window.canonical = {"originalHost":"blog.vconet.top","officialHosts":["localhost"],"encoded":"YmxvZy52Y29uZXQudG9w"};
   window.canonical["param"] = {"permalink":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","checklink":"/js/plugins/video.js"};
   // Fix: Ensure page is at the correct top position on data load
   if (history.scrollRestoration) {
@@ -243,6 +257,124 @@
     const scrollHandler = () => {
       const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
       const startEl = document.getElementById('start');
+      // 存在有效锚点时，等待布局稳定后滚动到目标
+      // （浏览器原生锚点滚动发生在布局完成前，长文章的懒加载图片/异步组件会把目标顶偏）
+      const hash = window.location.hash;
+      if (hash.length > 1) {
+        let anchorId = hash.slice(1);
+        try {
+          anchorId = decodeURIComponent(anchorId);
+        } catch (e) {
+          // 片段含非法编码时按原样查找
+        }
+        const anchor = document.getElementById(anchorId);
+        if (anchor) {
+          // #start 锚点贴顶，不预留 offset；其余锚点与 TOC 点击滚动保持一致
+          const offset = anchorId === 'start' ? 0 : 32;
+          const targetY = () => anchor.getBoundingClientRect().top + window.scrollY - offset;
+          let timer = null;
+          let lastY = null;
+          let quiet = 0;
+          let attempts = 0;
+          // 记录最近一次资源加载完成时间，判断异步数据/图片是否仍在改变布局
+          let lastResourceTime = performance.now();
+          let observer = null;
+          try {
+            observer = new PerformanceObserver(function (list) {
+              lastResourceTime = performance.now();
+            });
+            observer.observe({ entryTypes: ['resource'] });
+          } catch (e) {}
+          // 统计进行中的 fetch/XHR 请求，异步组件（timeline 等）未完成前不判定布局稳定
+          let pendingRequests = 0;
+          const trackRequest = (fn) => {
+            pendingRequests++;
+            try {
+              const result = fn();
+              if (result && typeof result.finally === 'function') {
+                result.finally(function () {
+                  pendingRequests = Math.max(0, pendingRequests - 1);
+                });
+              } else {
+                pendingRequests = Math.max(0, pendingRequests - 1);
+              }
+              return result;
+            } catch (e) {
+              pendingRequests = Math.max(0, pendingRequests - 1);
+              throw e;
+            }
+          };
+          if (typeof window.fetch === 'function') {
+            const origFetch = window.fetch.bind(window);
+            window.fetch = function () {
+              const args = arguments;
+              return trackRequest(function () {
+                return origFetch.apply(window, args);
+              });
+            };
+          }
+          if (window.XMLHttpRequest) {
+            const origOpen = window.XMLHttpRequest.prototype.open;
+            const origSend = window.XMLHttpRequest.prototype.send;
+            window.XMLHttpRequest.prototype.open = function () {
+              this.__anchorTracked = true;
+              return origOpen.apply(this, arguments);
+            };
+            window.XMLHttpRequest.prototype.send = function () {
+              if (this.__anchorTracked) {
+                pendingRequests++;
+                const done = () => {
+                  if (this.__anchorTracked) {
+                    this.__anchorTracked = false;
+                    pendingRequests = Math.max(0, pendingRequests - 1);
+                  }
+                };
+                this.addEventListener('loadend', done);
+              }
+              return origSend.apply(this, arguments);
+            };
+          }
+          const cancel = () => {
+            if (timer !== null) {
+              clearInterval(timer);
+              timer = null;
+            }
+            if (observer !== null) {
+              try {
+                observer.disconnect();
+              } catch (e) {}
+            }
+          };
+          const adjust = () => {
+            const y = targetY();
+            const atTarget = Math.abs(window.scrollY - y) <= 2;
+            if (!atTarget || lastY === null || Math.abs(y - lastY) > 2) {
+              window.scrollTo({ top: y, behavior: 'instant' });
+              lastY = y;
+              quiet = 0;
+            } else {
+              quiet++;
+            }
+            attempts++;
+            const resourceQuiet = performance.now() - lastResourceTime > 3000;
+            // 位置连续 1.8 秒无变化、无进行中的请求且最近 3 秒无资源加载才视为稳定；最长等待 30 秒
+            if ((quiet >= 3 && pendingRequests === 0 && resourceQuiet) || attempts >= 50) {
+              cancel();
+            }
+          };
+          requestAnimationFrame(() => {
+            // 锚点链接打开时直接定位，不做动画；用户主动点击（如 TOC）仍走平滑滚动
+            window.scrollTo({ top: targetY(), behavior: 'instant' });
+            timer = setInterval(adjust, 600);
+          });
+          // 用户主动滚动时停止自动校正
+          window.addEventListener('wheel', cancel, { passive: true });
+          window.addEventListener('touchstart', cancel, { passive: true });
+          window.addEventListener('mousedown', cancel, { passive: true });
+          window.addEventListener('keydown', cancel, { passive: true });
+          return;
+        }
+      }
       if (wikiCover && startEl) {
         window.scrollTo(0, startEl.offsetTop);
       } else {
@@ -278,11 +410,11 @@
     avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
     cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
     loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+    data_cache: {"enable":true,"default_ttl":3600,"ttl":{"giscus":600,"waline":600,"artalk":600,"memos":600,"memos-user":86400,"sites":86400,"friends":86400,"friends_and_posts":86400,"siteinfo":86400},"max_entries":200},
   };
   const deps = {
-    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
     marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
-    lazyload: `/%5Bobject%20Object%5D`
+    lazyload: `https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js`
   }
 </script>
 
@@ -401,7 +533,7 @@
     // 已加载脚本缓存
     _loadedScripts: new Set(),
 
-    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免 PJAX 导航时的状态混淆)
+    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免重复加载)
     _loadedElements: new WeakSet(),
 
     js: (src, opt) => new Promise((resolve, reject) => {
@@ -434,86 +566,405 @@
       document.head.appendChild(script)
     }),
 
-    // PJAX 事件监听器管理
-    _pjaxListeners: new Set(),
-    
-    jq: (fn, pjax = true) => {
-      if (typeof jQuery === 'undefined') {
-        utils.js(deps.jquery).then(fn)
-      } else {
-        fn()
+    // 原生 DOM 工具：querySelector / querySelectorAll 简写
+    qs: (sel, ctx) => (ctx || document).querySelector(sel),
+    qsa: (sel, ctx) => Array.prototype.slice.call((ctx || document).querySelectorAll(sel)),
+
+    // 原生 DOM 封装：常用 DOM 操作方法子集（find/append/class/attr/事件等）
+    dom: (selector, ctx) => {
+      var els = [];
+      if (typeof selector === 'string') {
+        els = utils.qsa(selector, ctx);
+      } else if (selector && selector.nodeType === 1) {
+        els = [selector];
+      } else if (selector && typeof selector.length === 'number') {
+        els = Array.prototype.slice.call(selector);
       }
-      if (pjax && !fn._pjax_registered) {
-        document.addEventListener('pjax:complete', fn);
-        fn._pjax_registered = true;
-        utils._pjaxListeners.add(fn); // 追踪监听器以便清理
-      }
-    },
-    
-    // 清理所有 PJAX 事件监听器
-    cleanupPjaxListeners: () => {
-      utils._pjaxListeners.forEach(fn => {
-        document.removeEventListener('pjax:complete', fn);
-        fn._pjax_registered = false;
+      var api = {
+        length: els.length,
+        each: function (fn) {
+          els.forEach(function (el, i) {
+            fn.call(el, i, el);
+          });
+          return api;
+        },
+        find: function (sel) {
+          var result = [];
+          els.forEach(function (el) {
+            Array.prototype.push.apply(result, el.querySelectorAll(sel));
+          });
+          return utils.dom(result);
+        },
+        append: function (content) {
+          els.forEach(function (el) {
+            if (typeof content === 'string') {
+              el.insertAdjacentHTML('beforeend', content);
+            } else if (content && content.nodeType === 1) {
+              el.appendChild(content);
+            } else if (content && typeof content.length === 'number') {
+              Array.prototype.forEach.call(content, function (child) {
+                if (child && child.nodeType === 1) el.appendChild(child);
+              });
+            }
+          });
+          return api;
+        },
+        remove: function () {
+          els.forEach(function (el) {
+            el.remove();
+          });
+        },
+        addClass: function (cls) {
+          els.forEach(function (el) {
+            cls.trim().split(/\s+/).forEach(function (c) {
+              if (c) el.classList.add(c);
+            });
+          });
+          return api;
+        },
+        removeClass: function (cls) {
+          els.forEach(function (el) {
+            cls.trim().split(/\s+/).forEach(function (c) {
+              if (c) el.classList.remove(c);
+            });
+          });
+          return api;
+        },
+        toggleClass: function (cls, force) {
+          els.forEach(function (el) {
+            cls.trim().split(/\s+/).forEach(function (c) {
+              if (c) el.classList.toggle(c, force);
+            });
+          });
+          return api;
+        },
+        attr: function (name, value) {
+          if (value === undefined) {
+            return els[0] ? els[0].getAttribute(name) : undefined;
+          }
+          els.forEach(function (el) {
+            el.setAttribute(name, value);
+          });
+          return api;
+        },
+        data: function (name) {
+          return els[0] ? els[0].getAttribute('data-' + name) : undefined;
+        },
+        text: function (value) {
+          if (value === undefined) {
+            return els[0] ? els[0].textContent : undefined;
+          }
+          els.forEach(function (el) {
+            el.textContent = value;
+          });
+          return api;
+        },
+        html: function (content) {
+          if (content === undefined) {
+            return els[0] ? els[0].innerHTML : undefined;
+          }
+          els.forEach(function (el) {
+            if (typeof content !== 'string' && content && typeof content.length === 'number' && content[0] && content[0].nodeType === 1) {
+              var frag = document.createDocumentFragment();
+              Array.prototype.forEach.call(content, function (child) {
+                frag.appendChild(child);
+              });
+              el.replaceChildren(frag);
+            } else {
+              el.innerHTML = content;
+            }
+          });
+          return api;
+        },
+        val: function (value) {
+          if (value === undefined) {
+            return els[0] ? els[0].value : undefined;
+          }
+          els.forEach(function (el) {
+            el.value = value;
+          });
+          return api;
+        },
+        offset: function () {
+          var el = els[0];
+          if (!el) return { top: 0, left: 0 };
+          var rect = el.getBoundingClientRect();
+          return { top: rect.top + window.scrollY, left: rect.left + window.scrollX };
+        },
+        on: function (event, cb) {
+          els.forEach(function (el) {
+            el.addEventListener(event, cb);
+          });
+          return api;
+        },
+        click: function (cb) { return api.on('click', cb); },
+        focus: function (cb) { return api.on('focus', cb); },
+        keydown: function (cb) { return api.on('keydown', cb); },
+        empty: function () {
+          els.forEach(function (el) {
+            el.replaceChildren();
+          });
+          return api;
+        }
+      };
+      els.forEach(function (el, i) {
+        api[i] = el;
       });
-      utils._pjaxListeners.clear();
+      return api;
     },
 
     onLoading: (el) => {
       if (el) {
-        if ($(el).find('.loading-wrap').length === 0){
-          $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+        if (el.querySelector('.loading-wrap') === null) {
+          el.insertAdjacentHTML('beforeend', '<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
         }
       }
     },
     onLoadSuccess: (el) => {
       if (el) {
-        $(el).find('.loading-wrap').remove();
+        var wrap = el.querySelector('.loading-wrap');
+        if (wrap) wrap.remove();
       }
     },
     onLoadFailure: (el) => {
       if (el) {
-        $(el).find('.loading-wrap svg').remove();
-        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
-        $(el).find('.loading-wrap').addClass('error');
+        var wrap = el.querySelector('.loading-wrap');
+        if (wrap) {
+          var svg = wrap.querySelector('svg');
+          if (svg) svg.remove();
+          wrap.insertAdjacentHTML('beforeend', '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+          wrap.classList.add('error');
+        }
       }
     },
-    request: (el, url, callback, onFailure) => {
+    /********************** data cache ********************************/
+    // 动态数据本地缓存：TTL 未过期直接命中；过期后先显示缓存再后台刷新（stale-while-revalidate）
+    _cacheEnabled: true,
+    _cacheMaxEntryBytes: 200 * 1024,
+    // 同 URL 并发请求去重：页面内多个组件请求同一接口时共享一次 fetch
+    _pendingRequests: {},
+    _fetchShared: (url, options) => {
+      const key = (options && options.method || 'GET') + ' ' + url;
+      if (utils._pendingRequests[key]) {
+        return utils._pendingRequests[key].then(resp => resp.clone());
+      }
+      const promise = fetch(url, options).then(resp => {
+        if (!resp.ok) throw new Error('响应失败');
+        return resp;
+      }).finally(() => {
+        delete utils._pendingRequests[key];
+      });
+      utils._pendingRequests[key] = promise;
+      // 每个调用方各自 clone，避免 Response body 被消费后其他调用方取不到数据
+      return promise.then(resp => resp.clone());
+    },
+    // 延迟执行：缓存写入等非关键操作让出主线程
+    _defer: (fn) => {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(fn, { timeout: 3000 });
+      } else {
+        setTimeout(fn, 0);
+      }
+    },
+    cache: {
+      prefix: 'Stellar.data_cache.v1.',
+      enabled: () => !!def.data_cache?.enable && utils._cacheEnabled,
+      serviceId: (el, options) => {
+        if (options && options.service) return options.service;
+        if (el) {
+          const match = String(el.className || '').match(/\bds-([\w-]+)\b/);
+          if (match) return match[1];
+        }
+        return null;
+      },
+      ttl: (el, options) => {
+        const conf = def.data_cache || {};
+        const id = utils.cache.serviceId(el, options);
+        const value = id && conf.ttl && conf.ttl[id] != null ? conf.ttl[id] : conf.default_ttl;
+        return typeof value === 'number' && value > 0 ? value : 0;
+      },
+      shouldCache: (url, options) => {
+        if (!utils.cache.enabled()) return false;
+        if (options && (options.cache === false || options.cache === 'no-store')) return false;
+        if (options && options.method && options.method !== 'GET') return false;
+        // 带时间戳缓存破坏参数的请求不缓存（如 mdrender 的 ?t=）
+        if (/[?&]t=\d{10,}/.test(url)) return false;
+        return true;
+      },
+      get: (url) => {
+        try {
+          const raw = localStorage.getItem(utils.cache.prefix + url);
+          if (!raw) return null;
+          const entry = JSON.parse(raw);
+          if (!entry || typeof entry.text !== 'string' || typeof entry.ts !== 'number') return null;
+          return entry;
+        } catch (e) {
+          console.warn('[cache] 读取失败:', url, e);
+          return null;
+        }
+      },
+      set: (url, text, contentType, ttl) => {
+        if (!(ttl > 0)) return;
+        if (text.length > utils._cacheMaxEntryBytes) return;
+        const entry = JSON.stringify({
+          text: text,
+          contentType: contentType || 'application/json',
+          ts: Date.now(),
+          ttl: ttl
+        });
+        const trySet = () => {
+          try {
+            localStorage.setItem(utils.cache.prefix + url, entry);
+            utils.cache.trim();
+            return true;
+          } catch (e) {
+            return false;
+          }
+        };
+        if (!trySet()) {
+          // 配额不足时淘汰最旧条目后重试一次，仍失败则本会话禁用缓存
+          utils.cache.evictOldest(url);
+          if (!trySet()) {
+            console.warn('[cache] 写入失败，本会话禁用缓存:', url);
+            utils._cacheEnabled = false;
+          }
+        }
+      },
+      trim: () => {
+        try {
+          const max = (def.data_cache && def.data_cache.max_entries) || 200;
+          const keys = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.indexOf(utils.cache.prefix) === 0) keys.push(key);
+          }
+          if (keys.length <= max) return;
+          const sorted = keys.map((key) => {
+            let ts = 0;
+            try {
+              const entry = JSON.parse(localStorage.getItem(key) || 'null');
+              if (entry && typeof entry.ts === 'number') ts = entry.ts;
+            } catch (e) {}
+            return { key, ts };
+          }).sort((a, b) => a.ts - b.ts);
+          for (let i = 0; i < sorted.length - max; i++) {
+            localStorage.removeItem(sorted[i].key);
+          }
+        } catch (e) {
+          console.warn('[cache] 清理失败:', e);
+        }
+      },
+      evictOldest: (exceptUrl) => {
+        try {
+          let oldestKey = null;
+          let oldestTs = Infinity;
+          const exceptKey = utils.cache.prefix + exceptUrl;
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key || key.indexOf(utils.cache.prefix) !== 0 || key === exceptKey) continue;
+            let ts = 0;
+            try {
+              const entry = JSON.parse(localStorage.getItem(key) || 'null');
+              if (entry && typeof entry.ts === 'number') ts = entry.ts;
+            } catch (e) {}
+            if (ts < oldestTs) {
+              oldestTs = ts;
+              oldestKey = key;
+            }
+          }
+          if (oldestKey) localStorage.removeItem(oldestKey);
+        } catch (e) {}
+      },
+      isFresh: (entry) => {
+        if (!entry || typeof entry.ts !== 'number' || typeof entry.ttl !== 'number') return false;
+        if (!(entry.ttl > 0)) return false;
+        return Date.now() - entry.ts < entry.ttl * 1000;
+      },
+      // 用缓存文本重建 Response，兼容回调中的 resp.json() / resp.text()
+      toResponse: (entry) => new Response(entry.text, {
+        status: 200,
+        statusText: 'OK',
+        headers: { 'Content-Type': entry.contentType }
+      })
+    },
+    request: (el, url, callback, onFailure, options) => {
       // 检查元素实例是否已加载 (而不是检查属性)
       if (el && utils._loadedElements.has(el)) {
         return;
       }
       const maxRetry = 3;
       let retryCount = 0;
+      const ttl = utils.cache.ttl(el, options);
+      const cacheable = utils.cache.shouldCache(url, options) && ttl > 0;
+      const cached = cacheable ? utils.cache.get(url) : null;
+      // 缓存渲染前的初始结构，后台刷新渲染前恢复，避免重复渲染
+      let initialHTML = null;
+      // 缓存渲染完成后（或超时兜底）再启动后台刷新，避免异步渲染未结束就清空重绘
+      let cacheRenderDone = null;
+
+      if (cached) {
+        if (el) {
+          // 已有缓存时不显示加载动画
+          utils.onLoadSuccess?.(el);
+          initialHTML = el.innerHTML;
+        }
+        try {
+          cacheRenderDone = Promise.resolve(callback(utils.cache.toResponse(cached))).catch(e => {
+            console.warn('[request] 缓存渲染失败:', url, e);
+          });
+        } catch (e) {
+          console.warn('[request] 缓存渲染失败:', url, e);
+        }
+        // 缓存未过期：直接完成，不发请求
+        if (utils.cache.isFresh(cached)) {
+          if (el) utils._loadedElements.add(el);
+          return Promise.resolve(cached.text);
+        }
+      } else {
+        utils.onLoading?.(el);
+      }
 
       return new Promise((resolve, reject) => {
         const load = () => {
-          utils.onLoading?.(el);
-
           let timedOut = false;
           const timeout = setTimeout(() => {
             timedOut = true;
             console.warn('[request] 超时:', url);
 
             if (++retryCount >= maxRetry) {
-              utils.onLoadFailure?.(el);
-              onFailure?.();
-              reject('请求超时');
+              if (cached) {
+                // 已有缓存渲染，保留缓存内容，不显示失败
+                resolve(cached.text);
+              } else {
+                utils.onLoadFailure?.(el);
+                onFailure?.();
+                reject('请求超时');
+              }
             } else {
               setTimeout(load, 1000);
             }
           }, 5000);
 
-          fetch(url).then(resp => {
+          utils._fetchShared(url).then(resp => {
             if (timedOut) return;
             clearTimeout(timeout);
-
-            if (!resp.ok) throw new Error('响应失败');
             return resp;
           }).then(data => {
             if (timedOut) return;
             // 标记元素实例为已加载
             if (el) utils._loadedElements.add(el);
+            // 写入缓存（克隆响应，避免影响回调读取；延迟执行，避免阻塞渲染）
+            if (cacheable && data.ok) {
+              utils._defer(() => {
+                data.clone().text().then(text => {
+                  utils.cache.set(url, text, data.headers.get('Content-Type') || 'application/json', ttl);
+                }).catch(() => {});
+              });
+            }
+            // 后台刷新渲染前恢复初始结构，避免缓存渲染的内容重复
+            if (el && initialHTML !== null) {
+              el.innerHTML = initialHTML;
+            }
             utils.onLoadSuccess?.(el);
             callback(data);
             resolve(data);
@@ -522,40 +973,82 @@
             console.warn('[request] 错误:', err);
 
             if (++retryCount >= maxRetry) {
-              utils.onLoadFailure?.(el);
-              onFailure?.();
-              reject(err);
+              if (cached) {
+                resolve(cached.text);
+              } else {
+                utils.onLoadFailure?.(el);
+                onFailure?.();
+                reject(err);
+              }
             } else {
               setTimeout(load, 1000);
             }
           });
         };
 
-        load();
+        if (cacheRenderDone) {
+          Promise.race([
+            cacheRenderDone,
+            new Promise(resolve => setTimeout(resolve, 5000))
+          ]).then(load);
+        } else {
+          load();
+        }
       });
     },
     requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      const ttl = utils.cache.ttl(null, options);
+      const cacheable = utils.cache.shouldCache(url, options) && ttl > 0;
+      const cached = cacheable ? utils.cache.get(url) : null;
+
+      if (cached && utils.cache.isFresh(cached)) {
+        return Promise.resolve(utils.cache.toResponse(cached));
+      }
+
       return new Promise((resolve, reject) => {
         let retryCount = 0;
+        // 与 request 保持一致：最终失败时回退 stale 缓存，避免闪失败态
+        const fallback = () => {
+          if (cached) {
+            resolve(utils.cache.toResponse(cached));
+          } else {
+            reject('timeout');
+          }
+        };
 
         const tryRequest = () => {
           let timedOut = false;
           const timer = setTimeout(() => {
             timedOut = true;
-            if (++retryCount > maxRetry) reject('timeout');
+            if (++retryCount > maxRetry) fallback();
             else tryRequest();
           }, timeout);
 
-          fetch(url, options)
+          utils._fetchShared(url, options)
             .then(resp => {
               clearTimeout(timer);
-              if (!resp.ok) throw new Error('bad response');
+              if (timedOut) return;
+              if (cacheable) {
+                utils._defer(() => {
+                  resp.clone().text().then(text => {
+                    utils.cache.set(url, text, resp.headers.get('Content-Type') || 'application/json', ttl);
+                  }).catch(() => {});
+                });
+              }
               resolve(resp);
             })
             .catch(err => {
               clearTimeout(timer);
-              if (++retryCount > maxRetry) reject(err);
-              else setTimeout(tryRequest, 500);
+              if (timedOut) return;
+              if (++retryCount > maxRetry) {
+                if (cached) {
+                  resolve(utils.cache.toResponse(cached));
+                } else {
+                  reject(err);
+                }
+              } else {
+                setTimeout(tryRequest, 500);
+              }
             });
         };
 
@@ -573,7 +1066,7 @@
     },
     dark: {},
 
-    // 插件初始化管理器 - 统一处理 DOMContentLoaded 和 pjax:complete 事件
+    // 插件初始化管理器 - 统一处理 DOMContentLoaded 事件
     _pluginInitializers: [],
     _pluginCleanups: new Map(), // 存储每个插件的清理函数
     
@@ -622,20 +1115,6 @@
       }
     },
 
-    // 重新初始化所有插件（用于 PJAX 等场景）
-    reinitPlugins: () => {
-      utils._pluginInitializers.forEach(plugin => {
-        // 跳过标记为不需要重新初始化的插件
-        if (plugin.options.skipReinit) return;
-        
-        try {
-          plugin.fn();
-        } catch (error) {
-          console.error(`[Plugin ${plugin.name}] 重新初始化失败:`, error);
-        }
-      });
-    },
-    
     // 清理所有插件资源
     cleanupPlugins: () => {
       utils._pluginCleanups.forEach((cleanup, name) => {
@@ -651,20 +1130,8 @@
     // 清理所有资源（用于页面卸载或重置）
     cleanupAll: () => {
       utils.cleanupPlugins();
-      utils.cleanupPjaxListeners();
     },
   };
-
-  // 自动处理 PJAX 事件
-  document.addEventListener('pjax:before', () => {
-    // 在导航前清理旧的 PJAX 监听器（如果需要重新注册）
-    // 注意：这里不清理，因为监听器应该是持久的
-    // utils.cleanupPjaxListeners();
-  });
-  
-  document.addEventListener('pjax:complete', () => {
-    utils.reinitPlugins();
-  });
 
   // utils.dark.mode 当前模式 dark or light
   // utils.dark.toggle() 暗黑模式触发器
@@ -676,6 +1143,7 @@
     push: utils.dark.method.toggle.push,
   });
 </script>
+
 <script>
   const sidebar = {
     leftbar: () => {
@@ -729,8 +1197,9 @@
   })()
 </script>
 
-<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
 <script>
+  // 先声明配置与初始化监听，再异步加载库：
+  // 保证库执行时 lazyLoadOptions 已就绪，避免 async 脚本抢先执行导致自初始化失败
   // https://www.npmjs.com/package/vanilla-lazyload
   // Set the options globally
   // to make LazyLoad self-initialize
@@ -738,13 +1207,13 @@
     elements_selector: ".lazy",
     callback_loaded: (el) => {
       el.classList.add('loaded');
-      const wrapper = el.closest('.lazy-box');
+      // {% image %} 没有 .lazy-box 包裹，回退到父元素查找加载图标
+      const wrapper = el.closest('.lazy-box') || el.parentElement;
       const icon = wrapper?.querySelector('.lazy-icon');
       if (icon) icon.remove();
     }
   };
-  // Listen to the initialization event
-  // and get the instance of LazyLoad
+  // 监听初始化事件，获取 LazyLoad 实例
   window.addEventListener(
     "LazyLoad::Initialized",
     function (event) {
@@ -755,6 +1224,30 @@
   document.addEventListener('DOMContentLoaded', function () {
     window.lazyLoadInstance?.update();
   });
+
+  // 兜底：动态插入的 .lazy 元素（如站点自定义脚本在 update() 之后追加的图片）
+  // 不会被 vanilla-lazyload 自动扫描，未注册的 img.lazy 会被 CSS opacity:0 永久隐藏。
+  // MutationObserver 检测到新增 .lazy 元素后自动调用 update() 重新注册。
+  if (window.MutationObserver) {
+    window.lazyMutationObserver = new MutationObserver((mutations) => {
+      if (window.lazyMutationObserver._pending) return;
+      const hasLazy = mutations.some((m) =>
+        Array.prototype.some.call(m.addedNodes, (node) =>
+          node.nodeType === 1 &&
+          (node.matches?.('.lazy') || !!node.querySelector?.('.lazy'))
+        )
+      );
+      if (!hasLazy) return;
+      window.lazyMutationObserver._pending = requestAnimationFrame(() => {
+        window.lazyMutationObserver._pending = null;
+        window.lazyLoadInstance?.update();
+      });
+    });
+    window.lazyMutationObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+  }
 
   window.wrapLazyloadImages = (container) => {
     if (typeof container === 'string') {
@@ -794,11 +1287,12 @@
       window.lazyLoadInstance.update();
     }
   }
-
 </script>
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+
 
 <!-- required -->
-<script src="/js/main.js?v=1.33.1" defer></script>
+<script src="/js/main.js?v=1.40.0" defer></script>
 
 <script type="text/javascript">
   const applyTheme = (theme) => {
@@ -871,9 +1365,8 @@
 
 <!-- optional -->
 
-  <script>
+  <script type="module">
   (function() {
-    const lazyload = false;
     
     function initTwikoo() {
       const el = document.getElementById('twikoo_container');
@@ -889,18 +1382,14 @@
         });
       }
       
-      util.viewportLazyload(el, load_twikoo, lazyload);
+      util.viewportLazyload(el, load_twikoo);
     }
-    
-    // Store in global stellar namespace for PJAX reinitialization
-    window.stellar = window.stellar || {};
-    window.stellar.initComments = window.stellar.initComments || {};
-    window.stellar.initComments.twikoo = initTwikoo;
     
     // Initialize on page load
     initTwikoo();
   })();
 </script>
+
 
 
 
@@ -948,28 +1437,26 @@
       } else {
         const els = document.getElementsByClassName(`ds-${id}`);
         if (els?.length > 0) {
-          utils.jq(() => {
-            if (id == 'timeline' || id == 'memos' || id == 'marked') {
-              utils.js(deps.marked).then(function () {
-                utils.js(js, { defer: true });
-              });
-            } else {
+          if (id == 'timeline' || id == 'memos' || id == 'marked' || id == 'mdrender') {
+            utils.js(deps.marked).then(function () {
               utils.js(js, { defer: true });
-            }
-          }, false);
+            });
+          } else {
+            utils.js(js, { defer: true });
+          }
         }
       }
     }
 
     // search
     if (ctx.search && typeof searchFunc === 'function') {
-      const $inputArea = $("input#search-input");
-      if ($inputArea.length > 0 && !$inputArea[0]._searchInitialized) {
+      const inputArea = document.querySelector("input#search-input");
+      if (inputArea && !inputArea._searchInitialized) {
         const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
-        const filter = $inputArea.attr('data-filter') || '';
+        const filter = inputArea.getAttribute('data-filter') || '';
         searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
         // 标记为已初始化，防止重复绑定
-        $inputArea[0]._searchInitialized = true;
+        inputArea._searchInitialized = true;
       }
     }
 
@@ -1085,6 +1572,7 @@
   utils.initPlugin(initServices, 'services');
 </script>
 
+
 <script>
   window.addEventListener('DOMContentLoaded', (event) => {
     ctx.search = {
@@ -1102,28 +1590,43 @@
 </script>
 <script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
   ctx.fancybox = {
+    mode: `auto`,
     selector: `.timenode p>img`,
     css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
     js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
   };
-  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  // auto=按需：页面存在可弹窗图片才加载；global=全局：所有页面加载
+  const isGlobal = ctx.fancybox.mode === 'global';
+  // 评论区图片（artalk/twikoo/waline）显示较小，自动支持放大
+  var selector = '[data-fancybox]:not(.error), .with-fancybox img:not([atk-emoticon]):not([class*="emo"])';
   if (ctx.fancybox.selector) {
     selector += `, ${ctx.fancybox.selector}`
   }
-  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  var needFancybox = isGlobal;
   if (!needFancybox) {
-    const memos = document.getElementsByClassName('ds-memos');
-    if (memos != undefined && memos.length > 0) {
-      needFancybox = true;
+    needFancybox = document.querySelectorAll(selector).length !== 0;
+    if (!needFancybox) {
+      // 图片型评论系统容器：评论区图片小图需要 fancybox
+      const withFancybox = document.getElementsByClassName('with-fancybox');
+      if (withFancybox != undefined && withFancybox.length > 0) {
+        needFancybox = true;
+      }
     }
-    const fancybox = document.getElementsByClassName('with-fancybox');
-    if (fancybox != undefined && fancybox.length > 0) {
-      needFancybox = true;
+    if (!needFancybox) {
+      // 动态数据服务：memos 渲染的图片需要 fancybox
+      const memos = document.getElementsByClassName('ds-memos');
+      if (memos != undefined && memos.length > 0) {
+        needFancybox = true;
+      }
     }
   }
   if (needFancybox) {
     utils.css(ctx.fancybox.css);
     utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      if (isGlobal) {
+        // 全局模式：正文所有非内联图片均可弹窗
+        selector += ', .md-text img:not(.inline):not([atk-emoticon])';
+      }
       Fancybox.bind(selector, {
         hideScrollbar: false,
         Thumbs: {
@@ -1164,6 +1667,102 @@
 </script>
 <script>
   utils.initPlugin(() => {
+    const els = Array.prototype.slice.call(document.querySelectorAll('.slide-up'));
+    if (els.length === 0) return;
+
+    // 吸顶/固定定位容器内的元素始终在视口内（或由容器控制显隐），
+    // 但 ScrollReveal 按文档坐标判断可见性，会误判这类元素为不可见，
+    // 导致带锚点/恢复滚动位置打开页面时组件一直不显示。
+    // 解决方式：以最近的吸顶/固定祖先作为该组元素的容器，
+    // 使可见性判断恒成立，入场动画保留且不再依赖主文档滚动。
+    const findPinnedContainer = (el) => {
+      let node = el;
+      while (node && node.nodeType === 1) {
+        const pos = window.getComputedStyle(node).position;
+        if (pos === 'sticky' || pos === 'fixed') return node;
+        node = node.parentElement;
+      }
+      return null;
+    };
+
+    // 最近的滚动容器（overflow-y: auto/scroll）
+    // 吸顶容器内可能存在内部滚动容器（如侧栏 .widgets），
+    // 若直接用吸顶容器做 reveal 容器，折叠区下方的元素永远不会进入视口，导致一直不显示。
+    const findScrollContainer = (el) => {
+      let node = el.parentElement;
+      while (node && node.nodeType === 1) {
+        const oy = window.getComputedStyle(node).overflowY;
+        if (oy === 'auto' || oy === 'scroll') return node;
+        node = node.parentElement;
+      }
+      return null;
+    };
+
+    const pinnedGroups = new Map(); // 容器 -> 元素列表
+    const targets = [];
+    els.forEach((el) => {
+      const pinned = findPinnedContainer(el);
+      if (pinned) {
+        // 优先使用最近的滚动容器，其次才用吸顶容器
+        const container = findScrollContainer(el) || pinned;
+        const group = pinnedGroups.get(container) || [];
+        group.push(el);
+        pinnedGroups.set(container, group);
+      } else {
+        targets.push(el);
+      }
+    });
+    if (pinnedGroups.size === 0 && targets.length === 0) return;
+
+    // 加载/初始化失败时兜底显示内容，避免整页空白
+    let fallbackApplied = false;
+    const revealFallback = () => {
+      if (fallbackApplied) return;
+      fallbackApplied = true;
+      document.documentElement.classList.add('sr-fallback');
+    };
+
+    const slideUp = {
+      distance: `8px`,
+      duration: `1000`,
+      interval: `100`,
+      scale: `1`,
+      opacity: 0,
+      easing: "ease-out"
+    };
+
+    // 看门狗：CDN 长时间无响应时强制显示内容
+    const watchdog = setTimeout(() => revealFallback(), 3000);
+
+    utils.js(`https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js`, { defer: true })
+      .then(() => {
+        if (fallbackApplied) return;
+        if (typeof ScrollReveal !== 'function') {
+          revealFallback();
+          return;
+        }
+        try {
+          const sr = ScrollReveal();
+          if (targets.length > 0) {
+            sr.reveal(targets, { ...slideUp });
+          }
+          pinnedGroups.forEach((group, container) => {
+            sr.reveal(group, { ...slideUp, container: container });
+          });
+          clearTimeout(watchdog);
+        } catch (err) {
+          console.error('[Plugin scrollreveal] 初始化失败:', err);
+          revealFallback();
+        }
+      })
+      .catch((err) => {
+        console.error('[Plugin scrollreveal] 加载失败:', err);
+        revealFallback();
+      });
+  }, 'scrollreveal');
+</script>
+<script>
+  utils.initPlugin(() => {
     const codeElements = document.querySelectorAll('.code');
     if (codeElements.length > 0) {
       ctx.copycode = {
@@ -1183,4 +1782,4 @@
 
 <!-- inject -->
 
-</div><div class="page-loading-bar"><img src="https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd"></div></body></html>
+</div></body></html>

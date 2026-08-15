@@ -3,12 +3,12 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.40.0" theme-name="Stellar" theme-version="1.40.0">
   <link rel="canonical" href="https://blog.vconet.top/archives/nvidia-kvm-passthrough/">
   
   <meta name="generator" content="Hexo 8.1.2">
   <meta http-equiv='x-dns-prefetch-control' content='on' />
-  
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin><link rel="preconnect" href="https://unpkg.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <meta name="renderer" content="webkit">
   <meta name="force-rendering" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
@@ -19,12 +19,11 @@
   <meta name="theme-color" content="#f9fafb">
   <title>告别重启：Linux 下的 NVIDIA 显卡直通 - VConet的杂物间</title>
 
-  
-    <meta name="description" content="缘起自前年全面从 Windows 转到 ArchLinux 之后，我的的大部分时间都在 Linux 下，但为了运行 CAD、打游戏，我不得不选择双系统方案 双系统虽然能解决软件兼容性的问题，但每次切换都需要重启的体验很割裂，那么虚拟机呢？">
+  <meta name="description" content="缘起自前年全面从 Windows 转到 ArchLinux 之后，我的的大部分时间都在 Linux 下，但为了运行 CAD、打游戏，我不得不选择双系统方案 双系统虽然能解决软件兼容性的问题，但每次切换都需要重启的体验很割裂，那么虚拟机呢？">
 <meta property="og:type" content="article">
 <meta property="og:title" content="告别重启：Linux 下的 NVIDIA 显卡直通">
 <meta property="og:url" content="https://blog.vconet.top/archives/nvidia-kvm-passthrough/">
-<meta property="og:site_name" content="VConet的杂物间">
+<meta property="og:site_name" content="告别重启：Linux 下的 NVIDIA 显卡直通">
 <meta property="og:description" content="缘起自前年全面从 Windows 转到 ArchLinux 之后，我的的大部分时间都在 Linux 下，但为了运行 CAD、打游戏，我不得不选择双系统方案 双系统虽然能解决软件兼容性的问题，但每次切换都需要重启的体验很割裂，那么虚拟机呢？">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog.vconet.top/static/avatar.jpg">
@@ -42,8 +41,7 @@
 <meta property="article:tag" content="显卡">
 <meta property="article:tag" content="直通">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://blog.vconet.top/static/avatar.jpg">
-  
+<meta name="twitter:image" content="https://blog.vconet.top/static/avatar.jpg"><meta name="twitter:title" content="告别重启：Linux 下的 NVIDIA 显卡直通">
   
   
   <meta name="keywords" content="Linux,Windows,ArchLinux,NVIDIA,KVM,libvirt,qemu,直通,双系统,显卡">
@@ -59,7 +57,8 @@
     
   
 
-  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+  <link rel="preload" href="/css/main.css?v=1.40.0" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=1.40.0">
 
 
   
@@ -85,34 +84,47 @@
 </style>
 <script defer src="https://analysis.vconet.top/script.js" data-website-id="ee90339e-f6e2-457d-86ee-ba4f417c1afb"></script>
 </head>
-<body><div class="sitebg"><div class="siteblur"></div></div><div id="l_cover"></div><div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+<body><div class="sitebg"><div class="siteblur"></div></div><div id="l_cover"></div><div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left leftbar-card"><div class="sidebg"></div><div class="leftbar-container">
 
 
-<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://blog.vconet.top/static/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
 
-<div class="nav-area">
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg"></div><img no-lazy class="avatar" src="https://blog.vconet.top/static/avatar.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">VConet的杂物间</div><div class="sub cap">探索，永不停息</div></a></div></header>
 
-<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="DN42" href="/dn42/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M6 4.71c.78.711 2.388 2.653 2.575 4.737C8.75 11.396 10.035 12.98 12 13c.755.008 1.518-.537 1.516-1.292c0-.233-.039-.472-.099-.692A1.4 1.4 0 0 1 13.5 10c.61-1.257 1.81-1.595 2.76-2.278c.421-.303.806-.623.975-.88c.469-.71.937-2.131.703-2.842M22 13c-.33.931-.562 3.375-4.282 3.414c0 0-3.293 0-4.281 1.862c-.791 1.49-.33 3.103 0 3.724" opacity=".5"/></g></svg></a><a class="nav-item" title="友链" href="/friends/" style="color:#FF9800"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48"><!-- Icon from IconPark Outline by ByteDance - https://github.com/bytedance/IconPark/blob/master/LICENSE --><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20"/><path d="M31 7v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M31 7v17"/><path d="m16.636 6.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m16.636 6.636l14.142 14.142"/><path d="M7 17h17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M7 17h17"/><path d="M20.364 17.636L6.222 31.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M20.364 17.636L6.222 31.778"/><path d="M17 25v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M17 25v17"/><path d="m17.636 27.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m17.636 27.636l14.142 14.142"/><path d="M24 31h18z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 31h18"/><path d="M42.364 16.636L28.222 30.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M42.364 16.636L28.222 30.778M24 31a7 7 0 1 0 0-14a7 7 0 0 0 0 14"/></g></svg></a><a class="nav-item" title="关于我" href="/about/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
-</div>
-<div class="widgets">
+
 <div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
 
+<div class="widgets">
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="leftbar-active-icon-grad" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+<div class="nav-area">
 
-
-<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/archives/dzip-reverse-engine/"><span class="title">逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES</span></a><a class="item title" href="/archives/kde-plm-fix/"><span class="title">KDE PLM 的问题及解决方案</span></a><a class="item title" href="/archives/stellar-friends/"><span class="title">为 Stellar 主题实现更轻量的动态友链</span></a><a class="item title" href="/archives/linux-wpa-eap-issue/"><span class="title">wpa_supplicant 后端无法连接 802.1x WiFi</span></a><a class="item title" href="/archives/dn42-intro/"><span class="title">DN42 之旅：搭建多节点 BGP 网络</span></a><a class="item title" href="/archives/genshin-in-linux/"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item title" href="/archives/hires-in-linux/"><span class="title">Linux 上 iBasso DC04U 原生 DSD 直出指南</span></a><a class="item title" href="/archives/zerotier-for-alpine/"><span class="title">为 Alpine 提供 ZeroTier</span></a><a class="item title" href="/archives/linux-access-radminlan/"><span class="title">在 Linux 下访问 Radmin LAN 网络</span></a><a class="item title" href="/archives/nvidia-kvm-passthrough/"><span class="title">告别重启：Linux 下的 NVIDIA 显卡直通</span></a></div></widget>
+<nav class="menu dis-select"><a class="nav-item active themed" style="--item-grad:url(#menu-grad-post);--item-theme:#1BCDFC" title="博客" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg><span>博客</span><span class="active-dot"></span>
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-post" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-dn42);--item-theme:#3DC550" title="DN42" href="/dn42/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M6 4.71c.78.711 2.388 2.653 2.575 4.737C8.75 11.396 10.035 12.98 12 13c.755.008 1.518-.537 1.516-1.292c0-.233-.039-.472-.099-.692A1.4 1.4 0 0 1 13.5 10c.61-1.257 1.81-1.595 2.76-2.278c.421-.303.806-.623.975-.88c.469-.71.937-2.131.703-2.842M22 13c-.33.931-.562 3.375-4.282 3.414c0 0-3.293 0-4.281 1.862c-.791 1.49-.33 3.103 0 3.724" opacity=".5"/></g></svg><span>DN42</span>
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-dn42" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-friends);--item-theme:#FF9800" title="友链" href="/friends/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48"><!-- Icon from IconPark Outline by ByteDance - https://github.com/bytedance/IconPark/blob/master/LICENSE --><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20"/><path d="M31 7v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M31 7v17"/><path d="m16.636 6.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m16.636 6.636l14.142 14.142"/><path d="M7 17h17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M7 17h17"/><path d="M20.364 17.636L6.222 31.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M20.364 17.636L6.222 31.778"/><path d="M17 25v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M17 25v17"/><path d="m17.636 27.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m17.636 27.636l14.142 14.142"/><path d="M24 31h18z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 31h18"/><path d="M42.364 16.636L28.222 30.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M42.364 16.636L28.222 30.778M24 31a7 7 0 1 0 0-14a7 7 0 0 0 0 14"/></g></svg><span>友链</span>
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-friends" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-about);--item-theme:#F44336" title="关于我" href="/about/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg><span>关于我</span>
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-about" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+</a></nav>
 </div>
-<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/V-Conet" target="_blank" rel="external nofollow noopener noreferrer"><svg aria-hidden="true" role="img" class="color-icon-primary" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a><a class="social" href="https://t.me/v_conet" target="_blank" rel="external nofollow noopener noreferrer"><img src="/static/telegram.svg"/></a><a class="social" href="https://git.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><img src="/static/forgejo.svg" /></a><a class="social" href="https://blog.vconet.top/atom.xml" target="_blank" rel="external nofollow noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div></footer>
+
+
+<widget class="widget-wrapper slide-up recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/archives/dzip-reverse-engine/"><span class="title">逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES</span></a><a class="item title" href="/archives/kde-plm-fix/"><span class="title">KDE PLM 的问题及解决方案</span></a><a class="item title" href="/archives/stellar-friends/"><span class="title">为 Stellar 主题实现更轻量的动态友链</span></a><a class="item title" href="/archives/linux-wpa-eap-issue/"><span class="title">wpa_supplicant 后端无法连接 802.1x WiFi</span></a><a class="item title" href="/archives/dn42-intro/"><span class="title">DN42 之旅：搭建多节点 BGP 网络</span></a><a class="item title" href="/archives/genshin-in-linux/"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item title" href="/archives/hires-in-linux/"><span class="title">Linux 上 iBasso DC04U 原生 DSD 直出指南</span></a><a class="item title" href="/archives/zerotier-for-alpine/"><span class="title">为 Alpine 提供 ZeroTier</span></a><a class="item title" href="/archives/linux-access-radminlan/"><span class="title">在 Linux 下访问 Radmin LAN 网络</span></a><a class="item title" href="/archives/nvidia-kvm-passthrough/"><span class="title">告别重启：Linux 下的 NVIDIA 显卡直通</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https:&#x2F;&#x2F;github.com&#x2F;V-Conet" target="_blank" rel="external nofollow noopener noreferrer"><svg aria-hidden="true" role="img" class="color-icon-primary" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a><a class="social" href="https:&#x2F;&#x2F;t.me&#x2F;v_conet" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/static/telegram.svg"/></a><a class="social" href="https:&#x2F;&#x2F;git.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/static/forgejo.svg" /></a><a class="social" href="https:&#x2F;&#x2F;blog.vconet.top&#x2F;atom.xml" target="_blank" rel="external nofollow noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div></footer>
 </div></aside><div class="l_main" id="main">
 
 
 
 
 
-<div class="article banner top"><img class="lazy bg" data-src="https://static.vconet.top/nv-kvm-passthr.png">
+
+<div class="article-banner-wrap slide-up"><div class="article banner top" style="--bg-url:url('https://static.vconet.top/nv-kvm-passthr.png')"><img class="lazy bg" data-src="https://static.vconet.top/nv-kvm-passthr.png">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/Linux/KVM/">KVM</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-09-23T11:06:11.000Z">2025-09-23</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-09-23T11:06:11.000Z">2025-09-23</time></span></div></div></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-09-23T11:06:11.000Z">2025-09-23</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-09-23T11:06:11.000Z">2025-09-23</time></span></div>
+</div></div>
     
     <div class="bottom only-title">
       
@@ -123,7 +135,8 @@
     </div>
     
   </div>
-  </div><article class="md-text content"><h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>自前年全面从 Windows 转到 ArchLinux 之后，我的的大部分时间都在 Linux 下，但为了运行 CAD、打游戏，我不得不选择双系统方案</p>
+  </div></div>
+<article class="md-text content slide-up"><h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>自前年全面从 Windows 转到 ArchLinux 之后，我的的大部分时间都在 Linux 下，但为了运行 CAD、打游戏，我不得不选择双系统方案</p>
 <p>双系统虽然能解决软件兼容性的问题，但每次切换都需要重启的体验很割裂，那么虚拟机呢？</p>
 <span id="more"></span>
 <p>行，也不行。虚拟机虽然能跑上面的应用，但那羸弱的 3D 性能，也就只能跑一些 wine 运行不了的软件</p>
@@ -137,60 +150,60 @@
 <div class="tag-plugin colorful note" color="cyan"><div class="body"><p>如果你在后续直通和安装驱动时有问题，可尝试关闭虚拟机的安全启动</p></div></div>
 
 <h2 id="配置宿主机"><a href="#配置宿主机" class="headerlink" title="配置宿主机"></a>配置宿主机</h2><p>为了让虚拟机可以使用宿主机的 PCIe 设备，需要用到 <code>IOMMU</code>和<code>vfio-pci</code> 模块</p>
-<h3 id="启用IOMMU"><a href="#启用IOMMU" class="headerlink" title="启用IOMMU"></a>启用IOMMU</h3><div class="tag-plugin colorful note" color="orange"><div class="title">为什么要用IOMMU</div><div class="body"><p>当操作系统在虚拟机内运行时（包括使用半虚拟化的系统，例如Xen），其通常不知道它要访问的内存的主机物理地址。这使其难以直接访问计算机硬件，因为如果客户机系统尝试用客户机的物理地址进行直接存储器访问（DMA）来吩咐硬件，其可能损坏内存数据，因为硬件不知道给定虚拟机客户机物理地址与主机物理地址之间的映射关系。而由管理程序或主机操作系统介入I&#x2F;O操作来应用翻译则可以避免损坏，但会增加此I&#x2F;O操作的延迟。</br> IOMMU可以依靠将客户机物理地址映射到主机物理地址的相同或兼容转换表重映射硬件访问地址，从而解决延迟问题。</p></div></div>
+<h3 id="启用IOMMU"><a href="#启用IOMMU" class="headerlink" title="启用IOMMU"></a>启用IOMMU</h3><div class="tag-plugin colorful note" color="orange"><div class="title">为什么要用IOMMU</div><div class="body"><p>当操作系统在虚拟机内运行时（包括使用半虚拟化的系统，例如Xen），其通常不知道它要访问的内存的主机物理地址。这使其难以直接访问计算机硬件，因为如果客户机系统尝试用客户机的物理地址进行直接存储器访问（DMA）来吩咐硬件，其可能损坏内存数据，因为硬件不知道给定虚拟机客户机物理地址与主机物理地址之间的映射关系。而由管理程序或主机操作系统介入I/O操作来应用翻译则可以避免损坏，但会增加此I/O操作的延迟。<br> IOMMU可以依靠将客户机物理地址映射到主机物理地址的相同或兼容转换表重映射硬件访问地址，从而解决延迟问题。</p></div></div>
 
 <p>首先，要确保你的 BIOS 已经开启了 VT-x 或者 AMD-v 虚拟化</p>
 <p>对于 Intel CPU，需要向内核参数中添加 <code>intel_iommu=on</code> 和 <code>iommu=pt</code></p>
 <p>对于 AMD CPU，则需要添加 <code>amd_iommu=on</code> 和 <code>iommu=pt</code></p>
 <h4 id="Grub"><a href="#Grub" class="headerlink" title="Grub"></a>Grub</h4><p>使用 Grub 的用户，在 <code>/etc/default/grub</code> 中添加：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Intel CPU</span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet intel_iommu=on iommu=pt ...&quot;</span><br><span class="line"></span><br><span class="line"># AMD CPU</span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet amd_iommu=on iommu=pt ...&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Intel CPU</span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt ..."</span><br><span class="line"></span><br><span class="line"># AMD CPU</span><br><span class="line">GRUB_CMDLINE_LINUX_DEFAULT="quiet amd_iommu=on iommu=pt ..."</span><br></pre></td></tr></tbody></table></figure>
 
 <h4 id="UKI"><a href="#UKI" class="headerlink" title="UKI"></a>UKI</h4><p>使用 UKI 的用户，在 <code>/etc/kernel/cmdline</code> 中添加：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root=UUID=... rw splash loglevel=3... intel_iommu=on iommu=pt</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root=UUID=... rw splash loglevel=3... intel_iommu=on iommu=pt</span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="设置-VFIO"><a href="#设置-VFIO" class="headerlink" title="设置 VFIO"></a>设置 VFIO</h3><h4 id="修改-mkinitcpio"><a href="#修改-mkinitcpio" class="headerlink" title="修改 mkinitcpio"></a>修改 mkinitcpio</h4><p>为了使用 VFIO，我们需要调整 VFIO 和 NVIDIA 驱动的顺序，修改 <code>/etc/mkinitcpio.conf</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MODULES=(vfio_pci vfio vfio_iommu_type1 nvidia nvidia_modeset nvidia_uvm nvidia_drm)</span><br><span class="line"># 如果你的内核版本小于 6.2, 那你可你需要添加 vfio_virqfd 这个模块</span><br><span class="line"># 为了在有需要的时候才直通显卡，需要保留此处的 nvidia 驱动</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MODULES=(vfio_pci vfio vfio_iommu_type1 nvidia nvidia_modeset nvidia_uvm nvidia_drm)</span><br><span class="line"># 如果你的内核版本小于 6.2, 那你可你需要添加 vfio_virqfd 这个模块</span><br><span class="line"># 为了在有需要的时候才直通显卡，需要保留此处的 nvidia 驱动</span><br></pre></td></tr></tbody></table></figure>
 
 <p>重新生成 <code>Initramfs</code>：</p>
-<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_6" value="mkinitcpio -P"><button class="copy-btn" onclick="util.copy(&quot;copy_6&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>#</span><input class="copy-area" id="copy_7" value="mkinitcpio -P"><button class="copy-btn" onclick="util.copy(&quot;copy_7&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>至此，宿主机的配置就算完成了</p>
 <h2 id="配置虚拟机"><a href="#配置虚拟机" class="headerlink" title="配置虚拟机"></a>配置虚拟机</h2><p>这部分我会略去一些特殊情况和问题，如果有没办法解决的问题，可以去看看 <code>Lan Tian</code>  的两篇教程</p>
 <h3 id="反虚拟化"><a href="#反虚拟化" class="headerlink" title="反虚拟化"></a>反虚拟化</h3><p>为了避免某些应用的虚拟机检测，需要编辑虚拟机的XML，在 <code>&lt;features&gt;</code> 段内添加以下内容：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">features</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">acpi</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">apic</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">hyperv</span> <span class="attr">mode</span>=<span class="string">&quot;custom&quot;</span>&gt;</span></span><br><span class="line">        ...</span><br><span class="line">    <span class="tag">&lt;/<span class="name">hyperv</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--新增--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">kvm</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">hidden</span> <span class="attr">state</span>=<span class="string">&quot;on&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">kvm</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">vmport</span> <span class="attr">state</span>=<span class="string">&quot;off&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">features</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">features</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">acpi</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">apic</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">hyperv</span> <span class="attr">mode</span>=<span class="string">"custom"</span>&gt;</span></span><br><span class="line">        ...</span><br><span class="line">    <span class="tag">&lt;/<span class="name">hyperv</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--新增--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">kvm</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">hidden</span> <span class="attr">state</span>=<span class="string">"on"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">kvm</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">vmport</span> <span class="attr">state</span>=<span class="string">"off"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">features</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="添加假电池"><a href="#添加假电池" class="headerlink" title="添加假电池"></a>添加假电池</h3><p>在直通后，虚拟机并不能直接使用 NVIDIA 显卡，可能是由于笔记本的限制，显卡只有在有假电池的情况使用</p>
 <p>在 <code>&lt;domain&gt;</code>段添加自定义的 qemu 指令：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--请不要忘了添加 xmlns:qemu=&quot;http://libvirt.org/schemas/domain/qemu/1.0&quot; 否则无法保存！--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">domain</span> <span class="attr">xmlns:qemu</span>=<span class="string">&quot;http://libvirt.org/schemas/domain/qemu/1.0&quot;</span> <span class="attr">type</span>=<span class="string">&quot;kvm&quot;</span>&gt;</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="tag">&lt;<span class="name">qemu:commandline</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">&quot;-acpitable&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">&quot;file=/opt/UserItems/ssdt.dat&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">qemu:commandline</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">domain</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--请不要忘了添加 xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" 否则无法保存！--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">domain</span> <span class="attr">xmlns:qemu</span>=<span class="string">"http://libvirt.org/schemas/domain/qemu/1.0"</span> <span class="attr">type</span>=<span class="string">"kvm"</span>&gt;</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="tag">&lt;<span class="name">qemu:commandline</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">"-acpitable"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">"file=/opt/UserItems/ssdt.dat"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">qemu:commandline</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">domain</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
 
 <p>上面 <code>/opt/UserItems/ssdt.dat</code> 为修改后的ACPI表，来自 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://lantian.pub/usr/uploads/202007/ssdt1.dat">Lan Tian</a> 的教程</p>
 <h3 id="添加-PCIe"><a href="#添加-PCIe" class="headerlink" title="添加 PCIe"></a>添加 PCIe</h3><p>依旧是在 <code>&lt;domain&gt;</code> 段内添加：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">domain</span> <span class="attr">xmlns:qemu</span>=<span class="string">&quot;http://libvirt.org/schemas/domain/qemu/1.0&quot;</span> <span class="attr">type</span>=<span class="string">&quot;kvm&quot;</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">hostdev</span> <span class="attr">mode</span>=<span class="string">&#x27;subsystem&#x27;</span> <span class="attr">type</span>=<span class="string">&#x27;pci&#x27;</span> <span class="attr">managed</span>=<span class="string">&#x27;yes&#x27;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">address</span> <span class="attr">domain</span>=<span class="string">&#x27;0x0000&#x27;</span> <span class="attr">bus</span>=<span class="string">&#x27;0x01&#x27;</span> <span class="attr">slot</span>=<span class="string">&#x27;0x00&#x27;</span> <span class="attr">function</span>=<span class="string">&#x27;0x0&#x27;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rom</span> <span class="attr">bar</span>=<span class="string">&#x27;off&#x27;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">address</span> <span class="attr">type</span>=<span class="string">&#x27;pci&#x27;</span> <span class="attr">domain</span>=<span class="string">&#x27;0x0000&#x27;</span> <span class="attr">bus</span>=<span class="string">&#x27;0x01&#x27;</span> <span class="attr">slot</span>=<span class="string">&#x27;0x00&#x27;</span> <span class="attr">function</span>=<span class="string">&#x27;0x0&#x27;</span> <span class="attr">multifunction</span>=<span class="string">&#x27;on&#x27;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">hostdev</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--禁用内存动态伸缩，影响性能--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">memballoon</span> <span class="attr">model</span>=<span class="string">&quot;none&quot;</span>/&gt;</span></span><br><span class="line">    ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">domain</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">domain</span> <span class="attr">xmlns:qemu</span>=<span class="string">"http://libvirt.org/schemas/domain/qemu/1.0"</span> <span class="attr">type</span>=<span class="string">"kvm"</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">hostdev</span> <span class="attr">mode</span>=<span class="string">'subsystem'</span> <span class="attr">type</span>=<span class="string">'pci'</span> <span class="attr">managed</span>=<span class="string">'yes'</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">address</span> <span class="attr">domain</span>=<span class="string">'0x0000'</span> <span class="attr">bus</span>=<span class="string">'0x01'</span> <span class="attr">slot</span>=<span class="string">'0x00'</span> <span class="attr">function</span>=<span class="string">'0x0'</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rom</span> <span class="attr">bar</span>=<span class="string">'off'</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">address</span> <span class="attr">type</span>=<span class="string">'pci'</span> <span class="attr">domain</span>=<span class="string">'0x0000'</span> <span class="attr">bus</span>=<span class="string">'0x01'</span> <span class="attr">slot</span>=<span class="string">'0x00'</span> <span class="attr">function</span>=<span class="string">'0x0'</span> <span class="attr">multifunction</span>=<span class="string">'on'</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">hostdev</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--禁用内存动态伸缩，影响性能--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">memballoon</span> <span class="attr">model</span>=<span class="string">"none"</span>/&gt;</span></span><br><span class="line">    ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">domain</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
 
 <p>请确保显卡的总线只能是上面的，如果提示冲突，请删掉占用这个地址的那个设备的 <code>&lt;address .../&gt;</code>段，让其重新分配一个新的地址</p>
 <h2 id="启动直通！"><a href="#启动直通！" class="headerlink" title="启动直通！"></a>启动直通！</h2><p>目前，配置好的虚拟机还不能启动，现在需要我们先手动卸载 NVIDIA 驱动，将 NVIDIA 交给 VFIO</p>
 <h3 id="手动切换显卡"><a href="#手动切换显卡" class="headerlink" title="手动切换显卡"></a>手动切换显卡</h3><ol>
 <li><p>手动关闭所有占用 NVIDIA 显卡的进程，进程可通过 lsof 查看：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_7" value="lsof /dev/nvidia*"><button class="copy-btn" onclick="util.copy(&quot;copy_7&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_8" value="lsof /dev/nvidia*"><button class="copy-btn" onclick="util.copy(&quot;copy_8&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 </li>
 <li><p>暂停 nvidia 服务：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_8" value="sudo systemctl stop nvidia-persistenced"><button class="copy-btn" onclick="util.copy(&quot;copy_8&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_9" value="sudo systemctl stop nvidia-persistenced"><button class="copy-btn" onclick="util.copy(&quot;copy_9&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 </li>
 <li><p>卸载 NVIDIA 驱动：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_9" value="sudo modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia ght"><button class="copy-btn" onclick="util.copy(&quot;copy_9&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_10" value="sudo modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia ght"><button class="copy-btn" onclick="util.copy(&quot;copy_10&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 </li>
 <li><p>绑定 VFIO：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_10" value="sudo modprobe vfio-pci ids=10de:28e0"><button class="copy-btn" onclick="util.copy(&quot;copy_10&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_11" value="sudo modprobe vfio-pci ids=10de:28e0"><button class="copy-btn" onclick="util.copy(&quot;copy_11&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>此处的 <code>ids=xxx</code> 需要所有的 NVIDIA 设备都交给 VFIO，通过 <code>lspci -nn | grep NVIDIA</code> 查看，多个设备使用 <code>,</code> 分隔</p>
 <p><em>我的设备在 Linux 下只有 VGA，并没有出现 Audio 设备</em></p>
 </li>
 </ol>
 <p>完成上面的步骤后，通过下面的指令查看显卡是否成果交给 VFIO：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_11" value="sudo dmesg | grep -i vfio"><button class="copy-btn" onclick="util.copy(&quot;copy_11&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_12" value="sudo dmesg | grep -i vfio"><button class="copy-btn" onclick="util.copy(&quot;copy_12&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>如果出现类似下面的信息，即为成功：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[  170.607580] vfio-pci 0000:01:00.0: vgaarb: VGA decodes changed: olddecodes=none,decodes=io+mem:owns=none</span><br><span class="line">[  170.607741] vfio_pci: add [10de:28e0[ffffffff:ffffffff]] class 0x000000/00000000</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[  170.607580] vfio-pci 0000:01:00.0: vgaarb: VGA decodes changed: olddecodes=none,decodes=io+mem:owns=none</span><br><span class="line">[  170.607741] vfio_pci: add [10de:28e0[ffffffff:ffffffff]] class 0x000000/00000000</span><br></pre></td></tr></tbody></table></figure>
 
 <p>此时，可以开启虚拟机了</p>
 <h3 id="画面显示"><a href="#画面显示" class="headerlink" title="画面显示"></a>画面显示</h3><p>为了把虚拟机的画面传输到宿主机，大体上有两种方法：</p>
@@ -201,38 +214,38 @@
 <p>无论上面那种方法，都需要先安装一个虚拟显示器软件比如 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/VirtualDrivers/Virtual-Display-Driver">VDD</a>，串流方案比较简单，不需要再配置虚拟机</p>
 <h3 id="Looking-Glass"><a href="#Looking-Glass" class="headerlink" title="Looking Glass"></a>Looking Glass</h3><p>我在这里介绍一下 Looking Glass 方案，虚拟机上只需要安装 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://looking-glass.io/artifact/bleeding/host">Looking Glass Host 版</a>，宿主机上的配置有下面两种办法</p>
 <h4 id="KVMFR"><a href="#KVMFR" class="headerlink" title="KVMFR"></a>KVMFR</h4><p>这是官方推荐的方案，通过 DMA 传输数据，能提供更好的画面和更好的帧率</p>
-<h5 id="安装模块"><a href="#安装模块" class="headerlink" title="安装模块"></a>安装模块</h5><div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_12" value="paru -S looking-glass-rc-module-dkms"><button class="copy-btn" onclick="util.copy(&quot;copy_12&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<h5 id="安装模块"><a href="#安装模块" class="headerlink" title="安装模块"></a>安装模块</h5><div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_13" value="paru -S looking-glass-rc-module-dkms"><button class="copy-btn" onclick="util.copy(&quot;copy_13&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <ol>
 <li><p>设置开机加载 kvmfr 模块，创建 <code>/etc/modules-load.d/looking-glass.conf</code>：</p>
- <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kvmfr</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kvmfr</span><br></pre></td></tr></tbody></table></figure>
 </li>
 <li><p>创建 <code>/etc/modprobe.d/looking-glass.conf</code> 内容如下：</p>
- <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options kvmfr static_size_mb=计算出的数值</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">options kvmfr static_size_mb=计算出的数值</span><br></pre></td></tr></tbody></table></figure>
 
 <p> 数值的计算方法：${\frac{分辨率宽\times 分辨率高\times4\times2}{1024\times1024}}$，将计算出的结果以 ${2^n}$ 向上取整的整数</p>
-<p> 如分显示器辨率为 2560x1600，其结果为：<br> $${\frac{2560\times1600\times4\times2}{  1024 \times 1024 } &#x3D;31.25}$$<br> 最接近 31.25 的是 ${2^6&#x3D; 64}$，因此上面的值为 64</p>
+<p> 如分显示器辨率为 2560x1600，其结果为：<br> $${\frac{2560\times1600\times4\times2}{  1024 \times 1024 } =31.25}$$<br> 最接近 31.25 的是 ${2^6= 64}$，因此上面的值为 64</p>
 </li>
 <li><p>给 <code>/dev/kvmfr0</code> 赋予访问权，创建 udev 规则 <code>/etc/udev/rules.d/99-kvmfr.rules</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SUBSYSTEM==&quot;kvmfr&quot;, OWNER=&quot;qemu&quot;, GROUP=&quot;kvm&quot;, MODE=&quot;0660&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SUBSYSTEM=="kvmfr", OWNER="qemu", GROUP="kvm", MODE="0660"</span><br></pre></td></tr></tbody></table></figure>
 
 <p><strong>其中的 <code>OWNER</code> 不要写任何 uid &gt; 1000 的用户，不然该 udev 规则不会生效</strong>，请确保当前用户在 <code>kvm</code> 组内，重启后生效</p>
 </li>
 </ol>
 <h5 id="设置虚拟机"><a href="#设置虚拟机" class="headerlink" title="设置虚拟机"></a>设置虚拟机</h5><p>编辑虚拟机的 XML，在 <code>&lt;domain&gt;</code> 段内添加以下内容：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  ...</span><br><span class="line">  <span class="tag">&lt;<span class="name">qemu:commandline</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">&quot;-acpitable&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">&quot;file=/opt/UserItems/ssdt1.dat&quot;</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--添加下面的内容--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">&quot;-device&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">&quot;&#123;&#x27;driver&#x27;:&#x27;ivshmem-plain&#x27;,&#x27;id&#x27;:&#x27;shmem0&#x27;,&#x27;memdev&#x27;:&#x27;looking-glass&#x27;&#125;&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">&quot;-object&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">&quot;&#123;&#x27;qom-type&#x27;:&#x27;memory-backend-file&#x27;,&#x27;id&#x27;:&#x27;looking-glass&#x27;,&#x27;mem-path&#x27;:&#x27;/dev/kvmfr0&#x27;,&#x27;size&#x27;:67108864,&#x27;share&#x27;:true&#125;&quot;</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--这里的 size 和上面的一样--&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">qemu:commandline</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">domain</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  ...</span><br><span class="line">  <span class="tag">&lt;<span class="name">qemu:commandline</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">"-acpitable"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">"file=/opt/UserItems/ssdt1.dat"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--添加下面的内容--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">"-device"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">"{'driver':'ivshmem-plain','id':'shmem0','memdev':'looking-glass'}"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">"-object"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qemu:arg</span> <span class="attr">value</span>=<span class="string">"{'qom-type':'memory-backend-file','id':'looking-glass','mem-path':'/dev/kvmfr0','size':67108864,'share':true}"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--这里的 size 和上面的一样--&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">qemu:commandline</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">domain</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
 
 <h5 id="修改客户端"><a href="#修改客户端" class="headerlink" title="修改客户端"></a>修改客户端</h5><p>修改全局设置 <code>/etc/looking-glass-client.ini</code>：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[app]</span></span><br><span class="line"><span class="attr">shmFile</span>=/dev/kvmfr0</span><br></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[app]</span></span><br><span class="line"><span class="attr">shmFile</span>=/dev/kvmfr0</span><br></pre></td></tr></tbody></table></figure>
 
 <div class="tag-plugin colorful note" color="red"><div class="body"><p>如果使用该方案，就不能使用&nbsp;virtiofs&nbsp;共享文件，只能选择&nbsp;SMB、NFS&nbsp;或者硬盘直通，如果就是想用&nbsp;virtiofs，那需要使用下面的方案</p></div></div>
 
 <h4 id="shmem"><a href="#shmem" class="headerlink" title="shmem"></a>shmem</h4><ol>
 <li><p>编译虚拟机的 XML，在 <code>&lt;device&gt;</code> 段内添加：</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">        ...</span><br><span class="line">        <span class="tag">&lt;<span class="name">shmem</span> <span class="attr">name</span>=<span class="string">&#x27;looking-glass&#x27;</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">model</span> <span class="attr">type</span>=<span class="string">&#x27;ivshmem-plain&#x27;</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">size</span> <span class="attr">unit</span>=<span class="string">&#x27;M&#x27;</span>&gt;</span>64<span class="tag">&lt;/<span class="name">size</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">shmem</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">device</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">domain</span>&gt;</span></span><br></pre></td></tr></table></figure>
+ <figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">        ...</span><br><span class="line">        <span class="tag">&lt;<span class="name">shmem</span> <span class="attr">name</span>=<span class="string">'looking-glass'</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">model</span> <span class="attr">type</span>=<span class="string">'ivshmem-plain'</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">size</span> <span class="attr">unit</span>=<span class="string">'M'</span>&gt;</span>64<span class="tag">&lt;/<span class="name">size</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">shmem</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">device</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">domain</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
 </li>
 <li><p>修改权限，创建 <code>/etc/tmpfiles.d/looking-glass.conf</code>：</p>
- <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f /dev/shm/looking-glass 0660 vconet kvm -</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f /dev/shm/looking-glass 0660 vconet kvm -</span><br></pre></td></tr></tbody></table></figure>
 
 <p> 请把 <code>vconet</code> 改为自己的用户名，运行 <code>sudo systemd-tmpfiles /etc/tmpfiles.d/looking-glass.conf --create</code> 生效</p>
 </li>
@@ -242,33 +255,33 @@
 <p>解决办法比较粗暴，我有一套单独的键鼠，直通后不影响笔记本的键盘和触控板</p>
 <p>为了保证随时可以切换连接状态，不应在 virt-manager 里直接添加 <code>USB 主机设备</code>，而是用 <code>virsh</code> 这个 CLI 工具</p>
 <p>连接：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_13" value="virsh attach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_13&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_14" value="virsh attach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_14&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>断开：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_14" value="virsh detach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_14&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_15" value="virsh detach-device VMID XML_FILE"><button class="copy-btn" onclick="util.copy(&quot;copy_15&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 
 <p>定义键鼠的 XML 格式如下：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">hostdev</span> <span class="attr">mode</span>=<span class="string">&quot;subsystem&quot;</span> <span class="attr">type</span>=<span class="string">&quot;usb&quot;</span> <span class="attr">managed</span>=<span class="string">&quot;yes&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">vendor</span> <span class="attr">id</span>=<span class="string">&quot;0x3554&quot;</span>/&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">product</span> <span class="attr">id</span>=<span class="string">&quot;0xfa09&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">hostdev</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">hostdev</span> <span class="attr">mode</span>=<span class="string">"subsystem"</span> <span class="attr">type</span>=<span class="string">"usb"</span> <span class="attr">managed</span>=<span class="string">"yes"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">vendor</span> <span class="attr">id</span>=<span class="string">"0x3554"</span>/&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">product</span> <span class="attr">id</span>=<span class="string">"0xfa09"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">hostdev</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
 
 <h2 id="重新启用-NVIDIA-显卡"><a href="#重新启用-NVIDIA-显卡" class="headerlink" title="重新启用 NVIDIA 显卡"></a>重新启用 NVIDIA 显卡</h2><p>至此，虚拟机已经用上 NVIDIA 显卡了，但如何把显卡重连回 Linux？</p>
 <p>步骤和上面的差不多</p>
 <ol>
 <li><p>卸载 <code>vfio-pic</code> 驱动：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_15" value="sudo modprobe -r vfio-pci"><button class="copy-btn" onclick="util.copy(&quot;copy_15&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div></li>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_16" value="sudo modprobe -r vfio-pci"><button class="copy-btn" onclick="util.copy(&quot;copy_16&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div></li>
 <li><p>重新加载 NVIDIA 驱动：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_16" value="sudo modprobe nvidia_drm nvidia_modeset nvidia_uvm nvidia"><button class="copy-btn" onclick="util.copy(&quot;copy_16&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_17" value="sudo modprobe nvidia_drm nvidia_modeset nvidia_uvm nvidia"><button class="copy-btn" onclick="util.copy(&quot;copy_17&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div>
 </li>
 <li><p>重启 nvidia 服务：</p>
-<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_17" value="sudo systemctl restart nvidia-persistenced"><button class="copy-btn" onclick="util.copy(&quot;copy_17&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div></li>
+<div class="tag-plugin copy"><span>$</span><input class="copy-area" id="copy_18" value="sudo systemctl restart nvidia-persistenced"><button class="copy-btn" onclick="util.copy(&quot;copy_18&quot;,&quot;复制成功&quot;)"><svg class="icon copy-btn" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.75 1a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-4.5zm.75 3V2.5h3V4h-3zm-2.874-.467a.75.75 0 00-.752-1.298A1.75 1.75 0 002 3.75v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0014 13.25v-9.5a1.75 1.75 0 00-.874-1.515.75.75 0 10-.752 1.298.25.25 0 01.126.217v9.5a.25.25 0 01-.25.25h-8.5a.25.25 0 01-.25-.25v-9.5a.25.25 0 01.126-.217z"></path></svg></button></div></li>
 </ol>
 <h2 id="GUI"><a href="#GUI" class="headerlink" title="GUI"></a>GUI</h2><p>虽然上面的方法实现了自由切换，但我不想每次都手动完成</p>
 <p>于是，我用 PySide6 写了一个简单的 GUI 用来简化流程，毕竟点点点总比一个个输方便</p>
-<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:1098/1129;"><img class="lazy" src="https://static.vconet.top/20250923_214950.png" data-src="https://static.vconet.top/20250923_214950.png" alt="toolbox"onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"/><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">toolbox</span></div></div>
+<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:1098/1129;"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://static.vconet.top/20250923_214950.png" alt="toolbox" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">toolbox</span></div></div>
 
 <p>我把它放在 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/V-Conet/nvidia_kvm_passthrough">Github</a> 上了，有需要的可以自行下载使用</p>
 <h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>文章到这里就暂时结束了，如果我后期有什么新的需求，会在继续这里更新<br>后续可能更新 Apparmor 和 Samba 相关的部分…</p>
 </article>
-<div class="article-footer">
+<div class="article-footer slide-up">
     <section id="references">
       <div class="header"><span>参考资料</span></div>
       <div class="body">
@@ -302,30 +315,29 @@
     <section id="share">
       <div class="header"><span>分享文章</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https://blog.vconet.top/archives/nvidia-kvm-passthrough/" /></div>
-        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https://blog.vconet.top/archives/nvidia-kvm-passthrough/&title=告别重启：Linux 下的 NVIDIA 显卡直通 - VConet的杂物间&pics=https://static.vconet.top/nv-kvm-passthr.png&summary=缘起自前年全面从 Windows 转到 ArchLinux 之后，我的的大部分时间都在 Linux 下，但为了运行 CAD、打游戏，我不得不选择双系统方案
-双系统虽然能解决软件兼容性的问题，但每次切换都需要重启的体验很割裂，那么虚拟机呢？"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=告别重启：Linux 下的 NVIDIA 显卡直通 - VConet的杂物间&amp;body=https://blog.vconet.top/archives/nvidia-kvm-passthrough/" rel="external nofollow noreferrer"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img  src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="https:&#x2F;&#x2F;blog.vconet.top&#x2F;archives&#x2F;nvidia-kvm-passthrough&#x2F;" /></div>
+        <div class="social-wrap dis-select"><a class="social share-item wechat" onclick="util.toggle(&quot;qrcode-wechat&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/b32ef3da1162a.svg" /></a><a class="social share-item weibo" target="_blank" rel="external nofollow noopener noreferrer" href="https://service.weibo.com/share/share.php?url=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fnvidia-kvm-passthrough%2F&title=%E5%91%8A%E5%88%AB%E9%87%8D%E5%90%AF%EF%BC%9ALinux%20%E4%B8%8B%E7%9A%84%20NVIDIA%20%E6%98%BE%E5%8D%A1%E7%9B%B4%E9%80%9A%20-%20VConet%E7%9A%84%E6%9D%82%E7%89%A9%E9%97%B4&pics=https%3A%2F%2Fstatic.vconet.top%2Fnv-kvm-passthr.png&summary=%E7%BC%98%E8%B5%B7%E8%87%AA%E5%89%8D%E5%B9%B4%E5%85%A8%E9%9D%A2%E4%BB%8E%20Windows%20%E8%BD%AC%E5%88%B0%20ArchLinux%20%E4%B9%8B%E5%90%8E%EF%BC%8C%E6%88%91%E7%9A%84%E7%9A%84%E5%A4%A7%E9%83%A8%E5%88%86%E6%97%B6%E9%97%B4%E9%83%BD%E5%9C%A8%20Linux%20%E4%B8%8B%EF%BC%8C%E4%BD%86%E4%B8%BA%E4%BA%86%E8%BF%90%E8%A1%8C%20CAD%E3%80%81%E6%89%93%E6%B8%B8%E6%88%8F%EF%BC%8C%E6%88%91%E4%B8%8D%E5%BE%97%E4%B8%8D%E9%80%89%E6%8B%A9%E5%8F%8C%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%0A%E5%8F%8C%E7%B3%BB%E7%BB%9F%E8%99%BD%E7%84%B6%E8%83%BD%E8%A7%A3%E5%86%B3%E8%BD%AF%E4%BB%B6%E5%85%BC%E5%AE%B9%E6%80%A7%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%8C%E4%BD%86%E6%AF%8F%E6%AC%A1%E5%88%87%E6%8D%A2%E9%83%BD%E9%9C%80%E8%A6%81%E9%87%8D%E5%90%AF%E7%9A%84%E4%BD%93%E9%AA%8C%E5%BE%88%E5%89%B2%E8%A3%82%EF%BC%8C%E9%82%A3%E4%B9%88%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%91%A2%EF%BC%9F"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/80c07e4dbb303.svg" /></a><a class="social share-item email" href="mailto:?subject=%E5%91%8A%E5%88%AB%E9%87%8D%E5%90%AF%EF%BC%9ALinux%20%E4%B8%8B%E7%9A%84%20NVIDIA%20%E6%98%BE%E5%8D%A1%E7%9B%B4%E9%80%9A%20-%20VConet%E7%9A%84%E6%9D%82%E7%89%A9%E9%97%B4&amp;body=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fnvidia-kvm-passthrough%2F" rel="external nofollow noreferrer"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/a1b00e20f425d.svg" /></a><a class="social share-item link" onclick="util.copy(&quot;copy-link&quot;, &quot;复制成功&quot;)"><img class="lazy"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/8411ed322ced6.svg" /></a></div>
         
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https://blog.vconet.top/archives/nvidia-kvm-passthrough/"/>
+          <img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fnvidia-kvm-passthrough%2F"/>
         </div>
         
       </div>
     </section>
     </div>
 
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/archives/linux-access-radminlan/">在 Linux 下访问 Radmin LAN 网络</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/archives/nec-8-pve/">NEC 8小主机：打通 PVE 内外网</a></div></section></div>
+<div class="related-wrap slide-up" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/archives/linux-access-radminlan/">在 Linux 下访问 Radmin LAN 网络</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/archives/nec-8-pve/">NEC 8小主机：打通 PVE 内外网</a></div></section></div>
 
-<div class="related-wrap" id="related-posts">
+<div class="related-wrap slide-up" id="related-posts">
     <section class='header'>
       <div class='title cap theme'>相关文章</div>
     </section>
     <section class='body'>
-    <div class="related-posts"><a class="item" href="/archives/genshin-in-linux/" title="如何在 Linux 下玩原神？"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item" href="/archives/linux-access-radminlan/" title="在 Linux 下访问 Radmin LAN 网络"><span class="title">在 Linux 下访问 Radmin LAN 网络</span><span class="excerpt">众所周知，Radmin LAN 并没有 Linux 版本，而有时仍需要访问对方的 Radmin LAN 网络，本文提供一种可行方案：让 Linux 通过一台 Windows Server 主机做 NAT 转发，借此访问整个 Radmi...</span></a><a class="item" href="/archives/kde-plm-fix/" title="KDE PLM 的问题及解决方案"><span class="title">KDE PLM 的问题及解决方案</span></a><a class="item" href="/archives/dn42-intro/" title="DN42 之旅：搭建多节点 BGP 网络"><span class="title">DN42 之旅：搭建多节点 BGP 网络</span><span class="excerpt">前言本文用以记录自己加入 DN42 网络的历程，本人是初入 BGP 的小白，对于文章中出现的各种不严谨内容和各种低级错误，请大佬们手下留情，可在评论区指出。
-欢迎和我 Peer：VCNET DN42</span></a></div></section></div>
+    <div class="related-posts"><a class="item" href="&#x2F;archives&#x2F;dn42-intro&#x2F;" title="DN42 之旅：搭建多节点 BGP 网络"><span class="title">DN42 之旅：搭建多节点 BGP 网络</span><span class="excerpt">前言本文用以记录自己加入 DN42 网络的历程，本人是初入 BGP 的小白，对于文章中出现的各种不严谨内容和各种低级错误，请大佬们手下留情，可在评论区指出。
+欢迎和我 Peer：VCNET DN42</span></a><a class="item" href="&#x2F;archives&#x2F;genshin-in-linux&#x2F;" title="如何在 Linux 下玩原神？"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item" href="&#x2F;archives&#x2F;kde-plm-fix&#x2F;" title="KDE PLM 的问题及解决方案"><span class="title">KDE PLM 的问题及解决方案</span></a><a class="item" href="&#x2F;archives&#x2F;linux-access-radminlan&#x2F;" title="在 Linux 下访问 Radmin LAN 网络"><span class="title">在 Linux 下访问 Radmin LAN 网络</span><span class="excerpt">众所周知，Radmin LAN 并没有 Linux 版本，而有时仍需要访问对方的 Radmin LAN 网络，本文提供一种可行方案：让 Linux 通过一台 Windows Server 主机做 NAT 转发，借此访问整个 Radmi...</span></a></div></section></div>
 
 
-  <div class="related-wrap md-text" id="comments">
+  <div class="related-wrap md-text slide-up" id="comments">
     <section class='header cmt-title cap theme'>
       <p>快来参与讨论吧~</p>
 
@@ -333,19 +345,20 @@
     <section class='body cmt-body twikoo'>
       
 
-<div id="twikoo_container"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+<div id="twikoo_container" class="with-fancybox"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+
     </section>
   </div>
 
 
 
-<footer class="page-footer footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1">Stellar 1.33.1</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
+<footer class="page-footer slide-up footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.40.0">Stellar 1.40.0</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right"><div class="widgets">
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%98%E8%B5%B7"><span class="toc-text">缘起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%86%B3%E6%9D%A1%E4%BB%B6"><span class="toc-text">先决条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA"><span class="toc-text">配置宿主机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8IOMMU"><span class="toc-text">启用IOMMU</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Grub"><span class="toc-text">Grub</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UKI"><span class="toc-text">UKI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-VFIO"><span class="toc-text">设置 VFIO</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-mkinitcpio"><span class="toc-text">修改 mkinitcpio</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">配置虚拟机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="toc-text">反虚拟化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%81%87%E7%94%B5%E6%B1%A0"><span class="toc-text">添加假电池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0-PCIe"><span class="toc-text">添加 PCIe</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%9B%B4%E9%80%9A%EF%BC%81"><span class="toc-text">启动直通！</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%88%87%E6%8D%A2%E6%98%BE%E5%8D%A1"><span class="toc-text">手动切换显卡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E9%9D%A2%E6%98%BE%E7%A4%BA"><span class="toc-text">画面显示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Looking-Glass"><span class="toc-text">Looking Glass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#KVMFR"><span class="toc-text">KVMFR</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%A8%A1%E5%9D%97"><span class="toc-text">安装模块</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">设置虚拟机</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">修改客户端</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#shmem"><span class="toc-text">shmem</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%AE%E9%BC%A0"><span class="toc-text">键鼠</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E6%96%B0%E5%90%AF%E7%94%A8-NVIDIA-%E6%98%BE%E5%8D%A1"><span class="toc-text">重新启用 NVIDIA 显卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GUI"><span class="toc-text">GUI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E5%B0%BE"><span class="toc-text">结尾</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+<widget class="widget-wrapper slide-up toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%98%E8%B5%B7"><span class="toc-text">缘起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E5%86%B3%E6%9D%A1%E4%BB%B6"><span class="toc-text">先决条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%AE%BF%E4%B8%BB%E6%9C%BA"><span class="toc-text">配置宿主机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8IOMMU"><span class="toc-text">启用IOMMU</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Grub"><span class="toc-text">Grub</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UKI"><span class="toc-text">UKI</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-VFIO"><span class="toc-text">设置 VFIO</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-mkinitcpio"><span class="toc-text">修改 mkinitcpio</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">配置虚拟机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="toc-text">反虚拟化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%81%87%E7%94%B5%E6%B1%A0"><span class="toc-text">添加假电池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0-PCIe"><span class="toc-text">添加 PCIe</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%9B%B4%E9%80%9A%EF%BC%81"><span class="toc-text">启动直通！</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%88%87%E6%8D%A2%E6%98%BE%E5%8D%A1"><span class="toc-text">手动切换显卡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%BB%E9%9D%A2%E6%98%BE%E7%A4%BA"><span class="toc-text">画面显示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Looking-Glass"><span class="toc-text">Looking Glass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#KVMFR"><span class="toc-text">KVMFR</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%A8%A1%E5%9D%97"><span class="toc-text">安装模块</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">设置虚拟机</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">修改客户端</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#shmem"><span class="toc-text">shmem</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%AE%E9%BC%A0"><span class="toc-text">键鼠</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E6%96%B0%E5%90%AF%E7%94%A8-NVIDIA-%E6%98%BE%E5%8D%A1"><span class="toc-text">重新启用 NVIDIA 显卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GUI"><span class="toc-text">GUI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E5%B0%BE"><span class="toc-text">结尾</span></a></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -358,7 +371,7 @@
 
 
 <script type="text/javascript">
-  window.canonical = {"closeEnable":true,"closeText":"关闭提示","originalHost":"blog.vconet.top","officialHosts":["localhost"],"encoded":"YmxvZy52Y29uZXQudG9w"};
+  window.canonical = {"originalHost":"blog.vconet.top","officialHosts":["localhost"],"encoded":"YmxvZy52Y29uZXQudG9w"};
   window.canonical["param"] = {"permalink":"https://blog.vconet.top/archives/nvidia-kvm-passthrough/","checklink":"/js/plugins/video.js"};
   // Fix: Ensure page is at the correct top position on data load
   if (history.scrollRestoration) {
@@ -368,6 +381,124 @@
     const scrollHandler = () => {
       const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
       const startEl = document.getElementById('start');
+      // 存在有效锚点时，等待布局稳定后滚动到目标
+      // （浏览器原生锚点滚动发生在布局完成前，长文章的懒加载图片/异步组件会把目标顶偏）
+      const hash = window.location.hash;
+      if (hash.length > 1) {
+        let anchorId = hash.slice(1);
+        try {
+          anchorId = decodeURIComponent(anchorId);
+        } catch (e) {
+          // 片段含非法编码时按原样查找
+        }
+        const anchor = document.getElementById(anchorId);
+        if (anchor) {
+          // #start 锚点贴顶，不预留 offset；其余锚点与 TOC 点击滚动保持一致
+          const offset = anchorId === 'start' ? 0 : 32;
+          const targetY = () => anchor.getBoundingClientRect().top + window.scrollY - offset;
+          let timer = null;
+          let lastY = null;
+          let quiet = 0;
+          let attempts = 0;
+          // 记录最近一次资源加载完成时间，判断异步数据/图片是否仍在改变布局
+          let lastResourceTime = performance.now();
+          let observer = null;
+          try {
+            observer = new PerformanceObserver(function (list) {
+              lastResourceTime = performance.now();
+            });
+            observer.observe({ entryTypes: ['resource'] });
+          } catch (e) {}
+          // 统计进行中的 fetch/XHR 请求，异步组件（timeline 等）未完成前不判定布局稳定
+          let pendingRequests = 0;
+          const trackRequest = (fn) => {
+            pendingRequests++;
+            try {
+              const result = fn();
+              if (result && typeof result.finally === 'function') {
+                result.finally(function () {
+                  pendingRequests = Math.max(0, pendingRequests - 1);
+                });
+              } else {
+                pendingRequests = Math.max(0, pendingRequests - 1);
+              }
+              return result;
+            } catch (e) {
+              pendingRequests = Math.max(0, pendingRequests - 1);
+              throw e;
+            }
+          };
+          if (typeof window.fetch === 'function') {
+            const origFetch = window.fetch.bind(window);
+            window.fetch = function () {
+              const args = arguments;
+              return trackRequest(function () {
+                return origFetch.apply(window, args);
+              });
+            };
+          }
+          if (window.XMLHttpRequest) {
+            const origOpen = window.XMLHttpRequest.prototype.open;
+            const origSend = window.XMLHttpRequest.prototype.send;
+            window.XMLHttpRequest.prototype.open = function () {
+              this.__anchorTracked = true;
+              return origOpen.apply(this, arguments);
+            };
+            window.XMLHttpRequest.prototype.send = function () {
+              if (this.__anchorTracked) {
+                pendingRequests++;
+                const done = () => {
+                  if (this.__anchorTracked) {
+                    this.__anchorTracked = false;
+                    pendingRequests = Math.max(0, pendingRequests - 1);
+                  }
+                };
+                this.addEventListener('loadend', done);
+              }
+              return origSend.apply(this, arguments);
+            };
+          }
+          const cancel = () => {
+            if (timer !== null) {
+              clearInterval(timer);
+              timer = null;
+            }
+            if (observer !== null) {
+              try {
+                observer.disconnect();
+              } catch (e) {}
+            }
+          };
+          const adjust = () => {
+            const y = targetY();
+            const atTarget = Math.abs(window.scrollY - y) <= 2;
+            if (!atTarget || lastY === null || Math.abs(y - lastY) > 2) {
+              window.scrollTo({ top: y, behavior: 'instant' });
+              lastY = y;
+              quiet = 0;
+            } else {
+              quiet++;
+            }
+            attempts++;
+            const resourceQuiet = performance.now() - lastResourceTime > 3000;
+            // 位置连续 1.8 秒无变化、无进行中的请求且最近 3 秒无资源加载才视为稳定；最长等待 30 秒
+            if ((quiet >= 3 && pendingRequests === 0 && resourceQuiet) || attempts >= 50) {
+              cancel();
+            }
+          };
+          requestAnimationFrame(() => {
+            // 锚点链接打开时直接定位，不做动画；用户主动点击（如 TOC）仍走平滑滚动
+            window.scrollTo({ top: targetY(), behavior: 'instant' });
+            timer = setInterval(adjust, 600);
+          });
+          // 用户主动滚动时停止自动校正
+          window.addEventListener('wheel', cancel, { passive: true });
+          window.addEventListener('touchstart', cancel, { passive: true });
+          window.addEventListener('mousedown', cancel, { passive: true });
+          window.addEventListener('keydown', cancel, { passive: true });
+          return;
+        }
+      }
       if (wikiCover && startEl) {
         window.scrollTo(0, startEl.offsetTop);
       } else {
@@ -403,11 +534,11 @@
     avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
     cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
     loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+    data_cache: {"enable":true,"default_ttl":3600,"ttl":{"giscus":600,"waline":600,"artalk":600,"memos":600,"memos-user":86400,"sites":86400,"friends":86400,"friends_and_posts":86400,"siteinfo":86400},"max_entries":200},
   };
   const deps = {
-    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
     marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
-    lazyload: `/%5Bobject%20Object%5D`
+    lazyload: `https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js`
   }
 </script>
 
@@ -526,7 +657,7 @@
     // 已加载脚本缓存
     _loadedScripts: new Set(),
 
-    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免 PJAX 导航时的状态混淆)
+    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免重复加载)
     _loadedElements: new WeakSet(),
 
     js: (src, opt) => new Promise((resolve, reject) => {
@@ -559,86 +690,405 @@
       document.head.appendChild(script)
     }),
 
-    // PJAX 事件监听器管理
-    _pjaxListeners: new Set(),
-    
-    jq: (fn, pjax = true) => {
-      if (typeof jQuery === 'undefined') {
-        utils.js(deps.jquery).then(fn)
-      } else {
-        fn()
+    // 原生 DOM 工具：querySelector / querySelectorAll 简写
+    qs: (sel, ctx) => (ctx || document).querySelector(sel),
+    qsa: (sel, ctx) => Array.prototype.slice.call((ctx || document).querySelectorAll(sel)),
+
+    // 原生 DOM 封装：常用 DOM 操作方法子集（find/append/class/attr/事件等）
+    dom: (selector, ctx) => {
+      var els = [];
+      if (typeof selector === 'string') {
+        els = utils.qsa(selector, ctx);
+      } else if (selector && selector.nodeType === 1) {
+        els = [selector];
+      } else if (selector && typeof selector.length === 'number') {
+        els = Array.prototype.slice.call(selector);
       }
-      if (pjax && !fn._pjax_registered) {
-        document.addEventListener('pjax:complete', fn);
-        fn._pjax_registered = true;
-        utils._pjaxListeners.add(fn); // 追踪监听器以便清理
-      }
-    },
-    
-    // 清理所有 PJAX 事件监听器
-    cleanupPjaxListeners: () => {
-      utils._pjaxListeners.forEach(fn => {
-        document.removeEventListener('pjax:complete', fn);
-        fn._pjax_registered = false;
+      var api = {
+        length: els.length,
+        each: function (fn) {
+          els.forEach(function (el, i) {
+            fn.call(el, i, el);
+          });
+          return api;
+        },
+        find: function (sel) {
+          var result = [];
+          els.forEach(function (el) {
+            Array.prototype.push.apply(result, el.querySelectorAll(sel));
+          });
+          return utils.dom(result);
+        },
+        append: function (content) {
+          els.forEach(function (el) {
+            if (typeof content === 'string') {
+              el.insertAdjacentHTML('beforeend', content);
+            } else if (content && content.nodeType === 1) {
+              el.appendChild(content);
+            } else if (content && typeof content.length === 'number') {
+              Array.prototype.forEach.call(content, function (child) {
+                if (child && child.nodeType === 1) el.appendChild(child);
+              });
+            }
+          });
+          return api;
+        },
+        remove: function () {
+          els.forEach(function (el) {
+            el.remove();
+          });
+        },
+        addClass: function (cls) {
+          els.forEach(function (el) {
+            cls.trim().split(/\s+/).forEach(function (c) {
+              if (c) el.classList.add(c);
+            });
+          });
+          return api;
+        },
+        removeClass: function (cls) {
+          els.forEach(function (el) {
+            cls.trim().split(/\s+/).forEach(function (c) {
+              if (c) el.classList.remove(c);
+            });
+          });
+          return api;
+        },
+        toggleClass: function (cls, force) {
+          els.forEach(function (el) {
+            cls.trim().split(/\s+/).forEach(function (c) {
+              if (c) el.classList.toggle(c, force);
+            });
+          });
+          return api;
+        },
+        attr: function (name, value) {
+          if (value === undefined) {
+            return els[0] ? els[0].getAttribute(name) : undefined;
+          }
+          els.forEach(function (el) {
+            el.setAttribute(name, value);
+          });
+          return api;
+        },
+        data: function (name) {
+          return els[0] ? els[0].getAttribute('data-' + name) : undefined;
+        },
+        text: function (value) {
+          if (value === undefined) {
+            return els[0] ? els[0].textContent : undefined;
+          }
+          els.forEach(function (el) {
+            el.textContent = value;
+          });
+          return api;
+        },
+        html: function (content) {
+          if (content === undefined) {
+            return els[0] ? els[0].innerHTML : undefined;
+          }
+          els.forEach(function (el) {
+            if (typeof content !== 'string' && content && typeof content.length === 'number' && content[0] && content[0].nodeType === 1) {
+              var frag = document.createDocumentFragment();
+              Array.prototype.forEach.call(content, function (child) {
+                frag.appendChild(child);
+              });
+              el.replaceChildren(frag);
+            } else {
+              el.innerHTML = content;
+            }
+          });
+          return api;
+        },
+        val: function (value) {
+          if (value === undefined) {
+            return els[0] ? els[0].value : undefined;
+          }
+          els.forEach(function (el) {
+            el.value = value;
+          });
+          return api;
+        },
+        offset: function () {
+          var el = els[0];
+          if (!el) return { top: 0, left: 0 };
+          var rect = el.getBoundingClientRect();
+          return { top: rect.top + window.scrollY, left: rect.left + window.scrollX };
+        },
+        on: function (event, cb) {
+          els.forEach(function (el) {
+            el.addEventListener(event, cb);
+          });
+          return api;
+        },
+        click: function (cb) { return api.on('click', cb); },
+        focus: function (cb) { return api.on('focus', cb); },
+        keydown: function (cb) { return api.on('keydown', cb); },
+        empty: function () {
+          els.forEach(function (el) {
+            el.replaceChildren();
+          });
+          return api;
+        }
+      };
+      els.forEach(function (el, i) {
+        api[i] = el;
       });
-      utils._pjaxListeners.clear();
+      return api;
     },
 
     onLoading: (el) => {
       if (el) {
-        if ($(el).find('.loading-wrap').length === 0){
-          $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+        if (el.querySelector('.loading-wrap') === null) {
+          el.insertAdjacentHTML('beforeend', '<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
         }
       }
     },
     onLoadSuccess: (el) => {
       if (el) {
-        $(el).find('.loading-wrap').remove();
+        var wrap = el.querySelector('.loading-wrap');
+        if (wrap) wrap.remove();
       }
     },
     onLoadFailure: (el) => {
       if (el) {
-        $(el).find('.loading-wrap svg').remove();
-        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
-        $(el).find('.loading-wrap').addClass('error');
+        var wrap = el.querySelector('.loading-wrap');
+        if (wrap) {
+          var svg = wrap.querySelector('svg');
+          if (svg) svg.remove();
+          wrap.insertAdjacentHTML('beforeend', '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+          wrap.classList.add('error');
+        }
       }
     },
-    request: (el, url, callback, onFailure) => {
+    /********************** data cache ********************************/
+    // 动态数据本地缓存：TTL 未过期直接命中；过期后先显示缓存再后台刷新（stale-while-revalidate）
+    _cacheEnabled: true,
+    _cacheMaxEntryBytes: 200 * 1024,
+    // 同 URL 并发请求去重：页面内多个组件请求同一接口时共享一次 fetch
+    _pendingRequests: {},
+    _fetchShared: (url, options) => {
+      const key = (options && options.method || 'GET') + ' ' + url;
+      if (utils._pendingRequests[key]) {
+        return utils._pendingRequests[key].then(resp => resp.clone());
+      }
+      const promise = fetch(url, options).then(resp => {
+        if (!resp.ok) throw new Error('响应失败');
+        return resp;
+      }).finally(() => {
+        delete utils._pendingRequests[key];
+      });
+      utils._pendingRequests[key] = promise;
+      // 每个调用方各自 clone，避免 Response body 被消费后其他调用方取不到数据
+      return promise.then(resp => resp.clone());
+    },
+    // 延迟执行：缓存写入等非关键操作让出主线程
+    _defer: (fn) => {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(fn, { timeout: 3000 });
+      } else {
+        setTimeout(fn, 0);
+      }
+    },
+    cache: {
+      prefix: 'Stellar.data_cache.v1.',
+      enabled: () => !!def.data_cache?.enable && utils._cacheEnabled,
+      serviceId: (el, options) => {
+        if (options && options.service) return options.service;
+        if (el) {
+          const match = String(el.className || '').match(/\bds-([\w-]+)\b/);
+          if (match) return match[1];
+        }
+        return null;
+      },
+      ttl: (el, options) => {
+        const conf = def.data_cache || {};
+        const id = utils.cache.serviceId(el, options);
+        const value = id && conf.ttl && conf.ttl[id] != null ? conf.ttl[id] : conf.default_ttl;
+        return typeof value === 'number' && value > 0 ? value : 0;
+      },
+      shouldCache: (url, options) => {
+        if (!utils.cache.enabled()) return false;
+        if (options && (options.cache === false || options.cache === 'no-store')) return false;
+        if (options && options.method && options.method !== 'GET') return false;
+        // 带时间戳缓存破坏参数的请求不缓存（如 mdrender 的 ?t=）
+        if (/[?&]t=\d{10,}/.test(url)) return false;
+        return true;
+      },
+      get: (url) => {
+        try {
+          const raw = localStorage.getItem(utils.cache.prefix + url);
+          if (!raw) return null;
+          const entry = JSON.parse(raw);
+          if (!entry || typeof entry.text !== 'string' || typeof entry.ts !== 'number') return null;
+          return entry;
+        } catch (e) {
+          console.warn('[cache] 读取失败:', url, e);
+          return null;
+        }
+      },
+      set: (url, text, contentType, ttl) => {
+        if (!(ttl > 0)) return;
+        if (text.length > utils._cacheMaxEntryBytes) return;
+        const entry = JSON.stringify({
+          text: text,
+          contentType: contentType || 'application/json',
+          ts: Date.now(),
+          ttl: ttl
+        });
+        const trySet = () => {
+          try {
+            localStorage.setItem(utils.cache.prefix + url, entry);
+            utils.cache.trim();
+            return true;
+          } catch (e) {
+            return false;
+          }
+        };
+        if (!trySet()) {
+          // 配额不足时淘汰最旧条目后重试一次，仍失败则本会话禁用缓存
+          utils.cache.evictOldest(url);
+          if (!trySet()) {
+            console.warn('[cache] 写入失败，本会话禁用缓存:', url);
+            utils._cacheEnabled = false;
+          }
+        }
+      },
+      trim: () => {
+        try {
+          const max = (def.data_cache && def.data_cache.max_entries) || 200;
+          const keys = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.indexOf(utils.cache.prefix) === 0) keys.push(key);
+          }
+          if (keys.length <= max) return;
+          const sorted = keys.map((key) => {
+            let ts = 0;
+            try {
+              const entry = JSON.parse(localStorage.getItem(key) || 'null');
+              if (entry && typeof entry.ts === 'number') ts = entry.ts;
+            } catch (e) {}
+            return { key, ts };
+          }).sort((a, b) => a.ts - b.ts);
+          for (let i = 0; i < sorted.length - max; i++) {
+            localStorage.removeItem(sorted[i].key);
+          }
+        } catch (e) {
+          console.warn('[cache] 清理失败:', e);
+        }
+      },
+      evictOldest: (exceptUrl) => {
+        try {
+          let oldestKey = null;
+          let oldestTs = Infinity;
+          const exceptKey = utils.cache.prefix + exceptUrl;
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key || key.indexOf(utils.cache.prefix) !== 0 || key === exceptKey) continue;
+            let ts = 0;
+            try {
+              const entry = JSON.parse(localStorage.getItem(key) || 'null');
+              if (entry && typeof entry.ts === 'number') ts = entry.ts;
+            } catch (e) {}
+            if (ts < oldestTs) {
+              oldestTs = ts;
+              oldestKey = key;
+            }
+          }
+          if (oldestKey) localStorage.removeItem(oldestKey);
+        } catch (e) {}
+      },
+      isFresh: (entry) => {
+        if (!entry || typeof entry.ts !== 'number' || typeof entry.ttl !== 'number') return false;
+        if (!(entry.ttl > 0)) return false;
+        return Date.now() - entry.ts < entry.ttl * 1000;
+      },
+      // 用缓存文本重建 Response，兼容回调中的 resp.json() / resp.text()
+      toResponse: (entry) => new Response(entry.text, {
+        status: 200,
+        statusText: 'OK',
+        headers: { 'Content-Type': entry.contentType }
+      })
+    },
+    request: (el, url, callback, onFailure, options) => {
       // 检查元素实例是否已加载 (而不是检查属性)
       if (el && utils._loadedElements.has(el)) {
         return;
       }
       const maxRetry = 3;
       let retryCount = 0;
+      const ttl = utils.cache.ttl(el, options);
+      const cacheable = utils.cache.shouldCache(url, options) && ttl > 0;
+      const cached = cacheable ? utils.cache.get(url) : null;
+      // 缓存渲染前的初始结构，后台刷新渲染前恢复，避免重复渲染
+      let initialHTML = null;
+      // 缓存渲染完成后（或超时兜底）再启动后台刷新，避免异步渲染未结束就清空重绘
+      let cacheRenderDone = null;
+
+      if (cached) {
+        if (el) {
+          // 已有缓存时不显示加载动画
+          utils.onLoadSuccess?.(el);
+          initialHTML = el.innerHTML;
+        }
+        try {
+          cacheRenderDone = Promise.resolve(callback(utils.cache.toResponse(cached))).catch(e => {
+            console.warn('[request] 缓存渲染失败:', url, e);
+          });
+        } catch (e) {
+          console.warn('[request] 缓存渲染失败:', url, e);
+        }
+        // 缓存未过期：直接完成，不发请求
+        if (utils.cache.isFresh(cached)) {
+          if (el) utils._loadedElements.add(el);
+          return Promise.resolve(cached.text);
+        }
+      } else {
+        utils.onLoading?.(el);
+      }
 
       return new Promise((resolve, reject) => {
         const load = () => {
-          utils.onLoading?.(el);
-
           let timedOut = false;
           const timeout = setTimeout(() => {
             timedOut = true;
             console.warn('[request] 超时:', url);
 
             if (++retryCount >= maxRetry) {
-              utils.onLoadFailure?.(el);
-              onFailure?.();
-              reject('请求超时');
+              if (cached) {
+                // 已有缓存渲染，保留缓存内容，不显示失败
+                resolve(cached.text);
+              } else {
+                utils.onLoadFailure?.(el);
+                onFailure?.();
+                reject('请求超时');
+              }
             } else {
               setTimeout(load, 1000);
             }
           }, 5000);
 
-          fetch(url).then(resp => {
+          utils._fetchShared(url).then(resp => {
             if (timedOut) return;
             clearTimeout(timeout);
-
-            if (!resp.ok) throw new Error('响应失败');
             return resp;
           }).then(data => {
             if (timedOut) return;
             // 标记元素实例为已加载
             if (el) utils._loadedElements.add(el);
+            // 写入缓存（克隆响应，避免影响回调读取；延迟执行，避免阻塞渲染）
+            if (cacheable && data.ok) {
+              utils._defer(() => {
+                data.clone().text().then(text => {
+                  utils.cache.set(url, text, data.headers.get('Content-Type') || 'application/json', ttl);
+                }).catch(() => {});
+              });
+            }
+            // 后台刷新渲染前恢复初始结构，避免缓存渲染的内容重复
+            if (el && initialHTML !== null) {
+              el.innerHTML = initialHTML;
+            }
             utils.onLoadSuccess?.(el);
             callback(data);
             resolve(data);
@@ -647,40 +1097,82 @@
             console.warn('[request] 错误:', err);
 
             if (++retryCount >= maxRetry) {
-              utils.onLoadFailure?.(el);
-              onFailure?.();
-              reject(err);
+              if (cached) {
+                resolve(cached.text);
+              } else {
+                utils.onLoadFailure?.(el);
+                onFailure?.();
+                reject(err);
+              }
             } else {
               setTimeout(load, 1000);
             }
           });
         };
 
-        load();
+        if (cacheRenderDone) {
+          Promise.race([
+            cacheRenderDone,
+            new Promise(resolve => setTimeout(resolve, 5000))
+          ]).then(load);
+        } else {
+          load();
+        }
       });
     },
     requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      const ttl = utils.cache.ttl(null, options);
+      const cacheable = utils.cache.shouldCache(url, options) && ttl > 0;
+      const cached = cacheable ? utils.cache.get(url) : null;
+
+      if (cached && utils.cache.isFresh(cached)) {
+        return Promise.resolve(utils.cache.toResponse(cached));
+      }
+
       return new Promise((resolve, reject) => {
         let retryCount = 0;
+        // 与 request 保持一致：最终失败时回退 stale 缓存，避免闪失败态
+        const fallback = () => {
+          if (cached) {
+            resolve(utils.cache.toResponse(cached));
+          } else {
+            reject('timeout');
+          }
+        };
 
         const tryRequest = () => {
           let timedOut = false;
           const timer = setTimeout(() => {
             timedOut = true;
-            if (++retryCount > maxRetry) reject('timeout');
+            if (++retryCount > maxRetry) fallback();
             else tryRequest();
           }, timeout);
 
-          fetch(url, options)
+          utils._fetchShared(url, options)
             .then(resp => {
               clearTimeout(timer);
-              if (!resp.ok) throw new Error('bad response');
+              if (timedOut) return;
+              if (cacheable) {
+                utils._defer(() => {
+                  resp.clone().text().then(text => {
+                    utils.cache.set(url, text, resp.headers.get('Content-Type') || 'application/json', ttl);
+                  }).catch(() => {});
+                });
+              }
               resolve(resp);
             })
             .catch(err => {
               clearTimeout(timer);
-              if (++retryCount > maxRetry) reject(err);
-              else setTimeout(tryRequest, 500);
+              if (timedOut) return;
+              if (++retryCount > maxRetry) {
+                if (cached) {
+                  resolve(utils.cache.toResponse(cached));
+                } else {
+                  reject(err);
+                }
+              } else {
+                setTimeout(tryRequest, 500);
+              }
             });
         };
 
@@ -698,7 +1190,7 @@
     },
     dark: {},
 
-    // 插件初始化管理器 - 统一处理 DOMContentLoaded 和 pjax:complete 事件
+    // 插件初始化管理器 - 统一处理 DOMContentLoaded 事件
     _pluginInitializers: [],
     _pluginCleanups: new Map(), // 存储每个插件的清理函数
     
@@ -747,20 +1239,6 @@
       }
     },
 
-    // 重新初始化所有插件（用于 PJAX 等场景）
-    reinitPlugins: () => {
-      utils._pluginInitializers.forEach(plugin => {
-        // 跳过标记为不需要重新初始化的插件
-        if (plugin.options.skipReinit) return;
-        
-        try {
-          plugin.fn();
-        } catch (error) {
-          console.error(`[Plugin ${plugin.name}] 重新初始化失败:`, error);
-        }
-      });
-    },
-    
     // 清理所有插件资源
     cleanupPlugins: () => {
       utils._pluginCleanups.forEach((cleanup, name) => {
@@ -776,20 +1254,8 @@
     // 清理所有资源（用于页面卸载或重置）
     cleanupAll: () => {
       utils.cleanupPlugins();
-      utils.cleanupPjaxListeners();
     },
   };
-
-  // 自动处理 PJAX 事件
-  document.addEventListener('pjax:before', () => {
-    // 在导航前清理旧的 PJAX 监听器（如果需要重新注册）
-    // 注意：这里不清理，因为监听器应该是持久的
-    // utils.cleanupPjaxListeners();
-  });
-  
-  document.addEventListener('pjax:complete', () => {
-    utils.reinitPlugins();
-  });
 
   // utils.dark.mode 当前模式 dark or light
   // utils.dark.toggle() 暗黑模式触发器
@@ -801,6 +1267,7 @@
     push: utils.dark.method.toggle.push,
   });
 </script>
+
 <script>
   const sidebar = {
     leftbar: () => {
@@ -854,8 +1321,9 @@
   })()
 </script>
 
-<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
 <script>
+  // 先声明配置与初始化监听，再异步加载库：
+  // 保证库执行时 lazyLoadOptions 已就绪，避免 async 脚本抢先执行导致自初始化失败
   // https://www.npmjs.com/package/vanilla-lazyload
   // Set the options globally
   // to make LazyLoad self-initialize
@@ -863,13 +1331,13 @@
     elements_selector: ".lazy",
     callback_loaded: (el) => {
       el.classList.add('loaded');
-      const wrapper = el.closest('.lazy-box');
+      // {% image %} 没有 .lazy-box 包裹，回退到父元素查找加载图标
+      const wrapper = el.closest('.lazy-box') || el.parentElement;
       const icon = wrapper?.querySelector('.lazy-icon');
       if (icon) icon.remove();
     }
   };
-  // Listen to the initialization event
-  // and get the instance of LazyLoad
+  // 监听初始化事件，获取 LazyLoad 实例
   window.addEventListener(
     "LazyLoad::Initialized",
     function (event) {
@@ -880,6 +1348,30 @@
   document.addEventListener('DOMContentLoaded', function () {
     window.lazyLoadInstance?.update();
   });
+
+  // 兜底：动态插入的 .lazy 元素（如站点自定义脚本在 update() 之后追加的图片）
+  // 不会被 vanilla-lazyload 自动扫描，未注册的 img.lazy 会被 CSS opacity:0 永久隐藏。
+  // MutationObserver 检测到新增 .lazy 元素后自动调用 update() 重新注册。
+  if (window.MutationObserver) {
+    window.lazyMutationObserver = new MutationObserver((mutations) => {
+      if (window.lazyMutationObserver._pending) return;
+      const hasLazy = mutations.some((m) =>
+        Array.prototype.some.call(m.addedNodes, (node) =>
+          node.nodeType === 1 &&
+          (node.matches?.('.lazy') || !!node.querySelector?.('.lazy'))
+        )
+      );
+      if (!hasLazy) return;
+      window.lazyMutationObserver._pending = requestAnimationFrame(() => {
+        window.lazyMutationObserver._pending = null;
+        window.lazyLoadInstance?.update();
+      });
+    });
+    window.lazyMutationObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+  }
 
   window.wrapLazyloadImages = (container) => {
     if (typeof container === 'string') {
@@ -919,11 +1411,12 @@
       window.lazyLoadInstance.update();
     }
   }
-
 </script>
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+
 
 <!-- required -->
-<script src="/js/main.js?v=1.33.1" defer></script>
+<script src="/js/main.js?v=1.40.0" defer></script>
 
 <script type="text/javascript">
   const applyTheme = (theme) => {
@@ -996,9 +1489,8 @@
 
 <!-- optional -->
 
-  <script>
+  <script type="module">
   (function() {
-    const lazyload = false;
     
     function initTwikoo() {
       const el = document.getElementById('twikoo_container');
@@ -1014,18 +1506,14 @@
         });
       }
       
-      util.viewportLazyload(el, load_twikoo, lazyload);
+      util.viewportLazyload(el, load_twikoo);
     }
-    
-    // Store in global stellar namespace for PJAX reinitialization
-    window.stellar = window.stellar || {};
-    window.stellar.initComments = window.stellar.initComments || {};
-    window.stellar.initComments.twikoo = initTwikoo;
     
     // Initialize on page load
     initTwikoo();
   })();
 </script>
+
 
 
 
@@ -1073,28 +1561,26 @@
       } else {
         const els = document.getElementsByClassName(`ds-${id}`);
         if (els?.length > 0) {
-          utils.jq(() => {
-            if (id == 'timeline' || id == 'memos' || id == 'marked') {
-              utils.js(deps.marked).then(function () {
-                utils.js(js, { defer: true });
-              });
-            } else {
+          if (id == 'timeline' || id == 'memos' || id == 'marked' || id == 'mdrender') {
+            utils.js(deps.marked).then(function () {
               utils.js(js, { defer: true });
-            }
-          }, false);
+            });
+          } else {
+            utils.js(js, { defer: true });
+          }
         }
       }
     }
 
     // search
     if (ctx.search && typeof searchFunc === 'function') {
-      const $inputArea = $("input#search-input");
-      if ($inputArea.length > 0 && !$inputArea[0]._searchInitialized) {
+      const inputArea = document.querySelector("input#search-input");
+      if (inputArea && !inputArea._searchInitialized) {
         const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
-        const filter = $inputArea.attr('data-filter') || '';
+        const filter = inputArea.getAttribute('data-filter') || '';
         searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
         // 标记为已初始化，防止重复绑定
-        $inputArea[0]._searchInitialized = true;
+        inputArea._searchInitialized = true;
       }
     }
 
@@ -1210,6 +1696,7 @@
   utils.initPlugin(initServices, 'services');
 </script>
 
+
 <script>
   window.addEventListener('DOMContentLoaded', (event) => {
     ctx.search = {
@@ -1227,28 +1714,43 @@
 </script>
 <script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
   ctx.fancybox = {
+    mode: `auto`,
     selector: `.timenode p>img`,
     css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
     js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
   };
-  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  // auto=按需：页面存在可弹窗图片才加载；global=全局：所有页面加载
+  const isGlobal = ctx.fancybox.mode === 'global';
+  // 评论区图片（artalk/twikoo/waline）显示较小，自动支持放大
+  var selector = '[data-fancybox]:not(.error), .with-fancybox img:not([atk-emoticon]):not([class*="emo"])';
   if (ctx.fancybox.selector) {
     selector += `, ${ctx.fancybox.selector}`
   }
-  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  var needFancybox = isGlobal;
   if (!needFancybox) {
-    const memos = document.getElementsByClassName('ds-memos');
-    if (memos != undefined && memos.length > 0) {
-      needFancybox = true;
+    needFancybox = document.querySelectorAll(selector).length !== 0;
+    if (!needFancybox) {
+      // 图片型评论系统容器：评论区图片小图需要 fancybox
+      const withFancybox = document.getElementsByClassName('with-fancybox');
+      if (withFancybox != undefined && withFancybox.length > 0) {
+        needFancybox = true;
+      }
     }
-    const fancybox = document.getElementsByClassName('with-fancybox');
-    if (fancybox != undefined && fancybox.length > 0) {
-      needFancybox = true;
+    if (!needFancybox) {
+      // 动态数据服务：memos 渲染的图片需要 fancybox
+      const memos = document.getElementsByClassName('ds-memos');
+      if (memos != undefined && memos.length > 0) {
+        needFancybox = true;
+      }
     }
   }
   if (needFancybox) {
     utils.css(ctx.fancybox.css);
     utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      if (isGlobal) {
+        // 全局模式：正文所有非内联图片均可弹窗
+        selector += ', .md-text img:not(.inline):not([atk-emoticon])';
+      }
       Fancybox.bind(selector, {
         hideScrollbar: false,
         Thumbs: {
@@ -1286,6 +1788,102 @@
       })
     }
   }, 'swiper');
+</script>
+<script>
+  utils.initPlugin(() => {
+    const els = Array.prototype.slice.call(document.querySelectorAll('.slide-up'));
+    if (els.length === 0) return;
+
+    // 吸顶/固定定位容器内的元素始终在视口内（或由容器控制显隐），
+    // 但 ScrollReveal 按文档坐标判断可见性，会误判这类元素为不可见，
+    // 导致带锚点/恢复滚动位置打开页面时组件一直不显示。
+    // 解决方式：以最近的吸顶/固定祖先作为该组元素的容器，
+    // 使可见性判断恒成立，入场动画保留且不再依赖主文档滚动。
+    const findPinnedContainer = (el) => {
+      let node = el;
+      while (node && node.nodeType === 1) {
+        const pos = window.getComputedStyle(node).position;
+        if (pos === 'sticky' || pos === 'fixed') return node;
+        node = node.parentElement;
+      }
+      return null;
+    };
+
+    // 最近的滚动容器（overflow-y: auto/scroll）
+    // 吸顶容器内可能存在内部滚动容器（如侧栏 .widgets），
+    // 若直接用吸顶容器做 reveal 容器，折叠区下方的元素永远不会进入视口，导致一直不显示。
+    const findScrollContainer = (el) => {
+      let node = el.parentElement;
+      while (node && node.nodeType === 1) {
+        const oy = window.getComputedStyle(node).overflowY;
+        if (oy === 'auto' || oy === 'scroll') return node;
+        node = node.parentElement;
+      }
+      return null;
+    };
+
+    const pinnedGroups = new Map(); // 容器 -> 元素列表
+    const targets = [];
+    els.forEach((el) => {
+      const pinned = findPinnedContainer(el);
+      if (pinned) {
+        // 优先使用最近的滚动容器，其次才用吸顶容器
+        const container = findScrollContainer(el) || pinned;
+        const group = pinnedGroups.get(container) || [];
+        group.push(el);
+        pinnedGroups.set(container, group);
+      } else {
+        targets.push(el);
+      }
+    });
+    if (pinnedGroups.size === 0 && targets.length === 0) return;
+
+    // 加载/初始化失败时兜底显示内容，避免整页空白
+    let fallbackApplied = false;
+    const revealFallback = () => {
+      if (fallbackApplied) return;
+      fallbackApplied = true;
+      document.documentElement.classList.add('sr-fallback');
+    };
+
+    const slideUp = {
+      distance: `8px`,
+      duration: `1000`,
+      interval: `100`,
+      scale: `1`,
+      opacity: 0,
+      easing: "ease-out"
+    };
+
+    // 看门狗：CDN 长时间无响应时强制显示内容
+    const watchdog = setTimeout(() => revealFallback(), 3000);
+
+    utils.js(`https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js`, { defer: true })
+      .then(() => {
+        if (fallbackApplied) return;
+        if (typeof ScrollReveal !== 'function') {
+          revealFallback();
+          return;
+        }
+        try {
+          const sr = ScrollReveal();
+          if (targets.length > 0) {
+            sr.reveal(targets, { ...slideUp });
+          }
+          pinnedGroups.forEach((group, container) => {
+            sr.reveal(group, { ...slideUp, container: container });
+          });
+          clearTimeout(watchdog);
+        } catch (err) {
+          console.error('[Plugin scrollreveal] 初始化失败:', err);
+          revealFallback();
+        }
+      })
+      .catch((err) => {
+        console.error('[Plugin scrollreveal] 加载失败:', err);
+        revealFallback();
+      });
+  }, 'scrollreveal');
 </script>
 
 <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async></script>
@@ -1331,4 +1929,4 @@
 
 <!-- inject -->
 
-</div><div class="page-loading-bar"><img src="https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd"></div></body></html>
+</div></body></html>
