@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.40.0" theme-name="Stellar" theme-version="1.40.0">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.43.0" theme-name="Stellar" theme-version="1.43.0">
   <link rel="canonical" href="https://blog.vconet.top/archives/genshin-in-linux/">
   
   <meta name="generator" content="Hexo 8.1.2">
@@ -23,17 +23,17 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何在 Linux 下玩原神？">
 <meta property="og:url" content="https://blog.vconet.top/archives/genshin-in-linux/">
-<meta property="og:site_name" content="如何在 Linux 下玩原神？">
+<meta property="og:site_name" content="VConet的杂物间">
 <meta property="og:description" content="此文会持续更新，旧内容仅供参考，请以最新内容为准。  每次版本更新的前三天，原版&nbsp;Wine&nbsp;也可进行游玩  版本6.6 26.5.23 更新  因 MHYBase.dll 引起的崩溃问题，是由主线 Wine 版本的 crypt32 造成的，现已在 Spritz-Wine-TkG-AAGL v11.9-1、Spritz-Wine-CachyOS 10.0-11 和 dwprot">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://blog.vconet.top/static/avatar.jpg">
+<meta property="og:image" content="https://static.vconet.top/2026/d5cf4e42f080a726b7296839d787839b.png">
 <meta property="article:published_time" content="2026-02-19T10:18:56.000Z">
 <meta property="article:modified_time" content="2026-02-19T10:18:56.000Z">
 <meta property="article:author" content="VConet">
 <meta property="article:tag" content="Genshin">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://blog.vconet.top/static/avatar.jpg"><meta name="twitter:title" content="如何在 Linux 下玩原神？">
+<meta name="twitter:image" content="https://static.vconet.top/2026/d5cf4e42f080a726b7296839d787839b.png"><meta name="twitter:title" content="如何在 Linux 下玩原神？">
   
   
   <meta name="keywords" content="Linux,Genshin">
@@ -49,8 +49,8 @@
     
   
 
-  <link rel="preload" href="/css/main.css?v=1.40.0" as="style">
-  <link rel="stylesheet" href="/css/main.css?v=1.40.0">
+  <link rel="preload" href="/css/main.css?v=1.43.0" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=1.43.0">
 
 
   
@@ -59,7 +59,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg"},"dateCreated":"2026-02-19T18:18:56+08:00","dateModified":"2026-02-19T18:18:56+08:00","datePublished":"2026-02-19T18:18:56+08:00","description":"","headline":"如何在 Linux 下玩原神？","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/genshin-in-linux/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg","logo":{"@type":"ImageObject","url":"https://blog.vconet.top/static/avatar.jpg"}},"url":"https://blog.vconet.top/archives/genshin-in-linux/","keywords":"Linux, Genshin","thumbnailUrl":"https://static.vconet.top/2026/d5cf4e42f080a726b7296839d787839b.png","image":1}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg"},"dateCreated":"2026-02-19T18:18:56+08:00","dateModified":"2026-02-19T18:18:56+08:00","datePublished":"2026-02-19T18:18:56+08:00","description":"\n此文会持续更新，旧内容仅供参考，请以最新内容为准。\n\n每次版本更新的前三天，原版&nbsp;Wine&nbsp;也可进行游玩\n\n版本6.6\n26.5.23 更新\n\n因 MHYBase.dll 引起的崩溃问题，是由主线 Wine 版本的 crypt32 造成的，现已在 Spritz-Wine-TkG-AAGL v11.9-1、Spritz-Wine-CachyOS 10.0-11 和 dwp...","headline":"如何在 Linux 下玩原神？","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/genshin-in-linux/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg","logo":{"@type":"ImageObject","url":"https://blog.vconet.top/static/avatar.jpg"}},"url":"https://blog.vconet.top/archives/genshin-in-linux/","keywords":"Linux, Genshin","thumbnailUrl":"https://static.vconet.top/2026/d5cf4e42f080a726b7296839d787839b.png","image":["https://static.vconet.top/2026/d5cf4e42f080a726b7296839d787839b.png"]}</script>
   <meta name="yandex-verification" content="7724ebe7e7e09ce8" /><link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet"><style>
   @font-face {
     font-family: "ZSFT-443";
@@ -75,8 +75,20 @@
   }
 </style>
 <script defer src="https://analysis.vconet.top/script.js" data-website-id="ee90339e-f6e2-457d-86ee-ba4f417c1afb"></script>
+
+  <!-- icons.yml 驱动的 CSS 装饰图标 -->
+  
+  
+  <style>:root {
+  --icon-h3-left: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2024%2024%22%3E%3C!--%20Icon%20from%20Solar%20by%20480%20Design%20-%20https%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby%2F4.0%2F%20--%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M17.75%2019a.75.75%200%200%201-1.32.488l-6-7a.75.75%200%200%201%200-.976l6-7A.75.75%200%200%201%2017.75%205z%22%20opacity%3D%22.5%22%2F%3E%3Cpath%20fill%3D%22currentColor%22%20fill-rule%3D%22evenodd%22%20d%3D%22M13.488%2019.57a.75.75%200%200%200%20.081-1.058L7.988%2012l5.581-6.512a.75.75%200%201%200-1.138-.976l-6%207a.75.75%200%200%200%200%20.976l6%207a.75.75%200%200%200%201.057.082%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+  --icon-h3-right: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2024%2024%22%3E%3C!--%20Icon%20from%20Solar%20by%20480%20Design%20-%20https%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby%2F4.0%2F%20--%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M6.25%2019a.75.75%200%200%200%201.32.488l6-7a.75.75%200%200%200%200-.976l-6-7A.75.75%200%200%200%206.25%205z%22%20opacity%3D%22.5%22%2F%3E%3Cpath%20fill%3D%22currentColor%22%20fill-rule%3D%22evenodd%22%20d%3D%22M10.512%2019.57a.75.75%200%200%201-.081-1.058L16.012%2012l-5.581-6.512a.75.75%200%201%201%201.139-.976l6%207a.75.75%200%200%201%200%20.976l-6%207a.75.75%200%200%201-1.058.082%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+  --icon-quote-left: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2024%2024%22%3E%3C!--%20Icon%20from%20BoxIcons%20Solid%20by%20Atisa%20-%20https%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby%2F4.0%2F%20--%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M3.691%206.292C5.094%204.771%207.217%204%2010%204h1v2.819l-.804.161c-1.37.274-2.323.813-2.833%201.604A2.9%202.9%200%200%200%206.925%2010H10a1%201%200%200%201%201%201v7c0%201.103-.897%202-2%202H3a1%201%200%200%201-1-1v-5l.003-2.919c-.009-.111-.199-2.741%201.688-4.789M20%2020h-6a1%201%200%200%201-1-1v-5l.003-2.919c-.009-.111-.199-2.741%201.688-4.789C16.094%204.771%2018.217%204%2021%204h1v2.819l-.804.161c-1.37.274-2.323.813-2.833%201.604A2.9%202.9%200%200%200%2017.925%2010H21a1%201%200%200%201%201%201v7c0%201.103-.897%202-2%202%22%2F%3E%3C%2Fsvg%3E");
+  --icon-quote-right: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2024%2024%22%3E%3C!--%20Icon%20from%20BoxIcons%20Solid%20by%20Atisa%20-%20https%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby%2F4.0%2F%20--%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M20.309%2017.708C22.196%2015.66%2022.006%2013.03%2022%2013V5a1%201%200%200%200-1-1h-6c-1.103%200-2%20.897-2%202v7a1%201%200%200%200%201%201h3.078a2.9%202.9%200%200%201-.429%201.396c-.508.801-1.465%201.348-2.846%201.624l-.803.16V20h1c2.783%200%204.906-.771%206.309-2.292m-11.007%200C11.19%2015.66%2010.999%2013.03%2010.993%2013V5a1%201%200%200%200-1-1h-6c-1.103%200-2%20.897-2%202v7a1%201%200%200%200%201%201h3.078a2.9%202.9%200%200%201-.429%201.396c-.508.801-1.465%201.348-2.846%201.624l-.803.16V20h1c2.783%200%204.906-.771%206.309-2.292%22%2F%3E%3C%2Fsvg%3E");
+  --icon-loading: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221em%22%20height%3D%221em%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2218%22%20cy%3D%2212%22%20r%3D%220%22%20fill%3D%22currentColor%22%3E%3Canimate%20attributeName%3D%22r%22%20begin%3D%22.67%22%20calcMode%3D%22spline%22%20dur%3D%221.5s%22%20keySplines%3D%220.2%200.2%200.4%200.8%3B0.2%200.2%200.4%200.8%3B0.2%200.2%200.4%200.8%22%20repeatCount%3D%22indefinite%22%20values%3D%220%3B2%3B0%3B0%22%2F%3E%3C%2Fcircle%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%220%22%20fill%3D%22currentColor%22%3E%3Canimate%20attributeName%3D%22r%22%20begin%3D%22.33%22%20calcMode%3D%22spline%22%20dur%3D%221.5s%22%20keySplines%3D%220.2%200.2%200.4%200.8%3B0.2%200.2%200.4%200.8%3B0.2%200.2%200.4%200.8%22%20repeatCount%3D%22indefinite%22%20values%3D%220%3B2%3B0%3B0%22%2F%3E%3C%2Fcircle%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2212%22%20r%3D%220%22%20fill%3D%22currentColor%22%3E%3Canimate%20attributeName%3D%22r%22%20begin%3D%220%22%20calcMode%3D%22spline%22%20dur%3D%221.5s%22%20keySplines%3D%220.2%200.2%200.4%200.8%3B0.2%200.2%200.4%200.8%3B0.2%200.2%200.4%200.8%22%20repeatCount%3D%22indefinite%22%20values%3D%220%3B2%3B0%3B0%22%2F%3E%3C%2Fcircle%3E%3C%2Fsvg%3E");
+}</style>
+  
 </head>
-<body><div class="sitebg"><div class="siteblur"></div></div><div id="l_cover"></div><div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left leftbar-card"><div class="sidebg"></div><div class="leftbar-container">
+<body><div class="sitebg"><div class="siteblur"></div></div><div id="l_cover"></div><div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left leftbar-card" data-ui-surface="card"><div class="sidebg"></div><div class="leftbar-container">
 
 
 
@@ -89,22 +101,295 @@
 <svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="leftbar-active-icon-grad" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
 <div class="nav-area">
 
-<nav class="menu dis-select"><a class="nav-item active themed" style="--item-grad:url(#menu-grad-post);--item-theme:#1BCDFC" title="博客" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg><span>博客</span><span class="active-dot"></span>
+<nav class="menu dis-select">
+<div class="ui-collection" data-layout="list" data-variant="nav" data-density="auto">
+  
+    
+<a class="ui-collection__item is-active is-themed" href="/" title="博客" aria-current="page" style="--item-theme:#1BCDFC;--item-grad:url(#menu-grad-post);">
+  
+  <span class="ui-collection__leading"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></span>
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">博客</span>
+      
+      
+    </span>
+  
+  
+  <span class="ui-collection__indicator"></span>
+  
 <svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-post" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
-</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-dn42);--item-theme:#3DC550" title="DN42" href="/dn42/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M6 4.71c.78.711 2.388 2.653 2.575 4.737C8.75 11.396 10.035 12.98 12 13c.755.008 1.518-.537 1.516-1.292c0-.233-.039-.472-.099-.692A1.4 1.4 0 0 1 13.5 10c.61-1.257 1.81-1.595 2.76-2.278c.421-.303.806-.623.975-.88c.469-.71.937-2.131.703-2.842M22 13c-.33.931-.562 3.375-4.282 3.414c0 0-3.293 0-4.281 1.862c-.791 1.49-.33 3.103 0 3.724" opacity=".5"/></g></svg><span>DN42</span>
+
+</a>
+
+  
+    
+<a class="ui-collection__item is-themed" href="/dn42/" title="DN42" style="--item-theme:#3DC550;--item-grad:url(#menu-grad-dn42);">
+  
+  <span class="ui-collection__leading"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M6 4.71c.78.711 2.388 2.653 2.575 4.737C8.75 11.396 10.035 12.98 12 13c.755.008 1.518-.537 1.516-1.292c0-.233-.039-.472-.099-.692A1.4 1.4 0 0 1 13.5 10c.61-1.257 1.81-1.595 2.76-2.278c.421-.303.806-.623.975-.88c.469-.71.937-2.131.703-2.842M22 13c-.33.931-.562 3.375-4.282 3.414c0 0-3.293 0-4.281 1.862c-.791 1.49-.33 3.103 0 3.724" opacity=".5"/></g></svg></span>
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">DN42</span>
+      
+      
+    </span>
+  
+  
+  
+  
 <svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-dn42" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
-</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-friends);--item-theme:#FF9800" title="友链" href="/friends/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48"><!-- Icon from IconPark Outline by ByteDance - https://github.com/bytedance/IconPark/blob/master/LICENSE --><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20"/><path d="M31 7v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M31 7v17"/><path d="m16.636 6.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m16.636 6.636l14.142 14.142"/><path d="M7 17h17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M7 17h17"/><path d="M20.364 17.636L6.222 31.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M20.364 17.636L6.222 31.778"/><path d="M17 25v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M17 25v17"/><path d="m17.636 27.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m17.636 27.636l14.142 14.142"/><path d="M24 31h18z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 31h18"/><path d="M42.364 16.636L28.222 30.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M42.364 16.636L28.222 30.778M24 31a7 7 0 1 0 0-14a7 7 0 0 0 0 14"/></g></svg><span>友链</span>
+
+</a>
+
+  
+    
+<a class="ui-collection__item is-themed" href="/friends/" title="友链" style="--item-theme:#FF9800;--item-grad:url(#menu-grad-friends);">
+  
+  <span class="ui-collection__leading"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48"><!-- Icon from IconPark Outline by ByteDance - https://github.com/bytedance/IconPark/blob/master/LICENSE --><g fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20"/><path d="M31 7v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M31 7v17"/><path d="m16.636 6.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m16.636 6.636l14.142 14.142"/><path d="M7 17h17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M7 17h17"/><path d="M20.364 17.636L6.222 31.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M20.364 17.636L6.222 31.778"/><path d="M17 25v17z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M17 25v17"/><path d="m17.636 27.636l14.142 14.142z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="m17.636 27.636l14.142 14.142"/><path d="M24 31h18z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M24 31h18"/><path d="M42.364 16.636L28.222 30.778z" clip-rule="evenodd"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M42.364 16.636L28.222 30.778M24 31a7 7 0 1 0 0-14a7 7 0 0 0 0 14"/></g></svg></span>
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">友链</span>
+      
+      
+    </span>
+  
+  
+  
+  
 <svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-friends" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
-</a><a class="nav-item themed" style="--item-grad:url(#menu-grad-about);--item-theme:#F44336" title="关于我" href="/about/"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg><span>关于我</span>
+
+</a>
+
+  
+    
+<a class="ui-collection__item is-themed" href="/about/" title="关于我" style="--item-theme:#F44336;--item-grad:url(#menu-grad-about);">
+  
+  <span class="ui-collection__leading"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></span>
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">关于我</span>
+      
+      
+    </span>
+  
+  
+  
+  
 <svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-about" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
-</a></nav>
+
+</a>
+
+  
+</div>
+
+</nav>
 </div>
 
 
-<widget class="widget-wrapper slide-up recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/archives/dzip-reverse-engine/"><span class="title">逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES</span></a><a class="item title" href="/archives/kde-plm-fix/"><span class="title">KDE PLM 的问题及解决方案</span></a><a class="item title" href="/archives/stellar-friends/"><span class="title">为 Stellar 主题实现更轻量的动态友链</span></a><a class="item title" href="/archives/linux-wpa-eap-issue/"><span class="title">wpa_supplicant 后端无法连接 802.1x WiFi</span></a><a class="item title" href="/archives/dn42-intro/"><span class="title">DN42 之旅：搭建多节点 BGP 网络</span></a><a class="item title" href="/archives/genshin-in-linux/"><span class="title">如何在 Linux 下玩原神？</span></a><a class="item title" href="/archives/hires-in-linux/"><span class="title">Linux 上 iBasso DC04U 原生 DSD 直出指南</span></a><a class="item title" href="/archives/zerotier-for-alpine/"><span class="title">为 Alpine 提供 ZeroTier</span></a><a class="item title" href="/archives/linux-access-radminlan/"><span class="title">在 Linux 下访问 Radmin LAN 网络</span></a><a class="item title" href="/archives/nvidia-kvm-passthrough/"><span class="title">告别重启：Linux 下的 NVIDIA 显卡直通</span></a></div></widget>
+
+<widget class="widget-wrapper slide-up recent-widget">
+  
+    <div class="widget-header dis-select">
+      <span class="name">最近更新</span>
+      
+    </div>
+  
+  <div class="widget-body"><div class="ui-collection" data-layout="list" data-variant="nav" data-density="compact">
+  
+    
+<a class="ui-collection__item" href="/archives/dzip-reverse-engine/" title="逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/kde-plm-fix/" title="KDE PLM 的问题及解决方案">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">KDE PLM 的问题及解决方案</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/stellar-friends/" title="为 Stellar 主题实现更轻量的动态友链">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">为 Stellar 主题实现更轻量的动态友链</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/linux-wpa-eap-issue/" title="wpa_supplicant 后端无法连接 802.1x WiFi">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">wpa_supplicant 后端无法连接 802.1x WiFi</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/dn42-intro/" title="DN42 之旅：搭建多节点 BGP 网络">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">DN42 之旅：搭建多节点 BGP 网络</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/genshin-in-linux/" title="如何在 Linux 下玩原神？">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">如何在 Linux 下玩原神？</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/hires-in-linux/" title="Linux 上 iBasso DC04U 原生 DSD 直出指南">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">Linux 上 iBasso DC04U 原生 DSD 直出指南</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/zerotier-for-alpine/" title="为 Alpine 提供 ZeroTier">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">为 Alpine 提供 ZeroTier</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/linux-access-radminlan/" title="在 Linux 下访问 Radmin LAN 网络">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">在 Linux 下访问 Radmin LAN 网络</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item" href="/archives/nvidia-kvm-passthrough/" title="告别重启：Linux 下的 NVIDIA 显卡直通">
+  
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">告别重启：Linux 下的 NVIDIA 显卡直通</span>
+      
+      
+    </span>
+  
+  
+  
+  
+</a>
+
+  
+</div></div>
+  
+</widget>
+
+
 </div>
-<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https:&#x2F;&#x2F;github.com&#x2F;V-Conet" target="_blank" rel="external nofollow noopener noreferrer"><svg aria-hidden="true" role="img" class="color-icon-primary" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a><a class="social" href="https:&#x2F;&#x2F;t.me&#x2F;v_conet" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/static/telegram.svg"/></a><a class="social" href="https:&#x2F;&#x2F;git.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/static/forgejo.svg" /></a><a class="social" href="https:&#x2F;&#x2F;blog.vconet.top&#x2F;atom.xml" target="_blank" rel="external nofollow noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19q0-.825.588-1.412T5 17q.825 0 1.413.588T7 19q0 .825-.587 1.413T5 21m13.5 0q-.65 0-1.088-.475T16.9 19.4q-.275-2.425-1.312-4.537T12.9 11.1q-1.65-1.65-3.762-2.687T4.6 7.1q-.65-.075-1.125-.512T3 5.5q0-.65.45-1.062t1.075-.363q3.075.275 5.763 1.563t4.737 3.337q2.05 2.05 3.338 4.738t1.562 5.762q.05.625-.363 1.075T18.5 21m-6 0q-.625 0-1.075-.437T10.85 19.5q-.225-1.225-.787-2.262T8.65 15.35q-.85-.85-1.888-1.412T4.5 13.15q-.625-.125-1.062-.575T3 11.5q0-.65.45-1.075t1.075-.325q1.825.25 3.413 1.063t2.837 2.062q1.25 1.25 2.063 2.838t1.062 3.412q.1.625-.325 1.075T12.5 21"/></svg></a></div></footer>
-</div></aside><div class="l_main" id="main">
+<footer class="footer dis-select"><div class="social-wrap" style="--item-grad:url(#footer-social-icon-grad)">
+<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="footer-social-icon-grad" x1="75%" y1="6.7%" x2="6.7%" y2="125%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>
+<a class="social" href="https:&#x2F;&#x2F;github.com&#x2F;V-Conet" target="_blank" rel="external nofollow noopener noreferrer"><svg class="icon" data-icon="github:logo" aria-hidden="true"></svg></a><a class="social" href="https:&#x2F;&#x2F;t.me&#x2F;v_conet" target="_blank" rel="external nofollow noopener noreferrer"><svg class="icon" data-icon="chat:telegram" aria-hidden="true"></svg></a><a class="social" href="https:&#x2F;&#x2F;git.vconet.top" target="_blank" rel="external nofollow noopener noreferrer"><svg class="icon" data-icon="example:forgejo" aria-hidden="true"></svg></a><a class="social" href="https:&#x2F;&#x2F;blog.vconet.top&#x2F;atom.xml" target="_blank" rel="external nofollow noopener noreferrer"><svg class="icon" data-icon="default:rss" aria-hidden="true"></svg></a></div></footer>
+</div></aside><div class="l_main" id="main" data-ui-surface="content">
 
 
 
@@ -112,9 +397,11 @@
 
 
 <div class="article-banner-wrap slide-up"><div class="article banner top" style="--bg-url:url('https://static.vconet.top/2026/d5cf4e42f080a726b7296839d787839b.png')"><img class="lazy bg" data-src="https://static.vconet.top/2026/d5cf4e42f080a726b7296839d787839b.png">
-  <div class="content">
-    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a></div>
+  <div class="content" data-text-adaptive="split">
+    <div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>
+    <div class="top bread-nav footnote"><div class="top-row"><div class="left" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Linux/">Linux</a>
+</div></div><div class="meta-row">
 <div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-02-19T10:18:56.000Z">2026-02-19</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-02-19T10:18:56.000Z">2026-02-19</time></span></div>
 </div></div>
     
@@ -137,7 +424,7 @@
 <p>26.5.23 更新</p>
 </blockquote>
 <p>因 <code>MHYBase.dll</code> 引起的崩溃问题，是由主线 Wine 版本的 <code>crypt32</code> 造成的，现已在 <code>Spritz-Wine-TkG-AAGL v11.9-1</code>、<code>Spritz-Wine-CachyOS 10.0-11</code> 和 <code>dwproton 11.0-2</code> 中修复。</p>
-<p>请更换上述新版 Wine 进行游玩，截至目前，旧版本 Wine 仍可通过 6.4 的脚本正常游玩。 </p>
+<p>更换上述新版 Wine 即可进行游玩（可不使用 AAGL），截至目前，旧版本 Wine 仍可通过 6.4 的脚本正常游玩。 </p>
 <p>参见 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://dawn.wine/dawn-winery/dwproton/issues/8">dwproton</a>、<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/an-anime-team/an-anime-game-launcher/issues/572">AAGL</a></p>
 <h3 id="6-4"><a href="#6-4" class="headerlink" title="6.4"></a>6.4</h3><blockquote>
 <p>26.03.14 更新</p>
@@ -157,15 +444,18 @@
 
 <p>Bwrap 版本可能导致无法启动游戏</p>
 <p>打开 <code>Bottles</code> $\rightarrow$ <code>┇</code> $\rightarrow$ <code>首选项</code> $\rightarrow$ <code>运行器</code> 选择最新的 Proton GE：</p>
-<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:1200/939;"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://static.vconet.top/2026/468be1a01dfd654916d73ced0ec812fd.png" alt="runners" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">runners</span></div></div>
+<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:1200/939;"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://static.vconet.top/2026/468be1a01dfd654916d73ced0ec812fd.png" alt="runners" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon"></div></div><div class="image-meta"><span class="image-caption center">runners</span></div></div>
 
 <p>创建容器后，选择<code>添加快捷方式</code>，选择 <code>YuanShen.exe</code>，添加后 点击旁边的 <code>┇</code> $\rightarrow$ <code>更改启动选项</code></p>
 <p>请修改成：<code>LD_PRELOAD=/PATH_TO/libhoyonetfix.so %command%</code>，请使用绝对路径，不要包含 <code>~</code></p>
-<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:819/1335;"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://static.vconet.top/2026/e8316f4df3243632f20c224da846e3f2.png" alt="更改启动选项" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">更改启动选项</span></div></div>
+<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:819/1335;"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://static.vconet.top/2026/e8316f4df3243632f20c224da846e3f2.png" alt="更改启动选项" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon"></div></div><div class="image-meta"><span class="image-caption center">更改启动选项</span></div></div>
 
 <p>启动游戏后不久后会弹出 <code>数据异常，请重新登陆游戏 错误码：10010-4001</code>，点击确认，重新进门之后即可正常游玩</p>
-<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:2560/1599;"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://static.vconet.top/2026/dcd3ddcc4ff8b95da0659a4f8c1abdca.png" alt="10010-4001" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon" style="background-image:url(https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd);"></div></div><div class="image-meta"><span class="image-caption center">10010-4001</span></div></div>
+<div class="tag-plugin image"><div class="image-bg" style="aspect-ratio:2560/1599;"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://static.vconet.top/2026/dcd3ddcc4ff8b95da0659a4f8c1abdca.png" alt="10010-4001" data-fancybox="true" onerror="this.src=&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E&quot;"><div class="lazy-icon"></div></div><div class="image-meta"><span class="image-caption center">10010-4001</span></div></div>
 </article>
+
+<div class="article-tags slide-up"><a class="tag" href="/tags/Linux/"><svg class="icon" data-icon="default:hashtag" aria-hidden="true"></svg>Linux</a><a class="tag" href="/tags/Genshin/"><svg class="icon" data-icon="default:hashtag" aria-hidden="true"></svg>Genshin</a></div>
+
 <div class="article-footer slide-up">
     <section id="references">
       <div class="header"><span>参考资料</span></div>
@@ -220,20 +510,32 @@
     <section class='body cmt-body twikoo'>
       
 
-<div id="twikoo_container" class="with-fancybox"><svg class="loading" style="vertical-align:middle;fill:currentColor;overflow:hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg></div>
+<div id="twikoo_container" class="with-fancybox"><div class="lazy-icon"></div></div>
 
     </section>
   </div>
 
 
 
-<footer class="page-footer slide-up footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.40.0">Stellar 1.40.0</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
+<footer class="page-footer slide-up footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.43.0">Stellar 1.43.0</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
 </div></footer>
-<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right"><div class="widgets">
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right" data-ui-surface="sidebar"><div class="widgets">
 
 
 
-<widget class="widget-wrapper slide-up toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC"><span class="toc-text">版本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6"><span class="toc-text">6.6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4"><span class="toc-text">6.4</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8 10.5h8M8 14h5.5M17 3.338A9.95 9.95 0 0 0 12 2C6.477 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22c5.523 0 10-4.477 10-10c0-1.821-.487-3.53-1.338-5"/></svg><span>参与讨论</span></a></div></widget>
+
+<widget class="widget-wrapper slide-up toc" id="data-toc" collapse="false">
+  
+    <div class="widget-header dis-select">
+      <span class="name">本文目录</span>
+      <a class="cap-action" onclick="sidebar.toggleTOC()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a>
+    </div>
+  
+  <div class="widget-body"><ol class="toc ui-collection-adapter"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%88%E6%9C%AC"><span class="toc-text">版本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6"><span class="toc-text">6.6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4"><span class="toc-text">6.4</span></a></li></ol></li></ol></div>
+  <div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" fill-rule="evenodd" d="M11.9426 1.25H12.0574C14.3658 1.24999 16.1748 1.24998 17.5863 1.43975C19.031 1.63399 20.1711 2.03933 21.0659 2.93414C21.9607 3.82895 22.366 4.96897 22.5603 6.41371C22.75 7.82519 22.75 9.63423 22.75 11.9426V12.0574C22.75 14.3658 22.75 16.1748 22.5603 17.5863C22.366 19.031 21.9607 20.1711 21.0659 21.0659C20.1711 21.9607 19.031 22.366 17.5863 22.5603C16.1748 22.75 14.3658 22.75 12.0574 22.75H11.9426C9.63423 22.75 7.82519 22.75 6.41371 22.5603C4.96897 22.366 3.82895 21.9607 2.93414 21.0659C2.03933 20.1711 1.63399 19.031 1.43975 17.5863C1.24998 16.1748 1.24999 14.3658 1.25 12.0574V11.9426C1.24999 9.63423 1.24998 7.82519 1.43975 6.41371C1.63399 4.96897 2.03933 3.82895 2.93414 2.93414C3.82895 2.03933 4.96897 1.63399 6.41371 1.43975C7.82519 1.24998 9.63423 1.24999 11.9426 1.25ZM6.61358 2.92637C5.33517 3.09825 4.56445 3.42514 3.9948 3.9948C3.42514 4.56445 3.09825 5.33517 2.92637 6.61358C2.75159 7.91356 2.75 9.62177 2.75 12C2.75 14.3782 2.75159 16.0864 2.92637 17.3864C3.09825 18.6648 3.42514 19.4355 3.9948 20.0052C4.56445 20.5749 5.33517 20.9018 6.61358 21.0736C7.91356 21.2484 9.62177 21.25 12 21.25C14.3782 21.25 16.0864 21.2484 17.3864 21.0736C18.6648 20.9018 19.4355 20.5749 20.0052 20.0052C20.5749 19.4355 20.9018 18.6648 21.0736 17.3864C21.2484 16.0864 21.25 14.3782 21.25 12C21.25 9.62177 21.2484 7.91356 21.0736 6.61358C20.9018 5.33517 20.5749 4.56445 20.0052 3.9948C19.4355 3.42514 18.6648 3.09825 17.3864 2.92637C16.0864 2.75159 14.3782 2.75 12 2.75C9.62177 2.75 7.91356 2.75159 6.61358 2.92637ZM12 9.56066L9.53033 12.0303C9.23744 12.3232 8.76256 12.3232 8.46967 12.0303C8.17678 11.7374 8.17678 11.2626 8.46967 10.9697L11.4697 7.96967C11.7626 7.67678 12.2374 7.67678 12.5303 7.96967L15.5303 10.9697C15.8232 11.2626 15.8232 11.7374 15.5303 12.0303C15.2374 12.3232 14.7626 12.3232 14.4697 12.0303L12 9.56066ZM12 13.5607L9.53033 16.0303C9.23744 16.3232 8.76256 16.3232 8.46967 16.0303C8.17678 15.7374 8.17678 15.2626 8.46967 14.9697L11.4697 11.9697C11.7626 11.6768 12.2374 11.6768 12.5303 11.9697L15.5303 14.9697C15.8232 15.2626 15.8232 15.7374 15.5303 16.0303C15.2374 16.3232 14.7626 16.3232 14.4697 16.0303L12 13.5607Z" clip-rule="evenodd"/></svg><span>回到顶部</span></a><a class="buttom" onclick="util.scrollComment()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" fill-rule="evenodd" d="M10.4606 1.25H13.5394C15.1427 1.24999 16.3997 1.24999 17.4039 1.34547C18.4274 1.44279 19.2655 1.64457 20.0044 2.09732C20.7781 2.57144 21.4286 3.22194 21.9027 3.99563C22.3554 4.73445 22.5572 5.57256 22.6545 6.59611C22.75 7.60029 22.75 8.85725 22.75 10.4606V11.5278C22.75 12.6691 22.75 13.564 22.7007 14.2868C22.6505 15.0223 22.5468 15.6344 22.3123 16.2004C21.7287 17.6093 20.6093 18.7287 19.2004 19.3123C18.3955 19.6457 17.4786 19.7197 16.2233 19.7413C15.7842 19.7489 15.5061 19.7545 15.2941 19.7779C15.096 19.7999 15.0192 19.832 14.9742 19.8582C14.9268 19.8857 14.8622 19.936 14.7501 20.0898C14.6287 20.2564 14.4916 20.4865 14.2742 20.8539L13.7321 21.7697C12.9585 23.0767 11.0415 23.0767 10.2679 21.7697L9.72579 20.8539C9.50835 20.4865 9.37122 20.2564 9.24985 20.0898C9.13772 19.936 9.07313 19.8857 9.02572 19.8582C8.98078 19.832 8.90399 19.7999 8.70588 19.7779C8.49387 19.7545 8.21575 19.7489 7.77666 19.7413C6.52138 19.7197 5.60454 19.6457 4.79957 19.3123C3.39066 18.7287 2.27128 17.6093 1.68769 16.2004C1.45323 15.6344 1.3495 15.0223 1.29932 14.2868C1.24999 13.564 1.25 12.6691 1.25 11.5278L1.25 10.4606C1.24999 8.85726 1.24999 7.60029 1.34547 6.59611C1.44279 5.57256 1.64457 4.73445 2.09732 3.99563C2.57144 3.22194 3.22194 2.57144 3.99563 2.09732C4.73445 1.64457 5.57256 1.44279 6.59611 1.34547C7.60029 1.24999 8.85726 1.24999 10.4606 1.25ZM6.73809 2.83873C5.82434 2.92561 5.24291 3.09223 4.77938 3.37628C4.20752 3.72672 3.72672 4.20752 3.37628 4.77938C3.09223 5.24291 2.92561 5.82434 2.83873 6.73809C2.75079 7.663 2.75 8.84876 2.75 10.5V11.5C2.75 12.6751 2.75041 13.5189 2.79584 14.1847C2.84081 14.8438 2.92737 15.2736 3.07351 15.6264C3.50486 16.6678 4.33223 17.4951 5.3736 17.9265C5.88923 18.1401 6.54706 18.2199 7.8025 18.2416L7.83432 18.2421C8.23232 18.249 8.58109 18.2549 8.87097 18.287C9.18246 18.3215 9.4871 18.3912 9.77986 18.5615C10.0702 18.7304 10.2795 18.9559 10.4621 19.2063C10.6307 19.4378 10.804 19.7306 11.0004 20.0623L11.5587 21.0057C11.7515 21.3313 12.2485 21.3313 12.4412 21.0057L12.9996 20.0623C13.1959 19.7306 13.3692 19.4378 13.5379 19.2063C13.7204 18.9559 13.9298 18.7304 14.2201 18.5615C14.5129 18.3912 14.8175 18.3215 15.129 18.287C15.4189 18.2549 15.7676 18.249 16.1656 18.2421L16.1975 18.2416C17.4529 18.2199 18.1108 18.1401 18.6264 17.9265C19.6678 17.4951 20.4951 16.6678 20.9265 15.6264C21.0726 15.2736 21.1592 14.8438 21.2042 14.1847C21.2496 13.5189 21.25 12.6751 21.25 11.5V10.5C21.25 8.84876 21.2492 7.663 21.1613 6.73809C21.0744 5.82434 20.9078 5.24291 20.6237 4.77938C20.2733 4.20752 19.7925 3.72672 19.2206 3.37628C18.7571 3.09223 18.1757 2.92561 17.2619 2.83873C16.337 2.75079 15.1512 2.75 13.5 2.75H10.5C8.84876 2.75 7.663 2.75079 6.73809 2.83873ZM7.25 9C7.25 8.58579 7.58579 8.25 8 8.25H16C16.4142 8.25 16.75 8.58579 16.75 9C16.75 9.41421 16.4142 9.75 16 9.75H8C7.58579 9.75 7.25 9.41421 7.25 9ZM7.25 12.5C7.25 12.0858 7.58579 11.75 8 11.75H13.5C13.9142 11.75 14.25 12.0858 14.25 12.5C14.25 12.9142 13.9142 13.25 13.5 13.25H8C7.58579 13.25 7.25 12.9142 7.25 12.5Z" clip-rule="evenodd"/></svg><span>参与讨论</span></a></div>
+</widget>
+
+
 </div></aside><div class='float-panel'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
@@ -254,8 +556,6 @@
   }
   (function() {
     const scrollHandler = () => {
-      const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
-      const startEl = document.getElementById('start');
       // 存在有效锚点时，等待布局稳定后滚动到目标
       // （浏览器原生锚点滚动发生在布局完成前，长文章的懒加载图片/异步组件会把目标顶偏）
       const hash = window.location.hash;
@@ -374,11 +674,8 @@
           return;
         }
       }
-      if (wikiCover && startEl) {
-        window.scrollTo(0, startEl.offsetTop);
-      } else {
-        window.scrollTo(0, 0);
-      }
+      // 没有锚点时始终保持页面顶部；Wiki Hero 只在用户显式访问 #start 时定位正文。
+      window.scrollTo(0, 0);
     };
     if (document.readyState !== 'loading') scrollHandler();
     else document.addEventListener('DOMContentLoaded', scrollHandler);
@@ -393,7 +690,10 @@
     root : `/`,
     tag_plugins: {
       chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
-    }
+    },
+    // 图标由构建期生成的 /js/stellar-icons.js 填充（defer，早于 DOMContentLoaded 就绪）
+    icons: {},
+    services: {"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"},"rss":{"js":"/js/services/rss.js"}},
   };
 
   // required plugins (only load if needs)
@@ -401,800 +701,100 @@
     ctx.search = {};
     ctx.search.service = `local_search`;
     if (ctx.search.service == 'local_search') {
-      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":[],"codeblock":true,"sort":"-date"}`);
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"lazy_load":true,"cache_ttl":86400,"skip_search":[],"codeblock":true,"sort":"-date"}`);
       ctx.search[ctx.search.service] = service_obj;
     }
   }
   const def = {
     avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
     cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
-    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
     data_cache: {"enable":true,"default_ttl":3600,"ttl":{"giscus":600,"waline":600,"artalk":600,"memos":600,"memos-user":86400,"sites":86400,"friends":86400,"friends_and_posts":86400,"siteinfo":86400},"max_entries":200},
   };
   const deps = {
     marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
     lazyload: `https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js`
   }
+
+  // 主题切换提示文案（供 /js/theme.js 使用）
+  window.__STELLAR_I18N__ = {
+    light: `切换到浅色模式`,
+    dark: `切换到深色模式`,
+    auto: `切换到跟随系统配色`,
+  };
+
+  // 搜索跳转高亮：URL 带 ?kw= 时按需加载，定位正文中的匹配词
+  (function () {
+    try {
+      if (!window.location.search) return;
+      if (!new URLSearchParams(window.location.search).has('kw')) return;
+      document.addEventListener('DOMContentLoaded', function () {
+        // utils 由 /js/utils.js 定义（同时暴露 window.utils）；
+        // 未就绪时由 bootstrap 队列兜底，此处按就绪状态判断
+        if (typeof utils === 'object' && typeof utils.js === 'function') {
+          utils.js('/js/search/highlight.js', { defer: true }).catch(function () {});
+        }
+      });
+    } catch (e) {}
+  })();
 </script>
 
-<script type="text/javascript">
-  
-  function RunItem() {
-    this.list = []; // 存放回调函数
-    this.start = () => {
-      for (var i = 0; i < this.list.length; i++) {
-        this.list[i].run();
-      }
-    };
-    this.push = (fn, name, setRequestAnimationFrame = true) => {
-      let myfn = fn
-      if (setRequestAnimationFrame) {
-        myfn = () => {
-          utils.requestAnimationFrame(fn)
-        }
-      }
-      var f = new Item(myfn, name);
-      this.list.push(f);
-    };
-    this.remove = (name) => {
-      // 倒序遍历避免 splice 后的索引问题
-      for (let index = this.list.length - 1; index >= 0; index--) {
-        const e = this.list[index];
-        if (e.name === name) {
-          this.list.splice(index, 1);
-        }
+
+<script>
+  // 插件注册队列：utils.js 尚未就绪时先缓存注册请求，就绪后统一补跑，
+  // 保证解析期注册的插件不因加载时序丢失。
+  window.stellar = window.stellar || {};
+  window.stellar._pluginQueue = window.stellar._pluginQueue || [];
+  window.stellar.initPlugin = function (fn, name, options) {
+    if (typeof utils === 'object' && typeof utils.initPlugin === 'function') {
+      return utils.initPlugin(fn, name, options);
+    }
+    window.stellar._pluginQueue.push({ fn: fn, name: name, options: options || {} });
+  };
+  window.stellar._flushPlugins = function () {
+    var pending = window.stellar._pluginQueue.splice(0);
+    if (typeof utils !== 'object' || typeof utils.initPlugin !== 'function') return;
+    for (var i = 0; i < pending.length; i++) {
+      try {
+        utils.initPlugin(pending[i].fn, pending[i].name, pending[i].options);
+      } catch (e) {
+        console.error('[Stellar] 插件补注册失败:', e);
       }
     }
-    // 构造一个可以run的对象
-    function Item(fn, name) {
-      // 函数名称
-      this.name = name || fn.name;
-      // run方法
-      this.run = () => {
-        try {
-          fn()
-        } catch (error) {
-          console.log(error);
-        }
-      };
-    }
-  }
-
-  const utils = {
-    // 已加载样式缓存
-    _loadedStyles: new Set(),
-
-    // 懒加载 css https://github.com/filamentgroup/loadCSS
-    css: (href, before, media, attributes) => {
-      // 如果样式已加载，直接返回 null
-      if (utils._loadedStyles.has(href)) {
-        return null;
-      }
-      var doc = window.document;
-      var ss = doc.createElement("link");
-      var ref;
-      if (before) {
-        ref = before;
-      } else {
-        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
-        ref = refs[refs.length - 1];
-      }
-      var sheets = doc.styleSheets;
-      if (attributes) {
-        for (var attributeName in attributes) {
-          if (attributes.hasOwnProperty(attributeName)) {
-            ss.setAttribute(attributeName, attributes[attributeName]);
-          }
-        }
-      }
-      ss.rel = "stylesheet";
-      ss.href = href;
-      ss.media = "only x";
-      // 标记样式为已加载 (在创建元素后立即标记，防止重复创建)
-      utils._loadedStyles.add(href);
-      function ready(cb) {
-        if (doc.body) {
-          return cb();
-        }
-        setTimeout(function () {
-          ready(cb);
-        });
-      }
-      ready(function () {
-        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
-      });
-      var onloadcssdefined = function (cb) {
-        var resolvedHref = ss.href;
-        var i = sheets.length;
-        while (i--) {
-          if (sheets[i].href === resolvedHref) {
-            return cb();
-          }
-        }
-        setTimeout(function () {
-          onloadcssdefined(cb);
-        });
-      };
-      function loadCB() {
-        if (ss.addEventListener) {
-          ss.removeEventListener("load", loadCB);
-        }
-        ss.media = media || "all";
-      }
-      if (ss.addEventListener) {
-        ss.addEventListener("load", loadCB);
-      }
-      ss.onloadcssdefined = onloadcssdefined;
-      onloadcssdefined(loadCB);
-      return ss;
-    },
-
-    // 已加载脚本缓存
-    _loadedScripts: new Set(),
-
-    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免重复加载)
-    _loadedElements: new WeakSet(),
-
-    js: (src, opt) => new Promise((resolve, reject) => {
-      if (src.startsWith('/')) {
-        src = ctx.root + src.substring(1);
-      }
-      // 如果脚本已加载，直接返回
-      if (utils._loadedScripts.has(src)) {
-        resolve();
-        return;
-      }
-      var script = document.createElement('script');
-      script.src = src;
-      if (opt) {
-        for (let key of Object.keys(opt)) {
-          script[key] = opt[key]
-        }
-      } else {
-        // 默认异步，如果需要同步，第二个参数传入 {} 即可
-        script.async = true
-      }
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function () {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        utils._loadedScripts.add(src);
-        resolve()
-      }
-      document.head.appendChild(script)
-    }),
-
-    // 原生 DOM 工具：querySelector / querySelectorAll 简写
-    qs: (sel, ctx) => (ctx || document).querySelector(sel),
-    qsa: (sel, ctx) => Array.prototype.slice.call((ctx || document).querySelectorAll(sel)),
-
-    // 原生 DOM 封装：常用 DOM 操作方法子集（find/append/class/attr/事件等）
-    dom: (selector, ctx) => {
-      var els = [];
-      if (typeof selector === 'string') {
-        els = utils.qsa(selector, ctx);
-      } else if (selector && selector.nodeType === 1) {
-        els = [selector];
-      } else if (selector && typeof selector.length === 'number') {
-        els = Array.prototype.slice.call(selector);
-      }
-      var api = {
-        length: els.length,
-        each: function (fn) {
-          els.forEach(function (el, i) {
-            fn.call(el, i, el);
-          });
-          return api;
-        },
-        find: function (sel) {
-          var result = [];
-          els.forEach(function (el) {
-            Array.prototype.push.apply(result, el.querySelectorAll(sel));
-          });
-          return utils.dom(result);
-        },
-        append: function (content) {
-          els.forEach(function (el) {
-            if (typeof content === 'string') {
-              el.insertAdjacentHTML('beforeend', content);
-            } else if (content && content.nodeType === 1) {
-              el.appendChild(content);
-            } else if (content && typeof content.length === 'number') {
-              Array.prototype.forEach.call(content, function (child) {
-                if (child && child.nodeType === 1) el.appendChild(child);
-              });
-            }
-          });
-          return api;
-        },
-        remove: function () {
-          els.forEach(function (el) {
-            el.remove();
-          });
-        },
-        addClass: function (cls) {
-          els.forEach(function (el) {
-            cls.trim().split(/\s+/).forEach(function (c) {
-              if (c) el.classList.add(c);
-            });
-          });
-          return api;
-        },
-        removeClass: function (cls) {
-          els.forEach(function (el) {
-            cls.trim().split(/\s+/).forEach(function (c) {
-              if (c) el.classList.remove(c);
-            });
-          });
-          return api;
-        },
-        toggleClass: function (cls, force) {
-          els.forEach(function (el) {
-            cls.trim().split(/\s+/).forEach(function (c) {
-              if (c) el.classList.toggle(c, force);
-            });
-          });
-          return api;
-        },
-        attr: function (name, value) {
-          if (value === undefined) {
-            return els[0] ? els[0].getAttribute(name) : undefined;
-          }
-          els.forEach(function (el) {
-            el.setAttribute(name, value);
-          });
-          return api;
-        },
-        data: function (name) {
-          return els[0] ? els[0].getAttribute('data-' + name) : undefined;
-        },
-        text: function (value) {
-          if (value === undefined) {
-            return els[0] ? els[0].textContent : undefined;
-          }
-          els.forEach(function (el) {
-            el.textContent = value;
-          });
-          return api;
-        },
-        html: function (content) {
-          if (content === undefined) {
-            return els[0] ? els[0].innerHTML : undefined;
-          }
-          els.forEach(function (el) {
-            if (typeof content !== 'string' && content && typeof content.length === 'number' && content[0] && content[0].nodeType === 1) {
-              var frag = document.createDocumentFragment();
-              Array.prototype.forEach.call(content, function (child) {
-                frag.appendChild(child);
-              });
-              el.replaceChildren(frag);
-            } else {
-              el.innerHTML = content;
-            }
-          });
-          return api;
-        },
-        val: function (value) {
-          if (value === undefined) {
-            return els[0] ? els[0].value : undefined;
-          }
-          els.forEach(function (el) {
-            el.value = value;
-          });
-          return api;
-        },
-        offset: function () {
-          var el = els[0];
-          if (!el) return { top: 0, left: 0 };
-          var rect = el.getBoundingClientRect();
-          return { top: rect.top + window.scrollY, left: rect.left + window.scrollX };
-        },
-        on: function (event, cb) {
-          els.forEach(function (el) {
-            el.addEventListener(event, cb);
-          });
-          return api;
-        },
-        click: function (cb) { return api.on('click', cb); },
-        focus: function (cb) { return api.on('focus', cb); },
-        keydown: function (cb) { return api.on('keydown', cb); },
-        empty: function () {
-          els.forEach(function (el) {
-            el.replaceChildren();
-          });
-          return api;
-        }
-      };
-      els.forEach(function (el, i) {
-        api[i] = el;
-      });
-      return api;
-    },
-
-    onLoading: (el) => {
-      if (el) {
-        if (el.querySelector('.loading-wrap') === null) {
-          el.insertAdjacentHTML('beforeend', '<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
-        }
-      }
-    },
-    onLoadSuccess: (el) => {
-      if (el) {
-        var wrap = el.querySelector('.loading-wrap');
-        if (wrap) wrap.remove();
-      }
-    },
-    onLoadFailure: (el) => {
-      if (el) {
-        var wrap = el.querySelector('.loading-wrap');
-        if (wrap) {
-          var svg = wrap.querySelector('svg');
-          if (svg) svg.remove();
-          wrap.insertAdjacentHTML('beforeend', '<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
-          wrap.classList.add('error');
-        }
-      }
-    },
-    /********************** data cache ********************************/
-    // 动态数据本地缓存：TTL 未过期直接命中；过期后先显示缓存再后台刷新（stale-while-revalidate）
-    _cacheEnabled: true,
-    _cacheMaxEntryBytes: 200 * 1024,
-    // 同 URL 并发请求去重：页面内多个组件请求同一接口时共享一次 fetch
-    _pendingRequests: {},
-    _fetchShared: (url, options) => {
-      const key = (options && options.method || 'GET') + ' ' + url;
-      if (utils._pendingRequests[key]) {
-        return utils._pendingRequests[key].then(resp => resp.clone());
-      }
-      const promise = fetch(url, options).then(resp => {
-        if (!resp.ok) throw new Error('响应失败');
-        return resp;
-      }).finally(() => {
-        delete utils._pendingRequests[key];
-      });
-      utils._pendingRequests[key] = promise;
-      // 每个调用方各自 clone，避免 Response body 被消费后其他调用方取不到数据
-      return promise.then(resp => resp.clone());
-    },
-    // 延迟执行：缓存写入等非关键操作让出主线程
-    _defer: (fn) => {
-      if (window.requestIdleCallback) {
-        window.requestIdleCallback(fn, { timeout: 3000 });
-      } else {
-        setTimeout(fn, 0);
-      }
-    },
-    cache: {
-      prefix: 'Stellar.data_cache.v1.',
-      enabled: () => !!def.data_cache?.enable && utils._cacheEnabled,
-      serviceId: (el, options) => {
-        if (options && options.service) return options.service;
-        if (el) {
-          const match = String(el.className || '').match(/\bds-([\w-]+)\b/);
-          if (match) return match[1];
-        }
-        return null;
-      },
-      ttl: (el, options) => {
-        const conf = def.data_cache || {};
-        const id = utils.cache.serviceId(el, options);
-        const value = id && conf.ttl && conf.ttl[id] != null ? conf.ttl[id] : conf.default_ttl;
-        return typeof value === 'number' && value > 0 ? value : 0;
-      },
-      shouldCache: (url, options) => {
-        if (!utils.cache.enabled()) return false;
-        if (options && (options.cache === false || options.cache === 'no-store')) return false;
-        if (options && options.method && options.method !== 'GET') return false;
-        // 带时间戳缓存破坏参数的请求不缓存（如 mdrender 的 ?t=）
-        if (/[?&]t=\d{10,}/.test(url)) return false;
-        return true;
-      },
-      get: (url) => {
-        try {
-          const raw = localStorage.getItem(utils.cache.prefix + url);
-          if (!raw) return null;
-          const entry = JSON.parse(raw);
-          if (!entry || typeof entry.text !== 'string' || typeof entry.ts !== 'number') return null;
-          return entry;
-        } catch (e) {
-          console.warn('[cache] 读取失败:', url, e);
-          return null;
-        }
-      },
-      set: (url, text, contentType, ttl) => {
-        if (!(ttl > 0)) return;
-        if (text.length > utils._cacheMaxEntryBytes) return;
-        const entry = JSON.stringify({
-          text: text,
-          contentType: contentType || 'application/json',
-          ts: Date.now(),
-          ttl: ttl
-        });
-        const trySet = () => {
-          try {
-            localStorage.setItem(utils.cache.prefix + url, entry);
-            utils.cache.trim();
-            return true;
-          } catch (e) {
-            return false;
-          }
-        };
-        if (!trySet()) {
-          // 配额不足时淘汰最旧条目后重试一次，仍失败则本会话禁用缓存
-          utils.cache.evictOldest(url);
-          if (!trySet()) {
-            console.warn('[cache] 写入失败，本会话禁用缓存:', url);
-            utils._cacheEnabled = false;
-          }
-        }
-      },
-      trim: () => {
-        try {
-          const max = (def.data_cache && def.data_cache.max_entries) || 200;
-          const keys = [];
-          for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.indexOf(utils.cache.prefix) === 0) keys.push(key);
-          }
-          if (keys.length <= max) return;
-          const sorted = keys.map((key) => {
-            let ts = 0;
-            try {
-              const entry = JSON.parse(localStorage.getItem(key) || 'null');
-              if (entry && typeof entry.ts === 'number') ts = entry.ts;
-            } catch (e) {}
-            return { key, ts };
-          }).sort((a, b) => a.ts - b.ts);
-          for (let i = 0; i < sorted.length - max; i++) {
-            localStorage.removeItem(sorted[i].key);
-          }
-        } catch (e) {
-          console.warn('[cache] 清理失败:', e);
-        }
-      },
-      evictOldest: (exceptUrl) => {
-        try {
-          let oldestKey = null;
-          let oldestTs = Infinity;
-          const exceptKey = utils.cache.prefix + exceptUrl;
-          for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (!key || key.indexOf(utils.cache.prefix) !== 0 || key === exceptKey) continue;
-            let ts = 0;
-            try {
-              const entry = JSON.parse(localStorage.getItem(key) || 'null');
-              if (entry && typeof entry.ts === 'number') ts = entry.ts;
-            } catch (e) {}
-            if (ts < oldestTs) {
-              oldestTs = ts;
-              oldestKey = key;
-            }
-          }
-          if (oldestKey) localStorage.removeItem(oldestKey);
-        } catch (e) {}
-      },
-      isFresh: (entry) => {
-        if (!entry || typeof entry.ts !== 'number' || typeof entry.ttl !== 'number') return false;
-        if (!(entry.ttl > 0)) return false;
-        return Date.now() - entry.ts < entry.ttl * 1000;
-      },
-      // 用缓存文本重建 Response，兼容回调中的 resp.json() / resp.text()
-      toResponse: (entry) => new Response(entry.text, {
-        status: 200,
-        statusText: 'OK',
-        headers: { 'Content-Type': entry.contentType }
-      })
-    },
-    request: (el, url, callback, onFailure, options) => {
-      // 检查元素实例是否已加载 (而不是检查属性)
-      if (el && utils._loadedElements.has(el)) {
-        return;
-      }
-      const maxRetry = 3;
-      let retryCount = 0;
-      const ttl = utils.cache.ttl(el, options);
-      const cacheable = utils.cache.shouldCache(url, options) && ttl > 0;
-      const cached = cacheable ? utils.cache.get(url) : null;
-      // 缓存渲染前的初始结构，后台刷新渲染前恢复，避免重复渲染
-      let initialHTML = null;
-      // 缓存渲染完成后（或超时兜底）再启动后台刷新，避免异步渲染未结束就清空重绘
-      let cacheRenderDone = null;
-
-      if (cached) {
-        if (el) {
-          // 已有缓存时不显示加载动画
-          utils.onLoadSuccess?.(el);
-          initialHTML = el.innerHTML;
-        }
-        try {
-          cacheRenderDone = Promise.resolve(callback(utils.cache.toResponse(cached))).catch(e => {
-            console.warn('[request] 缓存渲染失败:', url, e);
-          });
-        } catch (e) {
-          console.warn('[request] 缓存渲染失败:', url, e);
-        }
-        // 缓存未过期：直接完成，不发请求
-        if (utils.cache.isFresh(cached)) {
-          if (el) utils._loadedElements.add(el);
-          return Promise.resolve(cached.text);
-        }
-      } else {
-        utils.onLoading?.(el);
-      }
-
-      return new Promise((resolve, reject) => {
-        const load = () => {
-          let timedOut = false;
-          const timeout = setTimeout(() => {
-            timedOut = true;
-            console.warn('[request] 超时:', url);
-
-            if (++retryCount >= maxRetry) {
-              if (cached) {
-                // 已有缓存渲染，保留缓存内容，不显示失败
-                resolve(cached.text);
-              } else {
-                utils.onLoadFailure?.(el);
-                onFailure?.();
-                reject('请求超时');
-              }
-            } else {
-              setTimeout(load, 1000);
-            }
-          }, 5000);
-
-          utils._fetchShared(url).then(resp => {
-            if (timedOut) return;
-            clearTimeout(timeout);
-            return resp;
-          }).then(data => {
-            if (timedOut) return;
-            // 标记元素实例为已加载
-            if (el) utils._loadedElements.add(el);
-            // 写入缓存（克隆响应，避免影响回调读取；延迟执行，避免阻塞渲染）
-            if (cacheable && data.ok) {
-              utils._defer(() => {
-                data.clone().text().then(text => {
-                  utils.cache.set(url, text, data.headers.get('Content-Type') || 'application/json', ttl);
-                }).catch(() => {});
-              });
-            }
-            // 后台刷新渲染前恢复初始结构，避免缓存渲染的内容重复
-            if (el && initialHTML !== null) {
-              el.innerHTML = initialHTML;
-            }
-            utils.onLoadSuccess?.(el);
-            callback(data);
-            resolve(data);
-          }).catch(err => {
-            clearTimeout(timeout);
-            console.warn('[request] 错误:', err);
-
-            if (++retryCount >= maxRetry) {
-              if (cached) {
-                resolve(cached.text);
-              } else {
-                utils.onLoadFailure?.(el);
-                onFailure?.();
-                reject(err);
-              }
-            } else {
-              setTimeout(load, 1000);
-            }
-          });
-        };
-
-        if (cacheRenderDone) {
-          Promise.race([
-            cacheRenderDone,
-            new Promise(resolve => setTimeout(resolve, 5000))
-          ]).then(load);
-        } else {
-          load();
-        }
-      });
-    },
-    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
-      const ttl = utils.cache.ttl(null, options);
-      const cacheable = utils.cache.shouldCache(url, options) && ttl > 0;
-      const cached = cacheable ? utils.cache.get(url) : null;
-
-      if (cached && utils.cache.isFresh(cached)) {
-        return Promise.resolve(utils.cache.toResponse(cached));
-      }
-
-      return new Promise((resolve, reject) => {
-        let retryCount = 0;
-        // 与 request 保持一致：最终失败时回退 stale 缓存，避免闪失败态
-        const fallback = () => {
-          if (cached) {
-            resolve(utils.cache.toResponse(cached));
-          } else {
-            reject('timeout');
-          }
-        };
-
-        const tryRequest = () => {
-          let timedOut = false;
-          const timer = setTimeout(() => {
-            timedOut = true;
-            if (++retryCount > maxRetry) fallback();
-            else tryRequest();
-          }, timeout);
-
-          utils._fetchShared(url, options)
-            .then(resp => {
-              clearTimeout(timer);
-              if (timedOut) return;
-              if (cacheable) {
-                utils._defer(() => {
-                  resp.clone().text().then(text => {
-                    utils.cache.set(url, text, resp.headers.get('Content-Type') || 'application/json', ttl);
-                  }).catch(() => {});
-                });
-              }
-              resolve(resp);
-            })
-            .catch(err => {
-              clearTimeout(timer);
-              if (timedOut) return;
-              if (++retryCount > maxRetry) {
-                if (cached) {
-                  resolve(utils.cache.toResponse(cached));
-                } else {
-                  reject(err);
-                }
-              } else {
-                setTimeout(tryRequest, 500);
-              }
-            });
-        };
-
-        tryRequest();
-      });
-    },
-    /********************** requestAnimationFrame ********************************/
-    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
-    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
-    requestAnimationFrame: (fn) => {
-      if (!window.requestAnimationFrame) {
-        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
-      }
-      window.requestAnimationFrame(fn)
-    },
-    dark: {},
-
-    // 插件初始化管理器 - 统一处理 DOMContentLoaded 事件
-    _pluginInitializers: [],
-    _pluginCleanups: new Map(), // 存储每个插件的清理函数
-    
-    initPlugin: (initFn, name, options = {}) => {
-      if (!initFn || typeof initFn !== 'function') return;
-      
-      // 避免重复注册
-      const pluginName = name || initFn.name;
-      if (utils._pluginInitializers.some(p => p.name === pluginName)) return;
-      
-      // 包装初始化函数，添加防重复执行的保护
-      const wrappedInit = () => {
-        try {
-          // 在执行前先清理旧的资源
-          if (utils._pluginCleanups.has(pluginName)) {
-            const cleanup = utils._pluginCleanups.get(pluginName);
-            if (typeof cleanup === 'function') {
-              cleanup();
-            }
-          }
-          
-          // 执行初始化，可能返回清理函数
-          const cleanup = initFn();
-          
-          // 如果初始化函数返回了清理函数，保存它
-          if (typeof cleanup === 'function') {
-            utils._pluginCleanups.set(pluginName, cleanup);
-          }
-        } catch (error) {
-          console.error(`[Plugin ${pluginName}] 初始化失败:`, error);
-        }
-      };
-      
-      utils._pluginInitializers.push({ 
-        fn: wrappedInit, 
-        name: pluginName,
-        options: options 
-      });
-      
-      // 如果 DOM 已经加载完成，立即执行
-      if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        wrappedInit();
-      } else {
-        // 否则等待 DOMContentLoaded
-        window.addEventListener('DOMContentLoaded', wrappedInit, { once: true });
-      }
-    },
-
-    // 清理所有插件资源
-    cleanupPlugins: () => {
-      utils._pluginCleanups.forEach((cleanup, name) => {
-        try {
-          cleanup();
-        } catch (error) {
-          console.error(`[Plugin ${name}] 清理失败:`, error);
-        }
-      });
-      utils._pluginCleanups.clear();
-    },
-    
-    // 清理所有资源（用于页面卸载或重置）
-    cleanupAll: () => {
-      utils.cleanupPlugins();
-    },
   };
-
-  // utils.dark.mode 当前模式 dark or light
-  // utils.dark.toggle() 暗黑模式触发器
-  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
-  utils.dark.method = {
-    toggle: new RunItem(),
-  };
-  utils.dark = Object.assign(utils.dark, {
-    push: utils.dark.method.toggle.push,
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof utils === 'object') return;
+    // utils 未就绪时补载；加载成功后由 utils.js 内部补跑插件队列
+    var s = document.createElement('script');
+    // 用 setAttribute 赋值 src，避免被基于 `s.src = "..."` 的正则
+    // （图片懒加载 / 脚本延迟优化器）误改写
+    s.setAttribute('src', '/js/utils.js?v=1.43.0');
+    s.async = false;
+    s.onerror = function () {
+      console.error('[Stellar] 无法加载 /js/utils.js，已启用内容兜底显示（sr-fallback）');
+      document.documentElement.classList.add('sr-fallback');
+    };
+    document.head.appendChild(s);
   });
 </script>
 
+
+<!-- core: utils 必须同步加载（页尾内联插件片段在解析期即调用 utils.initPlugin） -->
+<script src="/js/utils.js?v=1.43.0"></script>
 <script>
-  const sidebar = {
-    leftbar: () => {
-      if (l_body) {
-        l_body.toggleAttribute('leftbar');
-        l_body.removeAttribute('rightbar');
-      }
-    },
-    rightbar: () => {
-      if (l_body) {
-        l_body.toggleAttribute('rightbar');
-        l_body.removeAttribute('leftbar');
-      }
-    },
-    dismiss: () => {
-      if (l_body) {
-        l_body.removeAttribute('leftbar');
-        l_body.removeAttribute('rightbar');
-      }
-    },
-    toggleTOC: () => {
-      document.querySelector('#data-toc').classList.toggle('collapse');
-    }
+  // 解析期检测 utils 是否已就绪；未就绪时同步补载，
+  // 保证「utils 先于页尾插件片段定义」的不变量。
+  if (typeof utils === 'undefined') {
+    document.write('<script src="/js/utils.js?v=1.43.0"><\/script>');
   }
 </script>
-<script type="text/javascript">
-  (() => {
-    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
-    for (const tagSwitcher of tagSwitchers) {
-      tagSwitcher.addEventListener('click', (e) => {
-        const parent = e.target.closest('.tag-subtree.parent-tag')
-        parent.classList.toggle('expanded')
-        e.preventDefault()
-      })
-    }
+<script defer src="/js/stellar-icons.js?v=1.43.0"></script>
+<!-- 非首屏图标异步加载：占位符替换依赖构建期生成的 js/icons/{ns}.json -->
+<script defer src="/js/icons.js?v=1.43.0" data-version="1.43.0"></script>
+<script defer src="/js/plugins/dropdown.js?v=1.43.0"></script>
+<script src="/js/main.js?v=1.43.0" defer></script>
+<script defer src="/js/theme.js?v=1.43.0"></script>
 
-    // Get active tag from query string, then activate it.
-    const urlParams = new URLSearchParams(window.location.search)
-    const activeTag = urlParams.get('tag')
-    if (activeTag) {
-      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
-      if (tag) {
-        tag.querySelector('a').classList.add('active')
-        
-        while (tag) {
-          tag.classList.add('expanded')
-          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
-        }
-      }
-    }
-  })()
-</script>
+
 
 <script>
   // 先声明配置与初始化监听，再异步加载库：
@@ -1271,9 +871,6 @@
 
       const icon = document.createElement('div');
       icon.className = 'lazy-icon';
-      if (def.loading) {
-        icon.style.backgroundImage = `url("${def.loading}")`;
-      }
 
       wrapper.appendChild(newImg);
       wrapper.appendChild(icon);
@@ -1290,78 +887,6 @@
 <script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
 
 
-<!-- required -->
-<script src="/js/main.js?v=1.40.0" defer></script>
-
-<script type="text/javascript">
-  const applyTheme = (theme) => {
-    if (theme === 'auto') {
-      document.documentElement.removeAttribute('data-theme')
-    } else {
-      document.documentElement.setAttribute('data-theme', theme)
-    }
-
-    // applyThemeToGiscus(theme)
-  }
-
-  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
-  const applyThemeToGiscus = (theme) => {
-    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
-    const cmt = document.getElementById('giscus')
-    if (cmt) {
-      // This works before giscus load.
-      cmt.setAttribute('data-theme', theme)
-    }
-
-    const iframe = document.querySelector('#comments > section.giscus > iframe')
-    if (iframe) {
-      // This works after giscus loaded.
-      const src = iframe.src
-      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
-      iframe.src = newSrc
-    }
-  }
-
-  const switchTheme = () => {
-    // light -> dark -> auto -> light -> ...
-    const currentTheme = document.documentElement.getAttribute('data-theme')
-    let newTheme;
-    switch (currentTheme) {
-      case 'light':
-        newTheme = 'dark'
-        break
-      case 'dark':
-        newTheme = 'auto'
-        break
-      default:
-        newTheme = 'light'
-    }
-    applyTheme(newTheme)
-    window.localStorage.setItem('Stellar.theme', newTheme)
-    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
-    utils.dark.method.toggle.start();
-
-    const messages = {
-      light: `切换到浅色模式`,
-      dark: `切换到深色模式`,
-      auto: `切换到跟随系统配色`,
-    }
-    hud?.toast?.(messages[newTheme])
-  }
-
-  (() => {
-    // Apply user's preferred theme, if any.
-    const theme = window.localStorage.getItem('Stellar.theme')
-    if (theme !== null) {
-      applyTheme(theme)
-    } else {
-      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    }
-    utils.dark.method.toggle.start();
-  })()
-</script>
-
-
 <!-- optional -->
 
   <script type="module">
@@ -1372,6 +897,7 @@
       if (!el) return;
       
       function load_twikoo() {
+        utils.css('/css/comments/twikoo.css?v=1.43.0');
         utils.js('https://gcore.jsdelivr.net/npm/twikoo@1.7/dist/twikoo.all.min.js', {defer: true}).then(function () {
           const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
           twikoo.init(Object.assign({"js":"https://gcore.jsdelivr.net/npm/twikoo@1.7/dist/twikoo.all.min.js","envId":"https://comments.vconet.top/"}, {
@@ -1392,194 +918,43 @@
 
 
 
-<script defer>
-  const initServices = () => {
-    // 用于存储需要清理的资源
-    let timers = [];
-    
-    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"},"rss":{"js":"/js/services/rss.js"}}`));
-    for (let id of Object.keys(ctx.services)) {
-      const js = ctx.services[id].js;
-      if (id == 'siteinfo') {
-        const cardlinks = document.querySelectorAll('a.link-card[cardlink]');
-        if (cardlinks?.length > 0) {
-          utils.js(js, { defer: true }).then(function () {
-            setCardLink(cardlinks);
-          });
-        }
-      } else if (id == 'ghinfo') {
-        const els = document.querySelectorAll('.ds-ghinfo');
-        if (els.length > 0) {
-          utils.js(js, { defer: true });
-        }
-      } else if (id == 'voice') {
-        const voiceAudios = document.querySelectorAll('.voice>audio');
-        if (voiceAudios?.length > 0) {
-          utils.js(js, { defer: true }).then(function () {
-            createVoiceDom(voiceAudios);
-          });
-        }
-      } else if (id == 'video') {
-        const videos = document.querySelectorAll('.video>video');
-        if (videos?.length > 0) {
-          utils.js(js, { defer: true }).then(function () {
-            videoEvents(videos);
-          });
-        }
-      } else if (id == 'download-file') {
-        const files = document.querySelectorAll('.chat-file');
-        if (files?.length > 0) {
-          utils.js(js, { defer: true }).then(function () {
-            downloadFileEvent(files);
-          });
-        }
-      } else {
-        const els = document.getElementsByClassName(`ds-${id}`);
-        if (els?.length > 0) {
-          if (id == 'timeline' || id == 'memos' || id == 'marked' || id == 'mdrender') {
-            utils.js(deps.marked).then(function () {
-              utils.js(js, { defer: true });
-            });
-          } else {
-            utils.js(js, { defer: true });
-          }
-        }
+<script defer src="/js/services.js?v=1.43.0"></script>
+<script>
+  // 防御：bootstrap 被第三方优化器改写/移除导致 window.stellar.initPlugin 缺失时，
+  // 在此补一个等价注册点：utils 就绪时直接委托，未就绪时入队，utils 加载后自动补跑。
+  if (typeof window.stellar === 'undefined' || typeof window.stellar.initPlugin !== 'function') {
+    window.stellar = window.stellar || {};
+    window.stellar._pluginQueue = window.stellar._pluginQueue || [];
+    window.stellar.initPlugin = function (fn, name, options) {
+      if (typeof utils === 'object' && typeof utils.initPlugin === 'function') {
+        return utils.initPlugin(fn, name, options);
       }
-    }
-
-    // search
-    if (ctx.search && typeof searchFunc === 'function') {
-      const inputArea = document.querySelector("input#search-input");
-      if (inputArea && !inputArea._searchInitialized) {
-        const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
-        const filter = inputArea.getAttribute('data-filter') || '';
-        searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
-        // 标记为已初始化，防止重复绑定
-        inputArea._searchInitialized = true;
-      }
-    }
-
-    // chat iphone time
-    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
-    let firstAdjustInterval = null;
-    let mainInterval = null;
-
-    if (phoneTimes.length > 0) {
-      NowTime();
-      const date = new Date();
-      const sec = date.getSeconds();
-      firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
-      timers.push(firstAdjustInterval);
-
-      function firstAdjustTime() {
-        NowTime();
-        if (firstAdjustInterval) {
-          clearInterval(firstAdjustInterval);
-          firstAdjustInterval = null;
-        }
-        mainInterval = setInterval(NowTime, 1000 * 60);
-        timers.push(mainInterval);
-      }
-
-      function NowTime() {
-        for (let i = 0; i < phoneTimes.length; ++i) {
-          const timeSpan = phoneTimes[i];
-          const date = new Date();
-          const hour = date.getHours();
-          const min = date.getMinutes();
-          timeSpan.innerHTML = check(hour) + ":" + check(min);
-        }
-      };
-
-      function check(val) {
-        if (val < 10) {
-          return ("0" + val);
-        }
-        return (val);
-      }
-    }
-
-    // chat quote - 存储事件监听器以便清理
-    const quoteClickHandlers = new Map();
-    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
-      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
-          observer.unobserve(entry.target);
-          setTimeout(() => {
-            entry.target.classList.add('quote-blink');
-            setTimeout(() => {
-              entry.target.classList.remove('quote-blink');
-            }, 1000);
-          }, Math.max(100, 16) * (index + 1));
-        });
-    });
-
-    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
-    chatQuotes.forEach((quote) => {
-      const handler = function () {
-        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
-        if (chatCellDom) {
-          var chatDiv = chatCellDom.parentElement;
-          var mid = chatDiv.clientHeight / 2;
-          var offsetTop = chatCellDom.offsetTop;
-          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
-            chatDiv.scrollTo({
-              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
-              behavior: "smooth"
-            });
-          } else {
-            chatDiv.scrollTo({
-              top: 0,
-              behavior: "smooth"
-            });
-          }
-          chat_quote_obverser.observe(chatCellDom);
-        }
-      };
-      quote.addEventListener('click', handler);
-      quoteClickHandlers.set(quote, handler); // 保存处理器引用
-    });
-
-    // 返回清理函数，用于清理定时器和观察器
-    return () => {
-      // 清理所有定时器（包括可能未完成的 firstAdjustInterval）
-      timers.forEach(timer => {
-        if (timer) clearInterval(timer);
-      });
-      timers = [];
-      if (firstAdjustInterval) {
-        clearInterval(firstAdjustInterval);
-        firstAdjustInterval = null;
-      }
-      if (mainInterval) {
-        clearInterval(mainInterval);
-        mainInterval = null;
-      }
-      
-      // 断开观察器
-      if (chat_quote_obverser) {
-        chat_quote_obverser.disconnect();
-      }
-      
-      // 移除所有 click 事件监听器
-      quoteClickHandlers.forEach((handler, quote) => {
-        quote.removeEventListener('click', handler);
-      });
-      quoteClickHandlers.clear();
+      window.stellar._pluginQueue.push({ fn: fn, name: name, options: options || {} });
     };
-  };
-
-  utils.initPlugin(initServices, 'services');
+    window.stellar._flushPlugins = function () {
+      var pending = window.stellar._pluginQueue.splice(0);
+      if (typeof utils !== 'object' || typeof utils.initPlugin !== 'function') return;
+      for (var i = 0; i < pending.length; i++) {
+        try {
+          utils.initPlugin(pending[i].fn, pending[i].name, pending[i].options);
+        } catch (e) {
+          console.error('[Stellar] 插件补注册失败:', e);
+        }
+      }
+    };
+  }
 </script>
-
 
 <script>
   window.addEventListener('DOMContentLoaded', (event) => {
-    ctx.search = {
+    ctx.search = Object.assign({}, ctx.search, {
       path: `/search.json`,
-    }
+      local_search: {"field":"all","path":"/search.json","content":true,"lazy_load":true,"cache_ttl":86400,"skip_search":[],"codeblock":true,"sort":"-date"},
+    });
     utils.js('/js/search/local-search.js', { defer: true });
   });
-</script><script>
+</script>
+<script>
   window.FPConfig = {
     delay: 0,
     ignoreKeywords: [],
@@ -1596,8 +971,9 @@
   };
   // auto=按需：页面存在可弹窗图片才加载；global=全局：所有页面加载
   const isGlobal = ctx.fancybox.mode === 'global';
-  // 评论区图片（artalk/twikoo/waline）显示较小，自动支持放大
-  var selector = '[data-fancybox]:not(.error), .with-fancybox img:not([atk-emoticon]):not([class*="emo"])';
+  // 评论区图片（artalk/twikoo/waline）显示较小，自动支持放大；
+  // 仅绑定各评论服务的评论内容区，编辑器、表情面板等非内容区图片不弹窗
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon]):not([class*="emo"]), .with-fancybox .tk-content img:not([atk-emoticon]):not([class*="emo"]), .with-fancybox .wl-content img:not([atk-emoticon]):not([class*="emo"])';
   if (ctx.fancybox.selector) {
     selector += `, ${ctx.fancybox.selector}`
   }
@@ -1620,6 +996,7 @@
     }
   }
   if (needFancybox) {
+    utils.css(`/css/plugins/fancybox.css?v=1.43.0`);
     utils.css(ctx.fancybox.css);
     utils.js(ctx.fancybox.js, { defer: true }).then(function () {
       if (isGlobal) {
@@ -1639,9 +1016,10 @@
   }
 </script>
 <script>
-  utils.initPlugin(() => {
+  stellar.initPlugin(() => {
     const swiper_api = document.getElementById('swiper-api');
     if (swiper_api != undefined) {
+      utils.css(`/css/plugins/swiper.css?v=1.43.0`);
       utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
       utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
         const effect = swiper_api.getAttribute('effect') || '';
@@ -1665,9 +1043,22 @@
   }, 'swiper');
 </script>
 <script>
-  utils.initPlugin(() => {
-    const els = Array.prototype.slice.call(document.querySelectorAll('.slide-up'));
-    if (els.length === 0) return;
+  (function () {
+    // 兜底看门狗独立于插件初始化：3 秒内未完成 reveal 时强制显示 .slide-up 内容
+    let fallbackApplied = false;
+    const revealFallback = () => {
+      if (fallbackApplied) return;
+      fallbackApplied = true;
+      document.documentElement.classList.add('sr-fallback');
+    };
+    const watchdog = setTimeout(() => revealFallback(), 3000);
+
+    stellar.initPlugin(() => {
+      const els = Array.prototype.slice.call(document.querySelectorAll('.slide-up'));
+      if (els.length === 0) {
+        clearTimeout(watchdog);
+        return;
+      }
 
     // 吸顶/固定定位容器内的元素始终在视口内（或由容器控制显隐），
     // 但 ScrollReveal 按文档坐标判断可见性，会误判这类元素为不可见，
@@ -1711,15 +1102,10 @@
         targets.push(el);
       }
     });
-    if (pinnedGroups.size === 0 && targets.length === 0) return;
-
-    // 加载/初始化失败时兜底显示内容，避免整页空白
-    let fallbackApplied = false;
-    const revealFallback = () => {
-      if (fallbackApplied) return;
-      fallbackApplied = true;
-      document.documentElement.classList.add('sr-fallback');
-    };
+    if (pinnedGroups.size === 0 && targets.length === 0) {
+      clearTimeout(watchdog);
+      return;
+    }
 
     const slideUp = {
       distance: `8px`,
@@ -1729,9 +1115,6 @@
       opacity: 0,
       easing: "ease-out"
     };
-
-    // 看门狗：CDN 长时间无响应时强制显示内容
-    const watchdog = setTimeout(() => revealFallback(), 3000);
 
     utils.js(`https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js`, { defer: true })
       .then(() => {
@@ -1758,7 +1141,8 @@
         console.error('[Plugin scrollreveal] 加载失败:', err);
         revealFallback();
       });
-  }, 'scrollreveal');
+    }, 'scrollreveal');
+  })();
 </script>
 
 <script id="MathJax-script" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async></script>
@@ -1784,7 +1168,7 @@
 </script>
 
 <script>
-  utils.initPlugin(() => {
+  stellar.initPlugin(() => {
     const codeElements = document.querySelectorAll('.code');
     if (codeElements.length > 0) {
       ctx.copycode = {
@@ -1800,6 +1184,18 @@
     }
   }, 'copycode');
 </script>
+<script>
+  stellar.initPlugin(() => {
+    const els = Array.prototype.slice.call(document.querySelectorAll('[data-text-adaptive]'));
+    if (els.length === 0) return;
+    utils.js('/js/color.js').then(() => utils.js('/js/plugins/adaptive-text.js')).then(() => {
+      if (typeof applyAdaptiveText === 'function') {
+        applyAdaptiveText(els);
+      }
+    });
+  }, 'adaptive-text');
+</script>
+
 
 
 <!-- inject -->
