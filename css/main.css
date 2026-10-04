@@ -12189,7 +12189,7 @@ body > .site-background {
   right: 0;
   bottom: 0;
   background-size: cover;
-  background-image: url("/static/cover.jpg");
+  background-image: url("/static/cover.webp");
 }
 body > .site-background .site-background__blur {
   width: 100%;
