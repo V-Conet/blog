@@ -104,9 +104,9 @@
       <name>VConet</name>
     </author>
     <category term="DN42" scheme="https://blog.vconet.top/categories/DN42/"/>
-    <category term="Linux" scheme="https://blog.vconet.top/tags/Linux/"/>
     <category term="DN42" scheme="https://blog.vconet.top/tags/DN42/"/>
     <category term="Bird" scheme="https://blog.vconet.top/tags/Bird/"/>
+    <category term="Linux" scheme="https://blog.vconet.top/tags/Linux/"/>
     <category term="Docker" scheme="https://blog.vconet.top/tags/Docker/"/>
     <category term="异地组网" scheme="https://blog.vconet.top/tags/%E5%BC%82%E5%9C%B0%E7%BB%84%E7%BD%91/"/>
     <category term="NAT" scheme="https://blog.vconet.top/tags/NAT/"/>
