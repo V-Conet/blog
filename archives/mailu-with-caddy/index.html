@@ -489,10 +489,10 @@
 <li><code>mail.exmaple.com.key</code>对应<code>/mailu/certs/key.pem</code></li>
 </ul>
 <h2 id="运行Mailu"><a href="#运行Mailu" class="headerlink" title="运行Mailu" data-stellar-navigation=""></a>运行Mailu</h2><p>上传配置，启动docker</p>
-<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -p mailu up -d</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose <span class="attr">-p</span> mailu up <span class="attr">-d</span></span><br></pre></td></tr></tbody></table></figure>
 
 <p>创建管理员账户</p>
-<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -p mailu <span class="built_in">exec</span> admin flask mailu admin hi MAIL.EXAMPLE.COM <span class="string">'PASSWORD'</span></span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose <span class="attr">-p</span> mailu <span class="built_in">exec</span> admin flask mailu admin hi MAIL.EXAMPLE.COM <span class="string">'PASSWORD'</span></span><br></pre></td></tr></tbody></table></figure>
 
 <p>请修改域名和密码后再运行</p>
 <h2 id="配置记录…"><a href="#配置记录…" class="headerlink" title="配置记录…" data-stellar-navigation=""></a>配置记录…</h2><p>下面是更为详细、完整的配置：</p>

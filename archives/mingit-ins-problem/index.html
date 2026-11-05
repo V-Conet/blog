@@ -470,12 +470,12 @@
 <ul>
 <li>本地https证书<br>报错<code>SSL certificate problem: unable to get local issuer certificate</code>, 解决办法:</li>
 </ul>
-<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.sslCAInfo <span class="string">"/path/to/certificate.crt"</span></span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config <span class="attr">--global</span> http.sslCAInfo <span class="string">"/path/to/certificate.crt"</span></span><br></pre></td></tr></tbody></table></figure>
 
 <ul>
 <li>git安全警告<br>报错<code>detected dubious ownership in repository...</code></li>
 </ul>
-<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global --add safe.directory /path/to/your/project</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config <span class="attr">--global</span> <span class="attr">--add</span> safe.directory /path/to/your/project</span><br></pre></td></tr></tbody></table></figure>
 
 
 </article>
