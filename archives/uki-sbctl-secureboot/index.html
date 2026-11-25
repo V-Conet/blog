@@ -29,12 +29,12 @@
     })();
   </script>
 
-  <meta name="description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。" data-stellar-page-meta="">
+  <meta name="description" content="前情提要 上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。" data-stellar-page-meta="">
 <meta property="og:type" content="article" data-stellar-page-meta="">
 <meta property="og:title" content="UKI+sbctl：启用 Secure Boot 最简单的方法" data-stellar-page-meta="">
 <meta property="og:url" content="https://blog.vconet.top/archives/uki-sbctl-secureboot/" data-stellar-page-meta="">
 <meta property="og:site_name" content="VConet的杂物间" data-stellar-page-meta="">
-<meta property="og:description" content="前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。" data-stellar-page-meta="">
+<meta property="og:description" content="前情提要 上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。" data-stellar-page-meta="">
 <meta property="og:locale" content="zh_CN" data-stellar-page-meta="">
 <meta property="og:image" content="https://static.vconet.top/imgu/612702643.png" data-stellar-page-meta="">
 <meta property="article:author" content="VConet" data-stellar-page-meta="">
@@ -72,29 +72,9 @@
 
   
 
-  <script type="application/ld+json" data-stellar-page-meta="">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg"},"dateCreated":"2025-02-04T22:38:00+08:00","dateModified":"2025-02-04T22:38:00+08:00","datePublished":"2025-02-04T22:38:00+08:00","description":"前情提要上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。","headline":"UKI+sbctl：启用 Secure Boot 最简单的方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/uki-sbctl-secureboot/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg","logo":{"@type":"ImageObject","url":"https://blog.vconet.top/static/avatar.jpg"}},"url":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","image":["https://static.vconet.top/imgu/612702643.png"],"keywords":"Archlinux, Secure Boot, UKI, sbctl","thumbnailUrl":"https://static.vconet.top/imgu/612702643.png"}</script>
-  <meta name="yandex-verification" content="7724ebe7e7e09ce8">
-<link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet">
-<style>
-  @font-face {
-    font-family: "ZSFT-443";
-    src: url("https://fontsapi.zeoseven.com/443/main.woff2") format("woff2"),
-    url("https://fontsapi-storage.zeoseven.com/443/main.woff2") format("woff2");
-    font-display: swap;
-  }
-  pre,
-  .md-text .highlight,
-  .md-text .highlight .blob-code-inner {
-    font-family: ZSFT-443, monospace, sans-serif;
-  }
-  /* v1 的 .sitebg 在 v2 更名为 .site-background */
-  @media (max-width: 768px) {
-    body > .site-background {
-      background-attachment: scroll;
-      background-position: center center;
-    }
-  }
-</style>
+  <script type="application/ld+json" data-stellar-page-meta="">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg"},"dateCreated":"2025-02-04T22:38:00+08:00","dateModified":"2025-02-04T22:38:00+08:00","datePublished":"2025-02-04T22:38:00+08:00","description":"前情提要\n上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。","headline":"UKI+sbctl：启用 Secure Boot 最简单的方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/uki-sbctl-secureboot/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg","logo":{"@type":"ImageObject","url":"https://blog.vconet.top/static/avatar.jpg"}},"url":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","image":["https://static.vconet.top/imgu/612702643.png"],"keywords":"Archlinux, Secure Boot, UKI, sbctl","thumbnailUrl":"https://static.vconet.top/imgu/612702643.png"}</script>
+  <link rel="stylesheet" href="/static/custom.css">
+<meta name="yandex-verification" content="7724ebe7e7e09ce8">
 <script data-stellar-script="umami" defer="" src="https://analysis.vconet.top/script.js" data-website-id="ee90339e-f6e2-457d-86ee-ba4f417c1afb"></script>
 
 
@@ -229,6 +209,24 @@
     </div>
   
   <div class="widget-body"><div class="ui-collection" data-layout="list" data-variant="nav" data-density="compact">
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="/archives/stm32-embassy-async-rs/" title="STM32 Embassy Async 生态初鉴" data-stellar-navigation="">
+  
+  
+  <span class="ui-collection__initial" aria-hidden="true">S</span>
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">STM32 Embassy Async 生态初鉴</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
   
     
 <a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="/archives/dzip-reverse-engine/" title="逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES" data-stellar-navigation="">
@@ -392,24 +390,6 @@
 </a>
 
   
-    
-<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="/archives/nvidia-kvm-passthrough/" title="告别重启：Linux 下的 NVIDIA 显卡直通" data-stellar-navigation="">
-  
-  
-  <span class="ui-collection__initial" aria-hidden="true">告</span>
-  
-    <span class="ui-collection__content">
-      
-      <span class="ui-collection__title">告别重启：Linux 下的 NVIDIA 显卡直通</span>
-      
-      
-    </span>
-  
-  
-  
-</a>
-
-  
 </div></div>
   
 </widget>
@@ -455,42 +435,42 @@
     
   </div>
   </div></div>
-<article class="md-text content slide-up"><h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要" data-stellar-navigation=""></a>前情提要</h2><p>上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。</p>
+<article class="md-text content slide-up"><h2 id="前情提要">前情提要</h2>
+<p>上一篇 Archboot 实现 Secure Boot 自动配置的办法，觉得还是不够简单，而且我现在也不需要通过 Grub 引导 Windows 和其他系统，遂有本文。</p>
 <span id="more"></span>
-
-
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文" data-stellar-navigation=""></a>正文</h2><p>在现有系统上抛弃Grub，拥抱统一内核映像（UKI）并启用 Secure Boot</p>
+<h2 id="正文">正文</h2>
+<p>在现有系统上抛弃Grub，拥抱统一内核映像（UKI）并启用 Secure Boot</p>
 <blockquote>
 <p>我所使用的内核为 <code>linux-zen</code>，下面的配置请注意修改</p>
 </blockquote>
-<h3 id="修改内核命令行参数"><a href="#修改内核命令行参数" class="headerlink" title="修改内核命令行参数" data-stellar-navigation=""></a>修改内核命令行参数</h3><p>创建<code>/etc/kernel/cmdline</code>如下：</p>
+<h3 id="修改内核命令行参数">修改内核命令行参数</h3>
+<p>创建<code>/etc/kernel/cmdline</code>如下：</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root=UUID=系统的分区UUID rw splash loglevel=3</span><br></pre></td></tr></tbody></table></figure>
-
 <p><em>注：Btrfs分区可能需要添加 rootflags=subvol=XXX 的挂载参数，可以在grub生成的文件中寻找</em></p>
-<h3 id="修改-mkinitcpio-预设"><a href="#修改-mkinitcpio-预设" class="headerlink" title="修改 mkinitcpio 预设" data-stellar-navigation=""></a>修改 mkinitcpio 预设</h3><p>编辑<code>/etc/mkinitcpio.d/linux-zen.preset</code>，取消 “<em>PRESET</em>_image=XXX” “<em>PRESET</em>_uki=XXX”的注释，并且修改存储位置，保存到 <code>EFI</code> 分区内</p>
+<h3 id="修改-mkinitcpio-预设">修改 mkinitcpio 预设</h3>
+<p>编辑<code>/etc/mkinitcpio.d/linux-zen.preset</code>，取消 “<em>PRESET</em>_image=XXX” "<em>PRESET</em>_uki=XXX"的注释，并且修改存储位置，保存到 <code>EFI</code> 分区内</p>
 <figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">mkinitcpio preset file <span class="keyword">for</span> the <span class="string">'linux-zen'</span> package</span></span><br><span class="line"></span><br><span class="line">ALL_config="/etc/mkinitcpio.conf"</span><br><span class="line">ALL_kver="/boot/vmlinuz-linux-zen"</span><br><span class="line"></span><br><span class="line">PRESETS=('default' 'fallback')</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">##我的EFI分区挂载在/boot下，故作此修改###</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_config=<span class="string">"/etc/mkinitcpio.conf"</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_image=<span class="string">"/boot/initramfs-linux-zen.img"</span></span></span><br><span class="line">default_uki="/boot/EFI/Linux/arch-linux-zen.efi"</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">default_options=<span class="string">"--splash /usr/share/systemd/bootctl/splash-arch.bmp"</span></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">fallback_config=<span class="string">"/etc/mkinitcpio.conf"</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">fallback_image=<span class="string">"/boot/initramfs-linux-zen-fallback.img"</span></span></span><br><span class="line">fallback_uki="/boot/EFI/Linux/arch-linux-zen-fallback.efi"</span><br><span class="line">fallback_options="-S autodetect"</span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="构建-UKI"><a href="#构建-UKI" class="headerlink" title="构建 UKI" data-stellar-navigation=""></a>构建 UKI</h3><p>确保 <code>EFI</code> 目录已挂载，运行：</p>
+<h3 id="构建-UKI">构建 UKI</h3>
+<p>确保 <code>EFI</code> 目录已挂载，运行：</p>
 <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> <span class="attr">-p</span> EFI_MOUNT_POINT/EFI/Linux</span><br><span class="line">mkinitcpio <span class="attr">-p</span> linux-zen</span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="添加引导"><a href="#添加引导" class="headerlink" title="添加引导" data-stellar-navigation=""></a>添加引导</h3><p>遵循一切从简的理念，使用 <code>efibootmgr</code> 添加引导</p>
+<h3 id="添加引导">添加引导</h3>
+<p>遵循一切从简的理念，使用 <code>efibootmgr</code> 添加引导</p>
 <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">efibootmgr <span class="attr">--create</span> \</span><br><span class="line">    <span class="attr">-d</span> /dev/nvmeXXX <span class="attr">-p</span> 1 \</span><br><span class="line">    <span class="attr">--label</span> <span class="string">"Arch Linux"</span> \</span><br><span class="line">    <span class="attr">--loader</span> <span class="string">"EFI/Linux/arch-linux-zen.efi"</span></span><br><span class="line"><span class="comment">#nvmeXXX EFI分区</span></span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="签名-UKI"><a href="#签名-UKI" class="headerlink" title="签名 UKI" data-stellar-navigation=""></a>签名 UKI</h3><blockquote>
+<h3 id="签名-UKI">签名 UKI</h3>
+<blockquote>
 <p>如果此时已经配置好 <code>sbctl</code> 和 Secure Boot，可直接通过 <code>sbctl sign -s /EFI_MOUNT_POINT/EFI/Linux/arch-linux-zen.efi</code> 结束本文</p>
 <p>至此，您可以抛弃 Grub 了，享受快人一步的开机😏</p>
 </blockquote>
 <p>通过以下命令删除不再使用的自动签名</p>
 <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sbctl remove-file /boot/grub/x86_64-efi/grub.efi</span><br></pre></td></tr></tbody></table></figure>
-
 <blockquote>
 <p>如果还没有安装 <code>sbctl</code>，请继续阅读</p>
 </blockquote>
-<h4 id="设置-Secure-Boot"><a href="#设置-Secure-Boot" class="headerlink" title="设置 Secure Boot" data-stellar-navigation=""></a>设置 Secure Boot</h4><p>进入设备 BIOS，将 <code>Secure Boot</code> 进入设置模式 <code>Setup Mode</code></p>
+<h4 id="设置-Secure-Boot">设置 Secure Boot</h4>
+<p>进入设备 BIOS，将 <code>Secure Boot</code> 进入设置模式 <code>Setup Mode</code></p>
 <p>进入Archlinux，安装 <code>sbctl</code> 包，运行</p>
 <figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sbctl enroll-keys <span class="attr">-m</span></span><br><span class="line">sbctl sign <span class="attr">-s</span> /EFI_MOUNT_POINT/EFI/Linux/arch-linux-zen.efi</span><br><span class="line"><span class="comment"># 你也许还需要签名这个（Windows）</span></span><br><span class="line">sbctl sign <span class="attr">-s</span> /EFI_MOUNT_POINT/EFI/Boot/bootx64.efi</span><br></pre></td></tr></tbody></table></figure>
-
-<p>重启至 BIOS 开启 Secure Boot </p>
+<p>重启至 BIOS 开启 Secure Boot</p>
 <p>至此，UKI + sbctl 最简单 Secure Boot 设置就大功告成了</p>
 </article>
 <div class="article-tags slide-up"><a class="tag" href="/tags/Archlinux/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>Archlinux</a><a class="tag" href="/tags/Secure-Boot/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>Secure Boot</a><a class="tag" href="/tags/UKI/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>UKI</a><a class="tag" href="/tags/sbctl/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>sbctl</a></div>
@@ -498,7 +478,7 @@
 
   <div class="article-share slide-up" id="share">
     <div class="body">
-      <div class="social-wrap dis-select"><a class="social share-item qrcode ui-interactive is-icon-only" onclick="util.toggle(&quot;share-qrcode&quot;)" aria-label="分享文章: QR Code" title="分享文章: QR Code"><span class="share-item__icon ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="M10.553 13.447c-.424-.424-.95-.596-1.535-.675c-.553-.074-1.25-.074-2.086-.074H5.827c-.58 0-1.065 0-1.459.037c-.411.04-.795.124-1.146.34c-.345.21-.634.5-.845.844c-.216.352-.3.735-.34 1.147C2 15.459 2 15.944 2 16.525v.068c0 .884 0 1.597.055 2.17c.056.592.175 1.108.459 1.571c.288.47.682.864 1.152 1.152c.463.284.979.403 1.57.46C5.81 22 6.524 22 7.407 22h.07c.58 0 1.064 0 1.458-.037c.412-.04.795-.124 1.147-.34c.344-.21.633-.5.844-.844c.216-.352.3-.736.34-1.147c.037-.394.037-.879.037-1.46v-1.104c0-.836 0-1.533-.074-2.086c-.079-.584-.251-1.111-.675-1.535m-1.62-11.41c.412.04.795.124 1.147.34c.344.21.633.5.844.845c.216.351.3.735.34 1.146c.037.394.037.879.037 1.46v1.104c0 .836 0 1.533-.074 2.086c-.079.584-.251 1.111-.675 1.535s-.95.596-1.535.675c-.553.074-1.25.074-2.086.074H5.827c-.58 0-1.065 0-1.459-.037c-.411-.04-.795-.124-1.146-.34a2.56 2.56 0 0 1-.845-.844c-.216-.352-.3-.735-.34-1.147C2 8.54 2 8.056 2 7.475v-.068c0-.884 0-1.597.055-2.17c.056-.592.175-1.108.459-1.571c.288-.47.682-.864 1.152-1.152c.463-.284.979-.403 1.57-.46C5.81 2 6.524 2 7.407 2h.07c.58 0 1.064 0 1.458.037M16.593 2h-.068c-.58 0-1.065 0-1.46.037c-.41.04-.794.124-1.146.34c-.344.21-.633.5-.844.845c-.216.351-.3.735-.34 1.146c-.037.394-.037.879-.037 1.46v1.104c0 .836 0 1.533.074 2.086c.079.584.251 1.111.675 1.535s.95.596 1.535.675c.553.074 1.25.074 2.086.074h1.105c.58 0 1.065 0 1.459-.037c.411-.04.795-.124 1.146-.34c.345-.21.634-.5.845-.844c.216-.352.3-.735.34-1.147C22 8.54 22 8.056 22 7.475v-.068c0-.884 0-1.597-.055-2.17c-.056-.592-.175-1.108-.459-1.571a3.5 3.5 0 0 0-1.152-1.152c-.463-.284-.979-.403-1.57-.46C18.19 2 17.477 2 16.594 2" opacity=".5"></path><path fill="currentColor" d="M14.093 21.302a.698.698 0 1 1-1.396 0v-2.79h1.396z" opacity=".4"></path><path fill="currentColor" d="M21.302 12.698a.7.7 0 0 0-.697.697v3.256H22v-3.256a.7.7 0 0 0-.698-.697" opacity=".5"></path><path fill="currentColor" d="M16.076 16.617c-.076.184-.076.417-.076.883s0 .699.076.883a1 1 0 0 0 .541.54c.184.077.417.077.883.077s.699 0 .883-.076a1 1 0 0 0 .54-.541c.077-.184.077-.417.077-.883s0-.699-.076-.883a1 1 0 0 0-.541-.54C18.199 16 17.966 16 17.5 16s-.699 0-.883.076a1 1 0 0 0-.54.541"></path><path fill="currentColor" d="M22 18.535v-.023h-1.396c0 .443 0 .74-.016.97c-.015.224-.043.333-.073.405a1.16 1.16 0 0 1-.629.63c-.072.029-.18.056-.405.072c-.23.015-.527.016-.97.016h-1.86V22h1.883c.414 0 .759 0 1.042-.02a2.6 2.6 0 0 0 .844-.175a2.56 2.56 0 0 0 1.384-1.384c.112-.27.156-.549.176-.844c.02-.283.02-.628.02-1.042" opacity=".7"></path><path fill="currentColor" d="M12.697 16.616v.035h1.396c0-.668 0-1.116.035-1.458c.034-.33.093-.482.16-.583a1.2 1.2 0 0 1 .321-.32c.101-.068.254-.128.584-.161c.342-.035.79-.036 1.458-.036h1.86v-1.395h-1.896c-.623 0-1.142 0-1.563.043c-.44.044-.85.142-1.218.388c-.28.187-.519.426-.706.706c-.246.368-.343.777-.388 1.217c-.043.421-.043.94-.043 1.564" opacity=".6"></path><path fill="currentColor" d="M5.508 18.69c.219.155.528.155 1.146.155c.619 0 .928 0 1.146-.155a.8.8 0 0 0 .2-.199c.154-.218.154-.527.154-1.146s0-.927-.155-1.146A.8.8 0 0 0 7.8 16c-.218-.155-.527-.155-1.146-.155s-.927 0-1.146.155a.8.8 0 0 0-.199.2c-.155.218-.155.527-.155 1.145c0 .619 0 .928.155 1.146a.8.8 0 0 0 .2.2M6.654 8.155c-.618 0-.927 0-1.146-.155a.8.8 0 0 1-.199-.2c-.155-.217-.155-.527-.155-1.145c0-.619 0-.928.155-1.146a.8.8 0 0 1 .2-.2c.218-.154.527-.154 1.145-.154c.619 0 .928 0 1.146.155a.8.8 0 0 1 .2.199c.154.218.154.527.154 1.146s0 .928-.155 1.146A.8.8 0 0 1 7.8 8c-.218.155-.527.155-1.146.155M16.2 8c.218.155.527.155 1.146.155s.927 0 1.146-.155a.8.8 0 0 0 .199-.199c.155-.218.155-.528.155-1.146c0-.619 0-.928-.155-1.146a.8.8 0 0 0-.2-.2c-.218-.154-.527-.154-1.145-.154c-.619 0-.928 0-1.146.155a.8.8 0 0 0-.2.199c-.154.218-.154.527-.154 1.146s0 .928.155 1.146A.8.8 0 0 0 16.2 8"></path></svg></span></a><a class="social share-item weibo ui-interactive is-icon-only" href="https://service.weibo.com/share/share.php?url=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fuki-sbctl-secureboot%2F&amp;title=UKI%2Bsbctl%EF%BC%9A%E5%90%AF%E7%94%A8%20Secure%20Boot%20%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E6%B3%95%20-%20VConet%E7%9A%84%E6%9D%82%E7%89%A9%E9%97%B4&amp;pics=https%3A%2F%2Fstatic.vconet.top%2Fimgu%2F612702643.png&amp;summary=%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81%E4%B8%8A%E4%B8%80%E7%AF%87%20Archboot%20%E5%AE%9E%E7%8E%B0%20Secure%20Boot%20%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E7%9A%84%E5%8A%9E%E6%B3%95%EF%BC%8C%E8%A7%89%E5%BE%97%E8%BF%98%E6%98%AF%E4%B8%8D%E5%A4%9F%E7%AE%80%E5%8D%95%EF%BC%8C%E8%80%8C%E4%B8%94%E6%88%91%E7%8E%B0%E5%9C%A8%E4%B9%9F%E4%B8%8D%E9%9C%80%E8%A6%81%E9%80%9A%E8%BF%87%20Grub%20%E5%BC%95%E5%AF%BC%20Windows%20%E5%92%8C%E5%85%B6%E4%BB%96%E7%B3%BB%E7%BB%9F%EF%BC%8C%E9%81%82%E6%9C%89%E6%9C%AC%E6%96%87%E3%80%82" target="_blank" rel="external nofollow noopener noreferrer" aria-label="分享文章: Weibo" title="分享文章: Weibo"><span class="share-item__icon ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Simple Icons - https://creativecommons.org/publicdomain/zero/1.0/ --><path fill="currentColor" d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.737 5.439l-.002.004zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.18.601l.014-.028zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.57-.18-.405-.615.375-.977.42-1.804 0-2.404-.781-1.112-2.915-1.053-5.364-.03 0 0-.766.331-.571-.271.376-1.217.315-2.224-.27-2.809-1.338-1.337-4.869.045-7.888 3.08C1.309 10.87 0 13.273 0 15.348c0 3.981 5.099 6.395 10.086 6.395 6.536 0 10.888-3.801 10.888-6.82 0-1.822-1.547-2.854-2.915-3.284v.01zm1.908-5.092c-.766-.856-1.908-1.187-2.96-.962-.436.09-.706.511-.616.932.09.42.511.691.932.602.511-.105 1.067.044 1.442.465.376.421.466.977.316 1.473-.136.406.089.856.51.992.405.119.857-.105.992-.512.33-1.021.12-2.178-.646-3.035l.03.045zm2.418-2.195c-1.576-1.757-3.905-2.419-6.054-1.968-.496.104-.812.587-.706 1.081.104.496.586.813 1.082.707 1.532-.331 3.185.15 4.296 1.383 1.112 1.246 1.429 2.943.947 4.416-.165.48.106 1.007.586 1.157.479.165.991-.104 1.157-.586.675-2.088.241-4.478-1.338-6.235l.03.045z"></path></svg></span></a><a class="social share-item email ui-interactive is-icon-only" href="mailto:?subject=UKI%2Bsbctl%EF%BC%9A%E5%90%AF%E7%94%A8%20Secure%20Boot%20%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E6%B3%95%20-%20VConet%E7%9A%84%E6%9D%82%E7%89%A9%E9%97%B4&amp;body=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fuki-sbctl-secureboot%2F" rel="external nofollow noreferrer" aria-label="分享文章: Email" title="分享文章: Email"><span class="share-item__icon ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" fill-rule="evenodd" d="M3.172 5.172C2 6.343 2 8.229 2 12s0 5.657 1.172 6.828C4.343 20 6.229 20 10 20h4c3.771 0 5.657 0 6.828-1.172C22 17.657 22 15.771 22 12s0-5.657-1.172-6.828C19.657 4 17.771 4 14 4h-4C6.229 4 4.343 4 3.172 5.172m15.404 2.348a.75.75 0 0 1-.096 1.056l-2.196 1.83c-.887.739-1.605 1.338-2.24 1.746-.66.424-1.303.693-2.044.693s-1.384-.269-2.045-.693c-.634-.408-1.352-1.007-2.239-1.745L5.52 8.576a.75.75 0 1 1 .96-1.152l2.159 1.799c.933.777 1.58 1.315 2.128 1.667.529.34.888.455 1.233.455s.704-.115 1.233-.455c.547-.352 1.195-.89 2.128-1.667l2.159-1.8a.75.75 0 0 1 1.056.097" clip-rule="evenodd"></path></svg></span></a></div>
+      <div class="social-wrap dis-select"><a class="social share-item qrcode ui-interactive is-icon-only" onclick="util.toggle(&quot;share-qrcode&quot;)" aria-label="分享文章: QR Code" title="分享文章: QR Code"><span class="share-item__icon ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="M10.553 13.447c-.424-.424-.95-.596-1.535-.675c-.553-.074-1.25-.074-2.086-.074H5.827c-.58 0-1.065 0-1.459.037c-.411.04-.795.124-1.146.34c-.345.21-.634.5-.845.844c-.216.352-.3.735-.34 1.147C2 15.459 2 15.944 2 16.525v.068c0 .884 0 1.597.055 2.17c.056.592.175 1.108.459 1.571c.288.47.682.864 1.152 1.152c.463.284.979.403 1.57.46C5.81 22 6.524 22 7.407 22h.07c.58 0 1.064 0 1.458-.037c.412-.04.795-.124 1.147-.34c.344-.21.633-.5.844-.844c.216-.352.3-.736.34-1.147c.037-.394.037-.879.037-1.46v-1.104c0-.836 0-1.533-.074-2.086c-.079-.584-.251-1.111-.675-1.535m-1.62-11.41c.412.04.795.124 1.147.34c.344.21.633.5.844.845c.216.351.3.735.34 1.146c.037.394.037.879.037 1.46v1.104c0 .836 0 1.533-.074 2.086c-.079.584-.251 1.111-.675 1.535s-.95.596-1.535.675c-.553.074-1.25.074-2.086.074H5.827c-.58 0-1.065 0-1.459-.037c-.411-.04-.795-.124-1.146-.34a2.56 2.56 0 0 1-.845-.844c-.216-.352-.3-.735-.34-1.147C2 8.54 2 8.056 2 7.475v-.068c0-.884 0-1.597.055-2.17c.056-.592.175-1.108.459-1.571c.288-.47.682-.864 1.152-1.152c.463-.284.979-.403 1.57-.46C5.81 2 6.524 2 7.407 2h.07c.58 0 1.064 0 1.458.037M16.593 2h-.068c-.58 0-1.065 0-1.46.037c-.41.04-.794.124-1.146.34c-.344.21-.633.5-.844.845c-.216.351-.3.735-.34 1.146c-.037.394-.037.879-.037 1.46v1.104c0 .836 0 1.533.074 2.086c.079.584.251 1.111.675 1.535s.95.596 1.535.675c.553.074 1.25.074 2.086.074h1.105c.58 0 1.065 0 1.459-.037c.411-.04.795-.124 1.146-.34c.345-.21.634-.5.845-.844c.216-.352.3-.735.34-1.147C22 8.54 22 8.056 22 7.475v-.068c0-.884 0-1.597-.055-2.17c-.056-.592-.175-1.108-.459-1.571a3.5 3.5 0 0 0-1.152-1.152c-.463-.284-.979-.403-1.57-.46C18.19 2 17.477 2 16.594 2" opacity=".5"></path><path fill="currentColor" d="M14.093 21.302a.698.698 0 1 1-1.396 0v-2.79h1.396z" opacity=".4"></path><path fill="currentColor" d="M21.302 12.698a.7.7 0 0 0-.697.697v3.256H22v-3.256a.7.7 0 0 0-.698-.697" opacity=".5"></path><path fill="currentColor" d="M16.076 16.617c-.076.184-.076.417-.076.883s0 .699.076.883a1 1 0 0 0 .541.54c.184.077.417.077.883.077s.699 0 .883-.076a1 1 0 0 0 .54-.541c.077-.184.077-.417.077-.883s0-.699-.076-.883a1 1 0 0 0-.541-.54C18.199 16 17.966 16 17.5 16s-.699 0-.883.076a1 1 0 0 0-.54.541"></path><path fill="currentColor" d="M22 18.535v-.023h-1.396c0 .443 0 .74-.016.97c-.015.224-.043.333-.073.405a1.16 1.16 0 0 1-.629.63c-.072.029-.18.056-.405.072c-.23.015-.527.016-.97.016h-1.86V22h1.883c.414 0 .759 0 1.042-.02a2.6 2.6 0 0 0 .844-.175a2.56 2.56 0 0 0 1.384-1.384c.112-.27.156-.549.176-.844c.02-.283.02-.628.02-1.042" opacity=".7"></path><path fill="currentColor" d="M12.697 16.616v.035h1.396c0-.668 0-1.116.035-1.458c.034-.33.093-.482.16-.583a1.2 1.2 0 0 1 .321-.32c.101-.068.254-.128.584-.161c.342-.035.79-.036 1.458-.036h1.86v-1.395h-1.896c-.623 0-1.142 0-1.563.043c-.44.044-.85.142-1.218.388c-.28.187-.519.426-.706.706c-.246.368-.343.777-.388 1.217c-.043.421-.043.94-.043 1.564" opacity=".6"></path><path fill="currentColor" d="M5.508 18.69c.219.155.528.155 1.146.155c.619 0 .928 0 1.146-.155a.8.8 0 0 0 .2-.199c.154-.218.154-.527.154-1.146s0-.927-.155-1.146A.8.8 0 0 0 7.8 16c-.218-.155-.527-.155-1.146-.155s-.927 0-1.146.155a.8.8 0 0 0-.199.2c-.155.218-.155.527-.155 1.145c0 .619 0 .928.155 1.146a.8.8 0 0 0 .2.2M6.654 8.155c-.618 0-.927 0-1.146-.155a.8.8 0 0 1-.199-.2c-.155-.217-.155-.527-.155-1.145c0-.619 0-.928.155-1.146a.8.8 0 0 1 .2-.2c.218-.154.527-.154 1.145-.154c.619 0 .928 0 1.146.155a.8.8 0 0 1 .2.199c.154.218.154.527.154 1.146s0 .928-.155 1.146A.8.8 0 0 1 7.8 8c-.218.155-.527.155-1.146.155M16.2 8c.218.155.527.155 1.146.155s.927 0 1.146-.155a.8.8 0 0 0 .199-.199c.155-.218.155-.528.155-1.146c0-.619 0-.928-.155-1.146a.8.8 0 0 0-.2-.2c-.218-.154-.527-.154-1.145-.154c-.619 0-.928 0-1.146.155a.8.8 0 0 0-.2.199c-.154.218-.154.527-.154 1.146s0 .928.155 1.146A.8.8 0 0 0 16.2 8"></path></svg></span></a><a class="social share-item weibo ui-interactive is-icon-only" href="https://service.weibo.com/share/share.php?url=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fuki-sbctl-secureboot%2F&amp;title=UKI%2Bsbctl%EF%BC%9A%E5%90%AF%E7%94%A8%20Secure%20Boot%20%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E6%B3%95%20-%20VConet%E7%9A%84%E6%9D%82%E7%89%A9%E9%97%B4&amp;pics=https%3A%2F%2Fstatic.vconet.top%2Fimgu%2F612702643.png&amp;summary=%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81%0A%E4%B8%8A%E4%B8%80%E7%AF%87%20Archboot%20%E5%AE%9E%E7%8E%B0%20Secure%20Boot%20%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E7%9A%84%E5%8A%9E%E6%B3%95%EF%BC%8C%E8%A7%89%E5%BE%97%E8%BF%98%E6%98%AF%E4%B8%8D%E5%A4%9F%E7%AE%80%E5%8D%95%EF%BC%8C%E8%80%8C%E4%B8%94%E6%88%91%E7%8E%B0%E5%9C%A8%E4%B9%9F%E4%B8%8D%E9%9C%80%E8%A6%81%E9%80%9A%E8%BF%87%20Grub%20%E5%BC%95%E5%AF%BC%20Windows%20%E5%92%8C%E5%85%B6%E4%BB%96%E7%B3%BB%E7%BB%9F%EF%BC%8C%E9%81%82%E6%9C%89%E6%9C%AC%E6%96%87%E3%80%82" target="_blank" rel="external nofollow noopener noreferrer" aria-label="分享文章: Weibo" title="分享文章: Weibo"><span class="share-item__icon ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Simple Icons - https://creativecommons.org/publicdomain/zero/1.0/ --><path fill="currentColor" d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.737 5.439l-.002.004zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.18.601l.014-.028zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.57-.18-.405-.615.375-.977.42-1.804 0-2.404-.781-1.112-2.915-1.053-5.364-.03 0 0-.766.331-.571-.271.376-1.217.315-2.224-.27-2.809-1.338-1.337-4.869.045-7.888 3.08C1.309 10.87 0 13.273 0 15.348c0 3.981 5.099 6.395 10.086 6.395 6.536 0 10.888-3.801 10.888-6.82 0-1.822-1.547-2.854-2.915-3.284v.01zm1.908-5.092c-.766-.856-1.908-1.187-2.96-.962-.436.09-.706.511-.616.932.09.42.511.691.932.602.511-.105 1.067.044 1.442.465.376.421.466.977.316 1.473-.136.406.089.856.51.992.405.119.857-.105.992-.512.33-1.021.12-2.178-.646-3.035l.03.045zm2.418-2.195c-1.576-1.757-3.905-2.419-6.054-1.968-.496.104-.812.587-.706 1.081.104.496.586.813 1.082.707 1.532-.331 3.185.15 4.296 1.383 1.112 1.246 1.429 2.943.947 4.416-.165.48.106 1.007.586 1.157.479.165.991-.104 1.157-.586.675-2.088.241-4.478-1.338-6.235l.03.045z"></path></svg></span></a><a class="social share-item email ui-interactive is-icon-only" href="mailto:?subject=UKI%2Bsbctl%EF%BC%9A%E5%90%AF%E7%94%A8%20Secure%20Boot%20%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E6%B3%95%20-%20VConet%E7%9A%84%E6%9D%82%E7%89%A9%E9%97%B4&amp;body=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fuki-sbctl-secureboot%2F" rel="external nofollow noreferrer" aria-label="分享文章: Email" title="分享文章: Email"><span class="share-item__icon ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" fill-rule="evenodd" d="M3.172 5.172C2 6.343 2 8.229 2 12s0 5.657 1.172 6.828C4.343 20 6.229 20 10 20h4c3.771 0 5.657 0 6.828-1.172C22 17.657 22 15.771 22 12s0-5.657-1.172-6.828C19.657 4 17.771 4 14 4h-4C6.229 4 4.343 4 3.172 5.172m15.404 2.348a.75.75 0 0 1-.096 1.056l-2.196 1.83c-.887.739-1.605 1.338-2.24 1.746-.66.424-1.303.693-2.044.693s-1.384-.269-2.045-.693c-.634-.408-1.352-1.007-2.239-1.745L5.52 8.576a.75.75 0 1 1 .96-1.152l2.159 1.799c.933.777 1.58 1.315 2.128 1.667.529.34.888.455 1.233.455s.704-.115 1.233-.455c.547-.352 1.195-.89 2.128-1.667l2.159-1.8a.75.75 0 0 1 1.056.097" clip-rule="evenodd"></path></svg></span></a></div>
       <div class="share-qrcode" id="share-qrcode" style="opacity:0;height:0"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&amp;data=https%3A%2F%2Fblog.vconet.top%2Farchives%2Fuki-sbctl-secureboot%2F" onerror="this.onerror=null;this.src=&quot;/images/stellar-error.491ee870f4940739.svg&quot;"></div>
     </div>
   </div>
@@ -533,7 +513,9 @@
 
 
 
-<footer class="page-footer slide-up footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/2.0.0">Stellar 2.0.0</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
+<footer class="page-footer slide-up footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/2.0.0">Stellar 2.0.0</a> 主题创建。<br>
+本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br>
+<a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
 </div></footer>
 </main>
 <aside data-stellar-runtime-region="" id="rightbar-region" class="site-region site-region--rightbar" data-region="rightbar" aria-label="Rightbar"><div class="site-region__surface ui-drawer-surface"><div class="site-region__viewport"><div class="widgets widget-stack widget-stack--rightbar widget-stack--rightbar"><div class="widget-instance widget-instance--toc" data-widget-id="rightbar:1:toc" data-presentation="rightbar">
@@ -625,4 +607,4 @@
 <script data-stellar-script="core" defer="" src="/js/navigation-init.js?v=2.0.0"></script>
 </div>
 
-<script type="application/json" id="stellar-navigation-config">{"collection":"[\"post\",\"post\"]","url":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","signature":"092e468f29808f319824275cbc2e059a661d759366086e17fec562afd5a6f604"}</script></body></html>
+<script type="application/json" id="stellar-navigation-config">{"collection":"[\"post\",\"post\"]","url":"https://blog.vconet.top/archives/uki-sbctl-secureboot/","signature":"91689844e01e5b5036d56e6de379a84107487b43ed2f3f68a64b552effa7f914"}</script></body></html>

@@ -73,28 +73,8 @@
   
 
   <script type="application/ld+json" data-stellar-page-meta="">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg"},"dateCreated":"2026-06-21T14:16:24+08:00","dateModified":"2026-06-21T14:16:24+08:00","datePublished":"2026-06-21T14:16:24+08:00","description":"动态友链算是挺常见的一个需求 —— 自动抓取友链站点最近的 RSS，不会让“友链”栏只显示一个孤零零的头像。Stellar 主题虽然自带了动态友链的实现，但用起来并不优雅","headline":"为 Stellar 主题实现更轻量的动态友链","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.vconet.top/archives/stellar-friends/"},"publisher":{"@type":"Organization","name":"VConet","sameAs":[],"image":"https://blog.vconet.top/static/avatar.jpg","logo":{"@type":"ImageObject","url":"https://blog.vconet.top/static/avatar.jpg"}},"url":"https://blog.vconet.top/archives/stellar-friends/","image":["https://static.vconet.top/imgu/2026/f598a70a6714fd26c9107bde6c08844c.png"],"keywords":"Hexo, Stellar, Rust, 友链","thumbnailUrl":"https://static.vconet.top/imgu/2026/f598a70a6714fd26c9107bde6c08844c.png"}</script>
-  <meta name="yandex-verification" content="7724ebe7e7e09ce8">
-<link href="https://fontsapi.zeoseven.com/292/main/result.css" rel="stylesheet">
-<style>
-  @font-face {
-    font-family: "ZSFT-443";
-    src: url("https://fontsapi.zeoseven.com/443/main.woff2") format("woff2"),
-    url("https://fontsapi-storage.zeoseven.com/443/main.woff2") format("woff2");
-    font-display: swap;
-  }
-  pre,
-  .md-text .highlight,
-  .md-text .highlight .blob-code-inner {
-    font-family: ZSFT-443, monospace, sans-serif;
-  }
-  /* v1 的 .sitebg 在 v2 更名为 .site-background */
-  @media (max-width: 768px) {
-    body > .site-background {
-      background-attachment: scroll;
-      background-position: center center;
-    }
-  }
-</style>
+  <link rel="stylesheet" href="/static/custom.css">
+<meta name="yandex-verification" content="7724ebe7e7e09ce8">
 <script data-stellar-script="umami" defer="" src="https://analysis.vconet.top/script.js" data-website-id="ee90339e-f6e2-457d-86ee-ba4f417c1afb"></script>
 
 
@@ -229,6 +209,24 @@
     </div>
   
   <div class="widget-body"><div class="ui-collection" data-layout="list" data-variant="nav" data-density="compact">
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="/archives/stm32-embassy-async-rs/" title="STM32 Embassy Async 生态初鉴" data-stellar-navigation="">
+  
+  
+  <span class="ui-collection__initial" aria-hidden="true">S</span>
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">STM32 Embassy Async 生态初鉴</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
   
     
 <a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="/archives/dzip-reverse-engine/" title="逆向 .dzip：从 UA 魔数到被改过密码的 WinZip AES" data-stellar-navigation="">
@@ -392,24 +390,6 @@
 </a>
 
   
-    
-<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="/archives/nvidia-kvm-passthrough/" title="告别重启：Linux 下的 NVIDIA 显卡直通" data-stellar-navigation="">
-  
-  
-  <span class="ui-collection__initial" aria-hidden="true">告</span>
-  
-    <span class="ui-collection__content">
-      
-      <span class="ui-collection__title">告别重启：Linux 下的 NVIDIA 显卡直通</span>
-      
-      
-    </span>
-  
-  
-  
-</a>
-
-  
 </div></div>
   
 </widget>
@@ -440,7 +420,7 @@
   <div class="content" data-text-adaptive="split">
     <div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>
     <div class="top bread-nav footnote"><div class="top-row"><div class="left" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/Hexo/">Hexo</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%9D%82%E7%89%A9/">杂物</a>
 </div></div><div class="meta-row">
 <div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-06-21T06:16:24.000Z">2026-06-21</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-06-21T06:16:24.000Z">2026-06-21</time></span></div>
 </div></div>
@@ -457,8 +437,8 @@
   </div></div>
 <article class="md-text content slide-up"><p>动态友链算是挺常见的一个需求 —— 自动抓取友链站点最近的 RSS，不会让“友链”栏只显示一个孤零零的头像。Stellar 主题虽然自带了动态友链的实现，但用起来并不优雅</p>
 <span id="more"></span>
-
-<h2 id="原版"><a href="#原版" class="headerlink" title="原版" data-stellar-navigation=""></a>原版</h2><p>原版<code>动态友链</code>的流程如下：</p>
+<h2 id="原版">原版</h2>
+<p>原版<code>动态友链</code>的流程如下：</p>
 <ol>
 <li>Fork 仓库，在自己仓库的 Issues 里按模板提交友链</li>
 <li>通过 GitHub Actions 定时拉取 Issues，抓取每个友链的 RSS，生成 <code>data.json</code></li>
@@ -470,36 +450,38 @@
 <li><strong>难以脱离 GitHub</strong>：作者写的 Action 用到了一些 GitHub API，无法直接搬到 Forgejo 上运行</li>
 </ul>
 <p>刚好最近在学 Rust，这个需求正适合拿来练手。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路" data-stellar-navigation=""></a>思路</h2><p>整个方案拆成三部分：</p>
+<h2 id="思路">思路</h2>
+<p>整个方案拆成三部分：</p>
 <pre class="mermaid">graph LR
   yml[friends.yml<br>label.yml] --&gt; cli[stellar-friends]
   rss[RSS/Atom] --&gt; cli
   cli --&gt; json[data.json]
   json --&gt; page[静态托管<br>Codeberg Pages]
   page --&gt; theme[Blog]</pre>
-
 <ul>
 <li><strong>数据</strong>：友链和标签采用 YAML（当初踩了个坑，本应使用更方便的 TOML，不过懒得改了 <span class="tag-plugin emoji"><img no-lazy="" class="inline" src="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/googlytrash.gif" onerror="this.onerror=null;this.src=&quot;/images/stellar-error.491ee870f4940739.svg&quot;" width="128" height="128" data-stellar-image-dimensions="true" data-stellar-image-color="{&quot;size&quot;:64,&quot;hsla&quot;:[48.1232,6.5198,49.9861,0.736]}" data-stellar-image-source="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/googlytrash.gif"></span>）</li>
 <li><strong>工具</strong>：用 Rust 写的 <code>stellar-friends</code>，读 YAML 输出 Stellar 的 <code>v2</code> JSON</li>
 <li><strong>托管</strong>：JSON 扔到 Codeberg Pages，前端通过 <code>{% friends %}</code> 拉取，与主题原生流程一致</li>
 </ul>
-<h2 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式" data-stellar-navigation=""></a>数据格式</h2><p>友链和标签均采用 YAML 格式，与原版大同小异。</p>
+<h2 id="数据格式">数据格式</h2>
+<p>友链和标签均采用 YAML 格式，与原版大同小异。</p>
 <p><code>friends.yml</code>：</p>
 <figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">title:</span> <span class="string">Bingxin</span> <span class="string">Blog</span>                                   <span class="comment"># 友链标题</span></span><br><span class="line">  <span class="attr">url:</span> <span class="string">https://blog.byteloid.one/</span>                       <span class="comment"># 友链地址</span></span><br><span class="line">  <span class="attr">description:</span> <span class="string">普通人，而已</span>                             <span class="comment"># 友链描述</span></span><br><span class="line">  <span class="attr">icon:</span> <span class="string">https://blog.byteloid.one/img/march7th.webp</span>     <span class="comment"># 友链图标</span></span><br><span class="line">  <span class="attr">feed:</span> <span class="string">https://blog.byteloid.one/atom.xml</span>              <span class="comment"># 友链 RSS/Atom 链接，可选</span></span><br><span class="line">  <span class="attr">issue_number:</span> <span class="number">2</span>                                       <span class="comment"># 排序序号</span></span><br><span class="line">  <span class="comment">#snapshot:                                            # 站点快照，可选</span></span><br><span class="line">  <span class="comment">#keywords:                                            # 友链关键词，逗号分隔，可选</span></span><br><span class="line">  <span class="comment">#labels:                                              # 标签列表，可选</span></span><br></pre></td></tr></tbody></table></figure>
-
 <p><code>label.yml</code> (可选)：</p>
 <figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">老友</span>        <span class="comment"># 标签名称</span></span><br><span class="line">  <span class="attr">color:</span> <span class="string">"228879"</span>   <span class="comment"># 标签颜色（十六进制，无 `#`）</span></span><br><span class="line">  <span class="attr">hue:</span> <span class="number">171</span>          <span class="comment"># HSL 色相</span></span><br><span class="line">  <span class="attr">saturation:</span> <span class="number">60</span>    <span class="comment"># HSL 饱和度</span></span><br><span class="line">  <span class="attr">lightness:</span> <span class="number">33</span>     <span class="comment"># HSL 亮度</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">失联</span></span><br><span class="line">  <span class="attr">color:</span> <span class="string">"D93F0B"</span></span><br><span class="line">  <span class="attr">hue:</span> <span class="number">15</span></span><br><span class="line">  <span class="attr">saturation:</span> <span class="number">90</span></span><br><span class="line">  <span class="attr">lightness:</span> <span class="number">45</span></span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="Rust-实现"><a href="#Rust-实现" class="headerlink" title="Rust 实现" data-stellar-navigation=""></a>Rust 实现</h2><p>这一部分应该没人爱看吧，大概？<br>项目挺简单的，可以直看源码（写的菜，轻喷<span class="tag-plugin emoji"><img no-lazy="" class="inline" src="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/googlytrash.gif" onerror="this.onerror=null;this.src=&quot;/images/stellar-error.491ee870f4940739.svg&quot;" width="128" height="128" data-stellar-image-dimensions="true" data-stellar-image-color="{&quot;size&quot;:64,&quot;hsla&quot;:[48.1232,6.5198,49.9861,0.736]}" data-stellar-image-source="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/googlytrash.gif"></span>）</p>
+<h2 id="Rust-实现">Rust 实现</h2>
+<p>这一部分应该没人爱看吧，大概？<br>
+项目挺简单的，可以直看源码（写的菜，轻喷<span class="tag-plugin emoji"><img no-lazy="" class="inline" src="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/googlytrash.gif" onerror="this.onerror=null;this.src=&quot;/images/stellar-error.491ee870f4940739.svg&quot;" width="128" height="128" data-stellar-image-dimensions="true" data-stellar-image-color="{&quot;size&quot;:64,&quot;hsla&quot;:[48.1232,6.5198,49.9861,0.736]}" data-stellar-image-source="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/googlytrash.gif"></span>）</p>
 <div class="tag-plugin ghcard"><a class="ghcard" rel="external nofollow noopener noreferrer" target="_blank" href="https://github.com/V-Conet/stellar-friends"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://github-stats-extended.vercel.app/api/pin/?username=V-Conet&amp;repo=stellar-friends&amp;theme=dark&amp;show_owner=true" onerror="this.onerror=null;this.src=&quot;/images/stellar-error.491ee870f4940739.svg&quot;" width="400" height="120" data-stellar-image-dimensions="true" data-stellar-image-color="{&quot;size&quot;:64,&quot;hsla&quot;:[52.828,0.4331,12.7694,0.9802]}" data-stellar-image-source="https://github-stats-extended.vercel.app/api/pin/?username=V-Conet&amp;repo=stellar-friends&amp;theme=dark&amp;show_owner=true"></a></div>
-
-<h2 id="部署"><a href="#部署" class="headerlink" title="部署" data-stellar-navigation=""></a>部署</h2><p>可以利用 Github/Forgejo Actions，写一个定时任务将生成的 JSON 放到仓库的另一个分支，并启用 Pages 托管这个分支，就能得到一个静态 URL 了</p>
+<h2 id="部署">部署</h2>
+<p>可以利用 Github/Forgejo Actions，写一个定时任务将生成的 JSON 放到仓库的另一个分支，并启用 Pages 托管这个分支，就能得到一个静态 URL 了</p>
 <p>这一部分可以参考我在 Codeberg 的 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://codeberg.org/V-Conet/friends_api/src/branch/main/.github/workflows/generate.yml" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>Actions</a></p>
-<h3 id="接入-Stellar-主题"><a href="#接入-Stellar-主题" class="headerlink" title="接入 Stellar 主题" data-stellar-navigation=""></a>接入 Stellar 主题</h3><p>部署完成后，只需在文章里添加一行：</p>
+<h3 id="接入-Stellar-主题">接入 Stellar 主题</h3>
+<p>部署完成后，只需在文章里添加一行：</p>
 <figure class="highlight markdown"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">{% friends posts:true api:https://v-conet.codeberg.page/friends<span class="emphasis">_api/v2/data.json %}</span></span><br></pre></td></tr></tbody></table></figure>
-
 <p>主题会按 <code>issue_number</code> 排序，效果与原版一致。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语" data-stellar-navigation=""></a>结语</h2><p>自我感觉这个方案比原版更好，而且也能在本地运行，如果你也在用 Stellar 主题且对原版友链方案不太满意，不妨试试这个工具，欢迎到 GitHub 提 Issue 或 PR！<span class="tag-plugin emoji"><img no-lazy="" class="inline" src="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/heart.gif" onerror="this.onerror=null;this.src=&quot;/images/stellar-error.491ee870f4940739.svg&quot;" width="128" height="128" data-stellar-image-dimensions="true" data-stellar-image-color="{&quot;size&quot;:64,&quot;hsla&quot;:[35.54,68.7226,39.8602,0.6416]}" data-stellar-image-source="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/heart.gif"></span></p>
+<h2 id="结语">结语</h2>
+<p>自我感觉这个方案比原版更好，而且也能在本地运行，如果你也在用 Stellar 主题且对原版友链方案不太满意，不妨试试这个工具，欢迎到 GitHub 提 Issue 或 PR！<span class="tag-plugin emoji"><img no-lazy="" class="inline" src="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/heart.gif" onerror="this.onerror=null;this.src=&quot;/images/stellar-error.491ee870f4940739.svg&quot;" width="128" height="128" data-stellar-image-dimensions="true" data-stellar-image-color="{&quot;size&quot;:64,&quot;hsla&quot;:[35.54,68.7226,39.8602,0.6416]}" data-stellar-image-source="https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/heart.gif"></span></p>
 </article>
 <div class="article-tags slide-up"><a class="tag" href="/tags/Hexo/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>Hexo</a><a class="tag" href="/tags/Stellar/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>Stellar</a><a class="tag" href="/tags/Rust/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>Rust</a><a class="tag" href="/tags/%E5%8F%8B%E9%93%BE/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>友链</a></div>
 
@@ -527,7 +509,8 @@
 
 <div class="related-wrap slide-up" id="read-next"><section class="body"><div class="item" id="prev"><div class="note"><svg class="icon" viewBox="0 0 1 1" data-icon="default:arrow-left" aria-hidden="true"></svg> 较新文章</div><a href="/archives/kde-plm-fix/" data-stellar-navigation="">KDE PLM 的问题及解决方案</a></div><div class="item" id="next"><div class="note">较早文章 <svg class="icon" viewBox="0 0 1 1" data-icon="default:arrow-right" aria-hidden="true"></svg></div><a href="/archives/linux-wpa-eap-issue/" data-stellar-navigation="">wpa_supplicant 后端无法连接 802.1x WiFi</a></div></section></div>
 
-
+<div class="related-wrap slide-up" id="related-posts"><section class="header"><div class="title cap theme">您可能感兴趣的文章</div></section><section class="body"><div class="related-posts"><a class="item" href="/archives/stm32-embassy-async-rs/" title="STM32 Embassy Async 生态初鉴" data-stellar-navigation=""><span class="title">STM32 Embassy Async 生态初鉴</span><span class="excerpt">如今，都 6202 年了，Rust 借着 AI 的东风火了起来，嵌入式这边也有比较成熟的 async 生态，而且，谁不喜欢不会阻塞主进程的异步模型呢…
+本文主要围绕 embedded-hal-async / Embassy Async...</span></a></div></section></div>
 
 
   <div class="related-wrap md-text slide-up" id="comments">
@@ -543,7 +526,9 @@
 
 
 
-<footer class="page-footer slide-up footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/2.0.0">Stellar 2.0.0</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br><a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
+<footer class="page-footer slide-up footnote"><hr><div class="text"><p>本站由 <a href="/">VConet</a> 使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/2.0.0">Stellar 2.0.0</a> 主题创建。<br>
+本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。<br>
+<a href="https://icp.gov.moe/?keyword=20263232" rel="external nofollow noreferrer" target="_blank">萌ICP备20263232号</a></p>
 </div></footer>
 </main>
 <aside data-stellar-runtime-region="" id="rightbar-region" class="site-region site-region--rightbar" data-region="rightbar" aria-label="Rightbar"><div class="site-region__surface ui-drawer-surface"><div class="site-region__viewport"><div class="widgets widget-stack widget-stack--rightbar widget-stack--rightbar"><div class="widget-instance widget-instance--toc" data-widget-id="rightbar:1:toc" data-presentation="rightbar">
@@ -635,4 +620,4 @@
 <script data-stellar-script="core" defer="" src="/js/navigation-init.js?v=2.0.0"></script>
 </div>
 
-<script type="application/json" id="stellar-navigation-config">{"collection":"[\"post\",\"post\"]","url":"https://blog.vconet.top/archives/stellar-friends/","signature":"092e468f29808f319824275cbc2e059a661d759366086e17fec562afd5a6f604"}</script></body></html>
+<script type="application/json" id="stellar-navigation-config">{"collection":"[\"post\",\"post\"]","url":"https://blog.vconet.top/archives/stellar-friends/","signature":"91689844e01e5b5036d56e6de379a84107487b43ed2f3f68a64b552effa7f914"}</script></body></html>
